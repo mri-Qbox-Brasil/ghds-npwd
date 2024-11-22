@@ -89,7 +89,7 @@ const MessagesList = (): any => {
             </div>
 
             <Box display="flex" flexDirection="column">
-                <div className='px-4'>
+                <div className='w-full'>
                     <List>
                         {[...filteredConversations]
                             .sort((a, b) => {

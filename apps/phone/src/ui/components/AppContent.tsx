@@ -33,7 +33,7 @@ export const AppContent: React.FC<AppContentTypes & BoxProps> = ({
 
   return (
 <div
-  className="flex flex-col flex-1 bg-[#f2f2f7] dark:bg-black" // Corrigido uso de cor hex e modo escuro
+  className="flex flex-col flex-1 bg-[#F6F6F67] dark:bg-black" // Corrigido uso de cor hex e modo escuro
   style={backdrop ? { overflow: 'hidden' } : { overflow: 'auto' }}
 >
   <Backdrop className={classes.backdrop} open={backdrop || false} onClick={onClickBackdrop} />
