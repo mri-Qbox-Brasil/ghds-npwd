@@ -43,7 +43,8 @@ export class QBXFramework implements Strategy {
 
       if (resource === GetCurrentResourceName()) {
         const onlinePlayers = QBCore.Functions.GetQBPlayers();
-        for (const player of onlinePlayers) {
+        if (!onlinePlayers) return;
+        for (const player of Object.values(onlinePlayers) as any[]) {
           await PlayerService.handleNewPlayerEvent({
             source: player.PlayerData.source,
             identifier: player.PlayerData.citizenid,
