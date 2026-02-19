@@ -11,9 +11,9 @@
   },
   "general": {
     "useResourceIntegration": false,
-    "toggleKey": "f1",
+    "toggleKey": "k",
     "toggleCommand": "phone",
-    "defaultLanguage": "en",
+    "defaultLanguage": "ptbr",
     "showId": false
   },
   "contacts": {
@@ -58,12 +58,13 @@
       "upcdn.io",
       "i.fivemanage.com",
       "api.fivemanage.com",
-      "r2.fivemanage.com"
+      "r2.fivemanage.com",
+      "mriqbox.com.br"
     ]
   },
   "profanityFilter": {
     "enabled": false,
-    "badWords": ["esx"]
+    "badWords": ["esx", "vrp"]
   },
   "twitter": {
     "showNotifications": true,
@@ -88,7 +89,7 @@
     "persistListings": false
   },
   "browser": {
-    "homepageUrl": "https://docs.projecterror.dev"
+    "homepageUrl": "https://mriqbox.com.br"
   },
   "debug": {
     "level": "error",

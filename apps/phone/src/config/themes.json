@@ -1,7 +1,7 @@
 {
   "default-light": {
     "typography": {
-      "fontFamily": "'SegoeUI', 'Roboto', 'Arial', sans-serif"
+      "fontFamily": "'Roboto', 'Arial', sans-serif"
     },
     "palette": {
       "mode": "light",
@@ -16,7 +16,7 @@
   },
   "taso-dark": {
     "typography": {
-      "fontFamily": "'SegoeUI', 'Roboto', 'Arial', sans-serif"
+      "fontFamily": "'Roboto', 'Arial', sans-serif"
     },
     "components": {
       "MuiDivider": {

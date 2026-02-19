@@ -74,6 +74,8 @@
       "FAILED_TO_TAKE_PHOTO": "A foto não pôde ser salva :("
     },
     "CONTACTS": {
+      "MY_NUMBER": "Meu número",
+      "NEARBY_SHARE": "Compartilhar por proximidade",
       "FEEDBACK": {
         "ADD_FAILED": "Falha ao criar contato!",
         "ADD_SUCCESS": "Contato criado com sucesso!",
@@ -81,8 +83,8 @@
         "UPDATE_SUCCESS": "Contato atualizado com sucesso!",
         "DELETE_FAILED": "Falha ao excluir contato!",
         "DELETE_SUCCESS": "Contato excluído com sucesso!",
-        "PAYMENTFAILED": "The payment failed!",
-        "PAYMENTSENT": "The payment sent!"
+        "PAYMENTFAILED": "O pagamento falhou!",
+        "PAYMENTSENT": "Pagamento enviado!"
       },
       "AMOUNT": "How Much?",
       "SENDMONEY": "Send Money",
@@ -100,8 +102,8 @@
         "TRANSMITTER_IS_CALLING": "{{ transmitter }} esta te ligando!"
       },
       "INPUT_PLACEHOLDER": "Digite um número",
-      "NAVBAR_HISTORY": "Histórico",
-      "NAVBAR_DIAL": "Discar",
+      "NAVBAR_HISTORY": "Recentes",
+      "NAVBAR_DIAL": "Teclado",
       "NAVBAR_CONTACTS": "Contatos",
       "NO_HISTORY": "Você não tem histórico de chamadas"
     },
@@ -178,6 +180,8 @@
       "DISLIKE": "Dislike"
     },
     "NOTES": {
+      "NOTE_SINGLE": "Nota",
+      "NOTE_PLURAL": "Notas",
       "FEEDBACK": {
         "NO_NOTES": "Você não tem notas",
         "ADD_FAILED": "Falha ao salvar a nota.",
@@ -283,21 +287,24 @@
     "APPS_DIALER": "Telefone",
     "APPS_CONTACTS": "Contatos",
     "APPS_MESSAGES": "Mensagens",
-    "APPS_CALCULATOR": "Calculatora",
-    "APPS_SETTINGS": "Config.",
-    "APPS_BANK": "Banco WhoDis",
+    "APPS_CALCULATOR": "Calculadora",
+    "APPS_SETTINGS": "Configurações",
+    "APPS_BANK": "Banco",
     "APPS_NOTES": "Notas",
     "APPS_EXAMPLE": "Aplicativo de exemplo",
-    "APPS_TWITTER": "Twitter",
-    "APPS_MARKETPLACE": "Mercado",
+    "APPS_TWITTER": "Tuiter",
+    "APPS_MARKETPLACE": "OXL",
+    "APPS_WEATHER": "Clima",
     "APPS_CAMERA": "Câmera",
-    "APPS_MATCH": "Matchmaker",
+    "APPS_MATCH": "Match",
     "APPS_CALCULATOR_COPIED": "Resultado copiado",
+    "APPS_DARKCHAT": "THOR",
     "GENERIC_CLICK_TO_REVEAL": "Clique para revelar",
     "GENERIC_LOADING": "Carregando...",
     "GENERIC_WAIT": "Um momento...",
     "GENERIC_SAVE": "Salvar",
     "GENERIC_EDIT": "Editar",
+    "GENERIC_DONE": "Pronto",
     "GENERIC_UPDATE": "Atualizar",
     "GENERIC_REQUIRED": "Obrigatório",
     "GENERIC_DELETE": "Exluir",

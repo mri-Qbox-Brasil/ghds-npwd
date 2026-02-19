@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import { ListItem, ListItemAvatar, ListItemText, useTheme } from '@mui/material';
 import { useApp } from '@os/apps/hooks/useApps';
 import { useRecoilValue } from 'recoil';
 import { notifications, useSetNavbarUncollapsed } from '@os/new-notifications/state';
@@ -17,6 +17,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ id, key }) =
   const { icon } = useApp(appId);
   const history = useHistory();
   const closeBar = useSetNavbarUncollapsed();
+  const theme = useTheme();
 
   const handleOnClose = () => {
     markAsRead(id);
@@ -26,14 +27,33 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ id, key }) =
 
   return (
     <ListItem
-      divider
       button
       onClick={handleOnClose}
-      sx={{ pr: '28px', position: 'relative' }}
+      sx={{ 
+        position: 'relative', 
+        backgroundColor: theme.palette.mode === 'dark' ? '#333' : '#fff',
+        borderRadius: '20px',
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+        opacity: '0.94',
+        marginBottom: '10px',
+        '&:hover': {
+          cursor: 'pointer',
+          backgroundColor: theme.palette.mode === 'dark' ? '#333' : '#fff',
+          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4)',
+          opacity: '0.97',
+        },
+        '& .MuiListItemAvatar-root': {
+          minWidth: '35px',
+          marginRight: '10px',
+        },
+
+      }}
       key={key}
     >
-      {icon && <ListItemAvatar>{icon}</ListItemAvatar>}
-      <ListItemText secondary={content} />
+      {icon && <ListItemAvatar
+        sx={{ maxWidth: '5px', marginRight: '10px' }}
+      >{icon}</ListItemAvatar>}
+      <ListItemText primary={content} />
     </ListItem>
   );
 };

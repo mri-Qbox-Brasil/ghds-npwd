@@ -21,7 +21,6 @@ export const MessagesApp = () => {
         <MessagesThemeProvider>
             <AppWrapper id="messages-app">
                 <WordFilterProvider>
-                    {pathname === '/messages' && <AppTitle app={messages}/>}
                     <AppContent>
                         <React.Suspense fallback={<LoadingSpinner/>}>
                             <Switch>

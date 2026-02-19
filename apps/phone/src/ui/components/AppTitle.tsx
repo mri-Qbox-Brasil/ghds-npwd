@@ -21,7 +21,7 @@ export const AppTitle: React.FC<AppTitleProps> = ({
   const [t] = useTranslation();
   return (
     // TODO: Support color and backgroundColor
-    <div className="px-4 py-2 pt-4 bg-neutral-100 dark:bg-neutral-900" {...props}>
+    <div className="px-5 py-2 pt-4 bg-[#F6F6F67] dark:bg-black" {...props}>
       <h3 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">
         {t(nameLocale)}
       </h3>

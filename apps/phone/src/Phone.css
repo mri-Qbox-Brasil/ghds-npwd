@@ -23,12 +23,11 @@
 .PhoneScreen {
   overflow: hidden;
   position: absolute;
-  background-color: #fff;
+  background-color: #F6F6F6;
   bottom: 100px;
   left: 50px;
   right: 50px;
   top: 70px;
-  padding-top: 15px;
   display: flex;
   flex-direction: column;
   background-position: center;

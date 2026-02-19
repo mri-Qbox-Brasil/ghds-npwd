@@ -12,8 +12,8 @@ const NotificationContext = createContext(null);
 const styles = {
   root: css({
     background: 'rgba(38,38,38,0.85) !important',
-    borderRadius: '12px !important',
-    boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+    // borderRadius: '12px !important',
+    // boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
     backdropFilter: 'blur(4px)',
   }),
 };

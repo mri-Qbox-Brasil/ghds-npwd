@@ -5,13 +5,12 @@ import { AppTitle } from '@ui/components/AppTitle';
 import { useApp } from '@os/apps/hooks/useApps';
 import NoteList from './list/NoteList';
 import { NoteModal } from './modal/NoteModal';
-import { Fab } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Fab, Typography, Box } from '@mui/material';
+import { RiEditBoxLine } from "@react-icons/all-files/ri/RiEditBoxLine";
 import useStyles from './notes.styles';
 import { NotesThemeProvider } from './providers/NotesThemeProvider';
-import {NOTES_APP_PRIMARY_COLOR} from "./notes.theme";
 import { Route } from 'react-router-dom';
-import { useSetModalVisible, useSetSelectedNote } from './hooks/state';
+import { useSetModalVisible, useSetSelectedNote, useNotesValue } from './hooks/state';
 import { LoadingSpinner } from '@ui/components/LoadingSpinner';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 import { AddNoteExportData } from '@typings/notes';
@@ -21,6 +20,7 @@ export const NotesApp: React.FC = () => {
   const notesApp = useApp('NOTES');
   const setSelectedNote = useSetSelectedNote();
   const setModalVisible = useSetModalVisible();
+  const notes = useNotesValue();
 
   const onClickCreate = () => {
     setSelectedNote({ title: '', content: '' });
@@ -30,8 +30,6 @@ export const NotesApp: React.FC = () => {
   const { title, content } = useQueryParams<AddNoteExportData>({ title: '', content: '' });
 
   useEffect(() => {
-    // Althought this interface kinda blows for readability,
-    // whenever we have
     if (title || content) {
       setModalVisible(true);
       setSelectedNote({ title, content });
@@ -51,10 +49,26 @@ export const NotesApp: React.FC = () => {
             <Route path="/notes" component={NoteList} />
           </React.Suspense>
         </AppContent>
-        <Fab className={classes.absolute} onClick={onClickCreate}>
-          <AddIcon style={{ color: NOTES_APP_PRIMARY_COLOR}}/>
-        </Fab>
+        
+        <Box sx={{ textAlign: 'center', paddingY: '16px' }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {notes.length} {notes.length === 1 ? 'Nota' : 'Notas'}
+          </Typography>
+        </Box>
+        
+        <RiEditBoxLine className={`${classes.absolute} ${classes.button}`} onClick={onClickCreate}>
+        </RiEditBoxLine>
       </AppWrapper>
     </NotesThemeProvider>
   );
 };
+
+// v2.0:
+// Redesign finalizado
+// 2.1:
+// Correção do darkmode
+
+// Futuras implementações?
+// Adicionar Data
+// Adicionar Buscar
+// Adicionar Emojis

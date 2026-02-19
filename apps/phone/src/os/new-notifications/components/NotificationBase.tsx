@@ -44,8 +44,11 @@ const NotificationBase = forwardRef<HTMLDivElement, NotificationBaseProps>((prop
         <SnackbarContent
             onClick={handleNotisClick}
             ref={ref}
-            style={{minWidth: '370px'}}
-            className="bg-neutral-50 dark:bg-neutral-900 py-3.5 px-4 flex rounded-md shadow-md border-2 border-neutral-200 dark:border-neutral-800"
+            style={{
+                minWidth: '370px',
+                borderRadius: '20px',
+            }}
+            className="bg-neutral-50 dark:bg-neutral-900 py-3.5 px-4 flex shadow-md  border-neutral-200 dark:border-neutral-800 opacity-95"
         >
             <div className="flex items-center text-neutral-900 dark:text-neutral-50 w-full mb-2">
                 <div

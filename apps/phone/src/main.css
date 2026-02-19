@@ -1,11 +1,12 @@
-@import url('non.geist');
+/* @import url('non.geist'); */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Sixtyfour+Convergence&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: 'Geist Variable', sans-serif;
+  font-family: 'Roboto', sans-serif;
     font-size: 20px;
     margin: 0;
     padding: 0;
@@ -15,7 +16,7 @@ body {
 }
 
 code {
-  font-family: 'Geist Variable', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 a,

@@ -46,10 +46,20 @@ build({
       resolveFrom: 'cwd',
       verbose: true,
       copyOnStart: true,
-      assets: {
-        from: ['client/cl_controls.lua'],
-        to: ['../../dist/game/client/cl_controls.lua'],
-      },
+      assets: [
+        {
+          from: 'client/cl_controls.lua',
+          to: '../../dist/game/client/cl_controls.lua',
+        },
+        {
+          from: 'client/bank/bank.lua',
+          to: '../../dist/game/client/bank.lua',
+        },
+        {
+          from: 'server/bank/bank.lua',
+          to: '../../dist/game/server/bank.lua',
+        },
+      ],
     }),
   ],
 })

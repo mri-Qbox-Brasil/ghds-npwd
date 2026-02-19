@@ -58,7 +58,7 @@ import ExampleIcon from '../icons/material/app/EXAMPLE';
 import ZapIcon from '../icons/material/app/ZAP';
 import WeatherIcon from '../icons/material/app/WEATHER';
 import BankIcon from '../icons/material/app/BANK';
-import { BankApp } from '@apps/bank/components/BankApp';
+import BankApp from '@apps/bank/components/BankApp';
 
 export interface IAppConfig {
   id: string;
@@ -92,6 +92,17 @@ export const APPS: IAppConfig[] = [
     Route: () => <AppRoute id="DIALER" path="/phone" component={DialerApp} emitOnOpen={false} />,
   },
   {
+    id: 'CONTACTS',
+    nameLocale: 'APPS_CONTACTS',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    icon: <ContactIcon />,
+    color: CONTACTS_APP_TEXT_COLOR,
+    path: '/contacts',
+    Route: () => (
+      <AppRoute id="CONTACTS" path="/contacts" component={ContactsApp} emitOnOpen={false} />
+    ),
+  },
+  {
     id: 'BROWSER',
     nameLocale: 'BROWSER.NAME',
     path: '/browser',
@@ -110,28 +121,6 @@ export const APPS: IAppConfig[] = [
     path: '/messages',
     Route: () => (
       <AppRoute id="MESSAGES" path="/messages" component={MessagesApp} emitOnOpen={false} />
-    ),
-  },
-  {
-    id: 'DARKCHAT',
-    nameLocale: 'APPS_DARKCHAT',
-    icon: <DarkchatIcon />,
-    backgroundColor: "#ffffff",
-    color: DARKCHAT_APP_TEXT_COLOR,
-    path: '/darkchat',
-    Route: () => (
-      <AppRoute id="DARKCHAT" path="/darkchat" component={DarkChatApp} emitOnOpen={false} />
-    ),
-  },
-  {
-    id: 'CONTACTS',
-    nameLocale: 'APPS_CONTACTS',
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-    icon: <ContactIcon />,
-    color: CONTACTS_APP_TEXT_COLOR,
-    path: '/contacts',
-    Route: () => (
-      <AppRoute id="CONTACTS" path="/contacts" component={ContactsApp} emitOnOpen={false} />
     ),
   },
   {
@@ -154,6 +143,17 @@ export const APPS: IAppConfig[] = [
     path: '/settings',
     Route: () => (
       <AppRoute id="SETTINGS" path="/settings" component={SettingsApp} emitOnOpen={false} />
+    ),
+  },
+  {
+    id: 'DARKCHAT',
+    nameLocale: 'APPS_DARKCHAT',
+    icon: <DarkchatIcon />,
+    backgroundColor: "#ffffff",
+    color: DARKCHAT_APP_TEXT_COLOR,
+    path: '/darkchat',
+    Route: () => (
+      <AppRoute id="DARKCHAT" path="/darkchat" component={DarkChatApp} emitOnOpen={false} />
     ),
   },
   {

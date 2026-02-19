@@ -105,6 +105,10 @@
       "value": "pt"
     },
     {
+      "label": "Português Brasileiro",
+      "value": "ptbr"
+    },
+    {
       "label": "Hungarian",
       "value": "hu"
     },
@@ -256,7 +260,7 @@
     "MARKETPLACE_notifyNewListing": true
   },
   "appSettings": {
-    "browserHomePage": "https://docs.projecterror.dev"
+    "browserHomePage": "https://docs.mriqbox.com.br"
   },
   "iconSet": [
     {

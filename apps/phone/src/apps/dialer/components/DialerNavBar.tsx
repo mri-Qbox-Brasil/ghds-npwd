@@ -1,55 +1,109 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Theme } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
-import PhoneIcon from '@mui/icons-material/Phone';
-import PersonIcon from '@mui/icons-material/Person';
-import HistoryIcon from '@mui/icons-material/History';
+import { IoIosKeypad } from '@react-icons/all-files/io/IoIosKeypad';
+import { AiOutlineUser } from '@react-icons/all-files/ai/AiOutlineUser';
+import { AiOutlineHistory } from '@react-icons/all-files/ai/AiOutlineHistory';
 import { useTranslation } from 'react-i18next';
-import { Contact, History, Phone } from 'lucide-react';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: 'transparent', 
+    boxShadow: 'none', 
+  },
+  BottomNavigation: {
+    backgroundColor: 'transparent',
+    onClick: 'none',
   },
   icon: {
-    color: theme.palette.primary.main,
+    width: '30px',
+    height: '30px', 
+    color: '#8e8e93', 
+    marginBottom: '4px',
+  },
+  selectedIcon: {
+    width: '30px',
+    height: '30px', 
+    color: '#007aff',
+    marginBottom: '4px',
+  },
+  label: {
+    fontSize: '8pt',
+    color: '#8e8e93',
+  },
+  selectedLabel: {
+    fontSize: '8pt !important',
+    color: '#007aff',
+    fontWeight: '500',
   },
 }));
 
 const DialerNavBar: React.FC = () => {
   const classes = useStyles();
-  const { pathname } = useLocation();
-  const [page, setPage] = useState(pathname);
+  const location = useLocation();
+  const [page, setPage] = useState(location.pathname); // Inicializa com o pathname atual
   const [t] = useTranslation();
+
+  // Sincroniza o estado com a rota ativa
+  useEffect(() => {
+    setPage(location.pathname);
+  }, [location]);
 
   const handleChange = (_e, newPage) => {
     setPage(newPage);
   };
 
   return (
-    <BottomNavigation value={page} onChange={handleChange} showLabels className={classes.root}>
+    <BottomNavigation
+      value={page}
+      onChange={handleChange}
+      showLabels
+      className={classes.root}
+    >
       <BottomNavigationAction
+        label={t('DIALER.NAVBAR_HISTORY')}
         value="/phone"
         component={NavLink}
-        icon={<History />}
         to="/phone"
+        icon={
+          <AiOutlineHistory
+            className={page === '/phone' ? classes.selectedIcon : classes.icon}
+          />
+        }
+        classes={{
+          label: page === '/phone' ? classes.selectedLabel : classes.label,
+        }}
       />
       <BottomNavigationAction
+        label={t('DIALER.NAVBAR_DIAL')}
         value="/phone/dial"
-        color="secondary"
         component={NavLink}
-        icon={<Phone />}
         to="/phone/dial"
+        icon={
+          <IoIosKeypad
+            className={page === '/phone/dial' ? classes.selectedIcon : classes.icon}
+          />
+        }
+        classes={{
+          label: page === '/phone/dial' ? classes.selectedLabel : classes.label,
+        }}
       />
       <BottomNavigationAction
+        label={t('DIALER.NAVBAR_CONTACTS')}
         value="/phone/contacts"
-        color="secondary"
         component={NavLink}
-        icon={<Contact />}
         to="/phone/contacts"
+        icon={
+          <AiOutlineUser
+            className={page === '/phone/contacts' ? classes.selectedIcon : classes.icon}
+          />
+        }
+        classes={{
+          label: page === '/phone/contacts' ? classes.selectedLabel : classes.label,
+        }}
       />
     </BottomNavigation>
   );

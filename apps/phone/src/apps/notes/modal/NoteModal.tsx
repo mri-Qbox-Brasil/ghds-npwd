@@ -1,14 +1,14 @@
-import { Button, Slide, Paper, Typography, Container, Box } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Box, Slide, Paper, Typography, Container } from '@mui/material';
+import React, { useEffect, useState, useRef } from 'react';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import useStyles from './modal.styles';
 import { useTranslation } from 'react-i18next';
-import { StatusButton } from '@ui/components/StatusButton';
-import { TextField } from '@ui/components/Input';
 import { useModalVisible, useSelectedNote } from '../hooks/state';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useNotesAPI } from '../hooks/useNotesAPI';
 import { useTheme } from '@mui/material';
+import { RiDeleteBin2Line } from '@react-icons/all-files/ri/RiDeleteBin2Line';
+import { RiEditBoxLine } from "@react-icons/all-files/ri/RiEditBoxLine";
 
 export const NoteModal: React.FC = () => {
   const classes = useStyles();
@@ -23,6 +23,8 @@ export const NoteModal: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
 
+  const titleRef = useRef<HTMLTextAreaElement | null>(null);
+
   const isNewNote = !Boolean(selectedNote?.id);
 
   useEffect(() => {
@@ -31,6 +33,17 @@ export const NoteModal: React.FC = () => {
       setNoteTitle(selectedNote.title);
     }
   }, [selectedNote]);
+
+  useEffect(() => {
+    if (titleRef.current) {
+      adjustHeight(titleRef.current);
+    }
+  }, [noteTitle]);
+
+  const adjustHeight = (element: HTMLTextAreaElement) => {
+    element.style.height = 'auto'; // Reseta a altura para recalcular
+    element.style.height = `${element.scrollHeight}px`; // Ajusta a altura com base no conteúdo
+  };
 
   const handleDeleteNote = () => {
     deleteNote({ id: selectedNote.id })
@@ -84,87 +97,105 @@ export const NoteModal: React.FC = () => {
       unmountOnExit
       onExited={handleClearContent}
     >
-      <Paper className={classes.modalRoot} square>
+      <Paper className={classes.modalRoot} square elevation={0} sx={{ padding: '16px' }}>
         <Container>
-          <Box>
-            <Box py={2}>
-              <Button
-                color="primary"
-                size="large"
-                startIcon={<ArrowBackIcon fontSize="large" />}
-                onClick={_handleClose}
-              >
+          <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+            <Box
+              onClick={_handleClose}
+              sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+            >
+              <ArrowBackIosNewRoundedIcon
+                style={{
+                  color: phoneTheme.palette.primary.main,
+                  marginRight: '2px',
+                  marginLeft: '-25px',
+                }}
+              />
+              <Typography variant="body1" color="primary">
                 {t('APPS_NOTES')}
-              </Button>
+              </Typography>
             </Box>
-            <TextField
-              className={classes.input}
-              maxRows={1}
-              label={t('GENERIC.TITLE')}
-              inputProps={{
-                className: classes.inputPropsTitle,
-                maxLength: 25,
+            <Box
+              onClick={isNewNote ? handleNewNote : handleUpdateNote}
+              sx={{
+                cursor: noteTitle.length === 0 ? 'default' : 'pointer',
+                color: phoneTheme.palette.primary.main,
+                fontWeight: 'lighter',
+                fontSize: '16px',
+                opacity: noteTitle.length === 0 ? 0.5 : 1,
+                marginRight: '-10px',
               }}
-              fullWidth
+            >
+              {isNewNote ? t('GENERIC_SAVE') : t('GENERIC_DONE')}
+            </Box>
+          </Box>
+          {/* Campos de título e conteúdo da nota */}
+          <Box mb={2}>
+            <textarea
+              ref={titleRef}
+              className={classes.input}
+              rows={1} // Começa com uma linha
+              placeholder="Título"
+              maxLength={30} // Aumentei o limite para permitir um título maior
               value={noteTitle}
-              onChange={handleTitleChange}
-            />
-            <TextField
-              className={classes.input}
-              inputProps={{
-                className: classes.inputPropsContent,
-                maxLength: 250,
+              onChange={(e) => {
+                handleTitleChange(e);
+                if (e.target) {
+                  adjustHeight(e.target as HTMLTextAreaElement);
+                }
               }}
-              label={t('GENERIC.CONTENT')}
-              multiline
-              fullWidth
-              rows={16}
-              variant="outlined"
+              style={{
+                width: '100%',
+                fontSize: '1.5rem',
+                fontWeight: 'bold',
+                border: 'none',
+                outline: 'none',
+                resize: 'none', // Não permite ao usuário redimensionar manualmente
+                marginBottom: '8px',
+                overflow: 'hidden', // Evita barras de rolagem
+              }}
+            />
+            <textarea
+              className={classes.input}
+              placeholder="Conteúdo"
+              maxLength={250}
+              rows={10}
               value={noteContent}
               onChange={handleContentChange}
+              style={{
+                width: '100%',
+                fontSize: '1rem',
+                border: 'none',
+                outline: 'none',
+                resize: 'none',
+                lineHeight: '1.5',
+              }}
             />
-            <Typography paragraph>{noteContent.length}/250</Typography>
-            {isNewNote ? (
-              <>
-                <Box display="inline" p={1}>
-                  <Button
-                    variant="contained"
-                    disabled={noteTitle.length <= 0}
-                    onClick={handleNewNote}
-                  >
-                  {<Typography style={noteTitle.length <= 0 && {color:  phoneTheme.palette.text.disabled} || {color:  phoneTheme.palette.text.primary}}>
-                    {t('GENERIC.SAVE')}
-                  </Typography>}
-                  </Button>
-                </Box>
-                <Box display="inline" p={1}>
-                  <StatusButton color="error" variant="contained" onClick={_handleClose}>
-                    {<Typography style={{ color: phoneTheme.palette.text.primary }}>{t('GENERIC.CANCEL')}</Typography>} 
-                  </StatusButton>
-                </Box>
-              </>
-            ) : (
-              <>
-                <Box display="inline" p={1}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={handleUpdateNote}
-                    disabled={noteTitle.length <= 0}
-                  >
-                    {<Typography style={noteTitle.length <= 0 && {color:  phoneTheme.palette.text.disabled} || {color:  phoneTheme.palette.text.primary}}>
-                      {t('GENERIC.UPDATE')}
-                    </Typography>}
-                  </Button>
-                </Box>
-                <Box display="inline" p={1}>
-                  <StatusButton color="error" variant="contained" onClick={handleDeleteNote}>
-                      {<Typography style={{ color: phoneTheme.palette.text.primary }}>{t('GENERIC.DELETE')}</Typography>}
-                  </StatusButton>
-                </Box>
-              </>
-            )}
+            <Typography align="right" variant="body2" color="text.disabled">
+              {noteContent.length}/250
+            </Typography>
           </Box>
+          {/* Ícone de lixeira na parte inferior */}
+          {!isNewNote && (
+            <Box
+              className={`${classes.absoluteLeft}`}
+              onClick={handleDeleteNote}
+              sx={{
+                cursor: 'pointer',
+                color: phoneTheme.palette.error.main,
+                fontWeight: 'lighter',
+                fontSize: '24px',
+                display: 'flex',
+                alignItems: 'left',
+                justifyContent: 'left',
+                mt: 4,
+              }}
+            >
+              <RiDeleteBin2Line />
+            </Box>
+          )}
+          <RiEditBoxLine className={`${classes.absoluteRight} ${classes.button}`}>
+          </RiEditBoxLine>
         </Container>
       </Paper>
     </Slide>

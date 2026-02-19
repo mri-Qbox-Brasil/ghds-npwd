@@ -11,11 +11,10 @@
   },
   "general": {
     "useResourceIntegration": false,
-    "toggleKey": "f1",
+    "toggleKey": "k",
     "toggleCommand": "phone",
-    "defaultLanguage": "en",
-    "showId": false,
-    "phoneNumberFormat": "/(\\d{3})(\\d{3})(\\d{4})/"
+    "defaultLanguage": "ptbr",
+    "showId": false
   },
   "contacts": {
     "frameworkPay": false,
@@ -59,12 +58,13 @@
       "upcdn.io",
       "i.fivemanage.com",
       "api.fivemanage.com",
-      "r2.fivemanage.com"
+      "r2.fivemanage.com",
+      "mriqbox.com.br"
     ]
   },
   "profanityFilter": {
     "enabled": false,
-    "badWords": ["esx"]
+    "badWords": ["esx", "vrp"]
   },
   "twitter": {
     "showNotifications": true,
@@ -89,7 +89,7 @@
     "persistListings": false
   },
   "browser": {
-    "homepageUrl": "https://docs.fivemanage.com"
+    "homepageUrl": "https://mriqbox.com.br"
   },
   "debug": {
     "level": "error",
@@ -102,7 +102,7 @@
   "voiceMessage": {
     "enabled": false,
     "authorizationHeader": "Authorization",
-    "url": "https://api.fivemanage/api/audio",
+    "url": "https://api.fivemange/api/audio",
     "returnedDataIndexes": ["url"]
   }
 }

@@ -32,18 +32,19 @@ export const AppContent: React.FC<AppContentTypes & BoxProps> = ({
   const classes = useStyles();
 
   return (
-    <div
-      className="flex flex-col flex-1 bg-neutral-100 dark:bg-neutral-900"
-      style={backdrop ? { overflow: 'hidden' } : { overflow: 'auto' }}
-    >
-      <Backdrop className={classes.backdrop} open={backdrop || false} onClick={onClickBackdrop} />
-      <div className={classNames('flex-auto w-full grow', props.className)} style={paperStyle}>
-        {!disableSuspenseHandler ? (
-          <React.Suspense fallback={<LoadingSpinner />}>{children}</React.Suspense>
-        ) : (
-          { children }
-        )}
-      </div>
-    </div>
+<div
+  className="flex flex-col flex-1 bg-[#F6F6F67] dark:bg-black" // Corrigido uso de cor hex e modo escuro
+  style={backdrop ? { overflow: 'hidden' } : { overflow: 'auto' }}
+>
+  <Backdrop className={classes.backdrop} open={backdrop || false} onClick={onClickBackdrop} />
+  <div className={classNames('flex-auto w-full grow', props.className)} style={paperStyle}>
+    {!disableSuspenseHandler ? (
+      <React.Suspense fallback={<LoadingSpinner />}>{children}</React.Suspense>
+    ) : (
+      children
+    )}
+  </div>
+</div>
+
   );
 };

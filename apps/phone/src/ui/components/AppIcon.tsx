@@ -2,16 +2,19 @@ import React from 'react';
 import { darken, Theme } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
 import { green } from '@mui/material/colors';
-import { Badge, Button, Zoom } from '@mui/material';
+import { Badge } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { INotificationIcon } from '@os/notifications/providers/NotificationsProvider';
-import { Tooltip } from './Tooltip';
 
 const useStyles = makeStyles<Theme, { color: string; backgroundColor: string }>((theme) => ({
   root: {
     padding: 0,
     background: 'transparent',
-    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    textAlign: 'center',
+    width: '90px', // Define a largura máxima para o ícone e o texto
   },
   avatar: {
     '&:hover': {
@@ -23,22 +26,30 @@ const useStyles = makeStyles<Theme, { color: string; backgroundColor: string }>(
       return `linear-gradient(45deg, ${darken(backgroundColor, 0.2)} 20%, ${backgroundColor} 90%)`;
     },
     color: ({ color }) => color,
-    // boxShadow: theme.shadows[2],
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 18,
-    width: theme.spacing(9.2),
-    height: theme.spacing(9.2),
+    borderRadius: 14,
+    width: theme.spacing(7.2),
+    height: theme.spacing(7.2),
     fontSize: theme.typography.h4.fontSize,
   },
   icon: {
     fontSize: theme.typography.h4.fontSize,
-    width: theme.spacing(9),
-    height: theme.spacing(9),
+    width: theme.spacing(7.2),
+    height: theme.spacing(7.2),
   },
-  tooltip: {
-    fontSize: 12,
+  name: {
+    marginTop: theme.spacing(0.5),
+    fontSize: '12px',
+    color: 'white',
+    weight: 'bold',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: '80px',
+    textAlign: 'center', 
+    textShadow: '1px 1px 1px rgba(0, 0, 0, 0.3)',
   },
 }));
 
@@ -80,6 +91,7 @@ export const AppIcon: React.FC<AppIconProps> = ({
           <div className={classes.avatar}>{icon || t(nameLocale)}</div>
         )}
       </Badge>
+      <span className={classes.name}>{t(nameLocale)}</span>
     </button>
   );
 };

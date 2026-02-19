@@ -1,5 +1,7 @@
+// NoteList.tsx (simplificado, removendo a parte da contagem)
+
 import React from 'react';
-import { Box, List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Box, List, ListItem, Typography, Divider, Paper } from '@mui/material';
 import { useNotesValue, useSetModalVisible } from '../hooks/state';
 import { useSetSelectedNote } from '../hooks/state';
 import { NoteItem } from '@typings/notes';
@@ -10,11 +12,9 @@ import { useHistory } from 'react-router-dom';
 import { addQueryToLocation } from '@common/utils/addQueryToLocation';
 import { getLocationFromUrl } from '@common/utils/getLocationFromUrl';
 
-// TODO: add search bar later
 const NoteList = () => {
   const notes = useNotesValue();
   const setNote = useSetSelectedNote();
-  const [t] = useTranslation();
   const setModalVisible = useSetModalVisible();
   const query = useQueryParams();
   const history = useHistory();
@@ -31,37 +31,88 @@ const NoteList = () => {
     setModalVisible(true);
   };
 
-  if (notes && notes.length)
+  if (notes && notes.length) {
     return (
-      <List disablePadding>
-        {notes.map((note) => (
-          <ListItem key={note.id} button divider onClick={() => handleNoteModal(note)}>
-            <ListItemText>
-              {
-                <Typography style={{ color: phoneTheme.palette.text.primary }}>
-                  {note.title}
-                </Typography>
-              }
-            </ListItemText>
-          </ListItem>
-        ))}
-      </List>
+      <Box sx={{ paddingX: '16px', paddingTop: '16px', width: '100%' }}>
+        <Paper
+          elevation={0}
+          sx={{
+            width: '100%',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            backgroundColor: phoneTheme.palette.background.paper, // Fundo branco para imitar o iPhone
+          }}
+        >
+          <List disablePadding sx={{ width: '100%' }}>
+            {notes.map((note, index) => (
+              <React.Fragment key={note.id}>
+                <ListItem
+                  button
+                  onClick={() => handleNoteModal(note)}
+                  sx={{
+                    paddingY: '12px',
+                    paddingX: '6%',
+                    alignItems: 'flex-start',
+                    transition: 'background-color 0.2s',
+                    '&:hover': {
+                      backgroundColor: phoneTheme.palette.action.hover,
+                    },
+                  }}
+                >
+                  <Box sx={{ width: '100%' }}>
+                    <Typography
+                      variant="subtitle1"
+                      sx={{
+                        fontWeight: 'bold',
+                        color: phoneTheme.palette.text.primary,
+                      }}
+                    >
+                      {note.title}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: phoneTheme.palette.text.disabled,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {note.content || 'Sem conteúdo disponível'}
+                    </Typography>
+                  </Box>
+                </ListItem>
+                {index < notes.length - 1 && (
+                  <Divider
+                    sx={{
+                      borderBlockWidth: '%0.01',
+                      marginLeft: '6%', // Deixar o divisor com uma margem horizontal
+                    }}
+                  />
+                )}
+              </React.Fragment>
+            ))}
+          </List>
+        </Paper>
+      </Box>
     );
+  }
 
   return (
     <Box
       display="flex"
-      justifyContent="center"
+      justifyContent="top"
       alignItems="center"
       flexDirection="column"
       height="100%"
+      marginTop={'16px'}
     >
       <Typography
         color="inherit"
-        variant="h6"
+        variant="subtitle2"
         style={{ fontWeight: 300, color: phoneTheme.palette.text.primary }}
       >
-        {t('NOTES.FEEDBACK.NO_NOTES')}
+        Nenhuma anotação disponível
       </Typography>
     </Box>
   );
