@@ -19,6 +19,7 @@ import InjectDebugData from './os/debug/InjectDebugData';
 import { NotificationAlert } from '@os/notifications/components/NotificationAlert';
 import { useCallModal } from '@os/call/hooks/useCallModal';
 import WindowSnackbar from './ui/components/WindowSnackbar';
+import { GameBlur } from './ui/components/GameBlur';
 import { useTranslation } from 'react-i18next';
 import { PhoneEvents } from '@typings/phone';
 import PhoneWrapper from './PhoneWrapper';
@@ -85,6 +86,7 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
 
   return (
     <div>
+      <GameBlur />
       <TopLevelErrorComponent>
         <WindowSnackbar />
         <PhoneWrapper>
