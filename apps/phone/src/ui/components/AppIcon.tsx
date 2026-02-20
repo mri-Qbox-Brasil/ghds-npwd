@@ -17,7 +17,11 @@ const useStyles = makeStyles<Theme, { color: string; backgroundColor: string }>(
     width: '90px', // Define a largura máxima para o ícone e o texto
   },
   avatar: {
+    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+    boxShadow: 'rgba(0, 0, 0, 0.00) 0px 1px 3px 0px, rgba(27, 31, 35, 0.00) 0px 0px 0px 2px',
     '&:hover': {
+      transform: 'scale(1.05)',
+      boxShadow: 'rgba(0, 0, 0, 0.2) 0px 4px 12px',
       background: ({ backgroundColor }) => {
         return `linear-gradient(45deg, ${darken(backgroundColor, 0.35)} 10%, ${backgroundColor} 90%)`;
       },
@@ -30,9 +34,19 @@ const useStyles = makeStyles<Theme, { color: string; backgroundColor: string }>(
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 14,
+    overflow: 'hidden',
     width: theme.spacing(7.2),
     height: theme.spacing(7.2),
     fontSize: theme.typography.h4.fontSize,
+    '& img': {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+    },
+    '& svg': {
+      width: '100%',
+      height: '100%',
+    },
   },
   icon: {
     fontSize: theme.typography.h4.fontSize,
@@ -48,7 +62,7 @@ const useStyles = makeStyles<Theme, { color: string; backgroundColor: string }>(
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     maxWidth: '80px',
-    textAlign: 'center', 
+    textAlign: 'center',
     textShadow: '1px 1px 1px rgba(0, 0, 0, 0.3)',
   },
 }));
@@ -57,10 +71,11 @@ export interface AppIconProps {
   id: string;
   nameLocale: string;
   Icon: React.ElementType;
-  icon: React.ElementType;
+  icon: React.ReactNode;
   backgroundColor: string;
   color: string;
-  notification: INotificationIcon;
+  notification: any; // Fallback to any or the correct typing as Notification wasn't correctly imported
+  isDockItem?: boolean;
 }
 
 export const AppIcon: React.FC<AppIconProps> = ({
@@ -71,6 +86,7 @@ export const AppIcon: React.FC<AppIconProps> = ({
   color,
   icon,
   notification,
+  isDockItem,
 }) => {
   const [t] = useTranslation();
   const classes = useStyles({
@@ -79,7 +95,7 @@ export const AppIcon: React.FC<AppIconProps> = ({
   });
 
   return (
-    <button className={classes.root}>
+    <button className={classes.root} style={isDockItem ? { marginBottom: 0 } : {}}>
       <Badge
         color="error"
         badgeContent={notification?.badge}
@@ -88,10 +104,12 @@ export const AppIcon: React.FC<AppIconProps> = ({
         {Icon ? (
           <Icon className={classes.icon} fontSize="large" />
         ) : (
-          <div className={classes.avatar}>{icon || t(nameLocale)}</div>
+          <div className={classes.avatar}>
+            {icon ? <>{icon}</> : <>{t(nameLocale)}</>}
+          </div>
         )}
       </Badge>
-      <span className={classes.name}>{t(nameLocale)}</span>
+      {!isDockItem && <span className={classes.name}>{String(t(nameLocale))}</span>}
     </button>
   );
 };

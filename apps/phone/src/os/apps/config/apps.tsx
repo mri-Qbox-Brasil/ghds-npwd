@@ -55,7 +55,6 @@ import MarketplaceIcon from '../icons/material/app/MARKETPLACE';
 import NotesIcon from '../icons/material/app/NOTES';
 import Camera from '../icons/material/app/CAMERA';
 import ExampleIcon from '../icons/material/app/EXAMPLE';
-import ZapIcon from '../icons/material/app/ZAP';
 import WeatherIcon from '../icons/material/app/WEATHER';
 import BankIcon from '../icons/material/app/BANK';
 import BankApp from '@apps/bank/components/BankApp';
@@ -239,7 +238,7 @@ if (import.meta.env.DEV) {
   APPS.push({
     id: 'EXAMPLE',
     nameLocale: 'APPS_EXAMPLE',
-    icon: <ExampleIcon/>,
+    icon: <ExampleIcon />,
     backgroundColor: blue[500],
     color: blue[50],
     path: '/example',
