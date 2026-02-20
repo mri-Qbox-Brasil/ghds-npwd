@@ -2,9 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import makeStyles from '@mui/styles/makeStyles';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Whatshot';
-import GroupIcon from '@mui/icons-material/Group';
-import ProfileIcon from '@mui/icons-material/Person';
+import { Flame, Users, User } from 'lucide-react';
 
 const useStyles = makeStyles({
   root: {
@@ -17,9 +15,9 @@ export function MatchBottomNavigation({ activePage, handleChange }) {
 
   return (
     <BottomNavigation value={activePage} onChange={handleChange} className={classes.root}>
-      <BottomNavigationAction component={Link} to="/match" icon={<HomeIcon />} />
-      <BottomNavigationAction component={Link} to="/match/matches" icon={<GroupIcon />} />
-      <BottomNavigationAction component={Link} to="/match/profile" icon={<ProfileIcon />} />
+      <BottomNavigationAction component={Link} to="/match" icon={<Flame />} />
+      <BottomNavigationAction component={Link} to="/match/matches" icon={<Users />} />
+      <BottomNavigationAction component={Link} to="/match/profile" icon={<User />} />
     </BottomNavigation>
   );
 }

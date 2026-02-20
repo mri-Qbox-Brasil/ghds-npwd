@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { TextField } from '@ui/components/Input';
 import { IconButton, styled, Tooltip } from '@mui/material';
 import { Box } from '@mui/material';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { ImagePlus } from 'lucide-react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { deleteQueryFromLocation } from '@common/utils/deleteQueryFromLocation';
 import qs from 'qs';
@@ -66,7 +66,7 @@ export const ImagePrompt = ({ visible, value, handleChange }) => {
       />
       <Tooltip placement="left" title="Select an image from your gallery">
         <IconButton onClick={handleChooseImage}>
-          <AddPhotoAlternateIcon />
+          <ImagePlus />
         </IconButton>
       </Tooltip>
     </Box>

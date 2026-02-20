@@ -14,7 +14,7 @@ import {
 } from './SettingItem';
 import { useTranslation } from 'react-i18next';
 
-import { FileCopy } from '@mui/icons-material';
+import { Copy } from 'lucide-react';
 import {
   BookA,
   EyeOff,
@@ -192,7 +192,7 @@ export const SettingsApp: React.FC = () => {
                 content: 'number',
               })}
               Icon={Phone}
-              actionIcon={<FileCopy />}
+              actionIcon={<Copy />}
               handleAction={handleCopyPhoneNumber}
               theme={theme}
             />

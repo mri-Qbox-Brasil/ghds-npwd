@@ -1,5 +1,5 @@
-import { Language } from '@mui/icons-material';
+import { Globe } from 'lucide-react';
 
-const BrowserIcon = () => <Language fontSize="small" />;
+const BrowserIcon = () => <Globe />;
 
 export default BrowserIcon;

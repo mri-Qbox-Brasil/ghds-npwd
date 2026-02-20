@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { Box, Button, styled } from '@mui/material';
-import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
-import EmojiIcon from '@mui/icons-material/SentimentSatisfied';
+import { Image, Smile } from 'lucide-react';
 import { usePhone } from '@os/phone/hooks/usePhone';
 
 const ButtonContainer = styled(Box)({
@@ -26,12 +25,12 @@ export const IconButtons = ({ onImageClick, onEmojiClick }) => {
     <ButtonContainer>
       {enableImages && (
         <ButtonWrapper onClick={onImageClick}>
-          <InsertPhotoIcon color="action" />
+          <Image className="text-gray-500" />
         </ButtonWrapper>
       )}
       {enableEmojis && (
         <ButtonWrapper onClick={onEmojiClick}>
-          <EmojiIcon color="action" />
+          <Smile />
         </ButtonWrapper>
       )}
     </ButtonContainer>

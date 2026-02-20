@@ -1,28 +1,23 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
-import { Fab } from '@mui/material';
-import PublishIcon from '@mui/icons-material/Publish';
-
-const useStyles = makeStyles({
-  root: {
-    position: 'absolute',
-    bottom: '15px',
-    right: '15px',
-  },
-});
+import { UploadCloud } from 'lucide-react'; // Equivalente ao PublishIcon
+import { Button } from './ui/button';
+import { cn } from '@utils/css';
 
 interface ProfileUpdateButtonProps {
   handleClick: () => void;
 }
 
 export const ProfileUpdateButton: React.FC<ProfileUpdateButtonProps> = ({ handleClick }) => {
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <Fab color="primary" onClick={handleClick}>
-        <PublishIcon />
-      </Fab>
+    <div className="absolute bottom-[15px] right-[15px] z-50">
+      <Button 
+        variant="default"
+        size="icon"
+        onClick={handleClick}
+        className="h-14 w-14 rounded-full shadow-lg"
+      >
+        <UploadCloud className="h-6 w-6" />
+      </Button>
     </div>
   );
 };

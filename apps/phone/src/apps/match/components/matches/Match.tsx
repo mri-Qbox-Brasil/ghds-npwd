@@ -4,8 +4,7 @@ import { useHistory } from 'react-router-dom';
 import ListItemText from '@mui/material/ListItemText';
 import { Box, Button, ListItem } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import PersonIcon from '@mui/icons-material/Person';
-import ChatIcon from '@mui/icons-material/Chat';
+import { User, MessageCircle } from 'lucide-react';
 
 import { FormattedMatch } from '@typings/match';
 import Profile from '../profile/Profile';
@@ -45,10 +44,10 @@ export const Match = ({ match }: IProps) => {
       <ListItem divider>
         <ListItemText primary={match.name} secondary={secondaryText} />
         <Button onClick={handleProfile}>
-          <PersonIcon />
+          <User />
         </Button>
         <Button onClick={handleMessage}>
-          <ChatIcon />
+          <MessageCircle />
         </Button>
       </ListItem>
       {showProfile && (

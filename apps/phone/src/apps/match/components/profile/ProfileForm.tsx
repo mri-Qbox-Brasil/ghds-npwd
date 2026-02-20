@@ -17,10 +17,8 @@ import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 import { deleteQueryFromLocation } from '@common/utils/deleteQueryFromLocation';
-import MicIcon from '@mui/icons-material/Mic';
+import { Mic, Play, Pause } from 'lucide-react';
 import { useAudioPlayer } from '@os/audio/hooks/useAudioPlayer';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
 import RecordVoiceMessage from '../RecordVoiceMessage';
 import Backdrop from '@ui/components/Backdrop';
 import { blobToBase64 } from '@utils/seralize';
@@ -221,14 +219,14 @@ export function ProfileForm({ profile, showPreview }: IProps) {
 
           <Stack direction="row">
             <IconButton onClick={() => setRecordVoiceMessage(true)}>
-              <MicIcon />
+              <Mic />
             </IconButton>
 
             {profile.voiceMessage && (
               <Box sx={{ width: '100%' }}>
                 <Box display="flex" alignItems="center">
                   <IconButton onClick={playing ? pause : play}>
-                    {playing ? <PauseIcon /> : <PlayArrowIcon />}
+                    {playing ? <Pause /> : <Play />}
                   </IconButton>
                   <Box sx={{ width: '60%' }}>
                     {!calculateProgress && playing ? (

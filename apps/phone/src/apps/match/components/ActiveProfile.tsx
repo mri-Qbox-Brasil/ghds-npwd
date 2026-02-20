@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Card, Fab, Box } from '@mui/material';
-import CancelIcon from '@mui/icons-material/Clear';
-import FireIcon from '@mui/icons-material/Whatshot';
+import { X, Flame } from 'lucide-react';
 import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 
@@ -142,7 +141,7 @@ const ActiveProfile = ({ profile, onSwipe }: IProps) => {
             onClick={handleNope}
             className={c.button}
           >
-            <CancelIcon />
+            <X />
           </Fab>
         </Tooltip>
         <Tooltip title={t('MATCH.LIKE')} aria-label="like">
@@ -153,7 +152,7 @@ const ActiveProfile = ({ profile, onSwipe }: IProps) => {
             onClick={handleLike}
             className={c.button}
           >
-            <FireIcon />
+            <Flame />
           </Fab>
         </Tooltip>
       </Box>

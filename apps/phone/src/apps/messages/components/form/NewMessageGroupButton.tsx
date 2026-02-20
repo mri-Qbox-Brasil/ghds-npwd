@@ -1,6 +1,6 @@
 import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
-import { Add, Delete } from '@mui/icons-material';
+import { Plus, Trash2 } from 'lucide-react';
 import { Fab } from '@mui/material';
 import { useCheckedConversationsValue, useIsEditing } from '../../hooks/state';
 import { useMessageAPI } from '../../hooks/useMessageAPI';
@@ -37,7 +37,7 @@ export const NewMessageGroupButton: React.FC<NewMessageGroupButtonProps> = ({ on
         toggleKeys(false);
       }}
     >
-      {!isEditing ? <Add /> : <Delete />}
+      {!isEditing ? <Plus /> : <Trash2 />}
     </button>
   );
 };

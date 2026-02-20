@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { useActiveDarkchatValue, useDarkchatMembersValue } from '@apps/darkchat/state/state';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { useMyPhoneNumber } from '@os/simcard/hooks/useMyPhoneNumber';
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { ArrowLeftRight } from 'lucide-react';
 
 interface OwnerModalProps {
   open: boolean;
@@ -70,7 +70,7 @@ export const OwnerModal: React.FC<OwnerModalProps> = ({ open, closeModal }) => {
                         edge="end"
                         aria-label="delete"
                       >
-                        <SwapHorizIcon />
+                        <ArrowLeftRight />
                       </IconButton>
                     </Tooltip>
                   }

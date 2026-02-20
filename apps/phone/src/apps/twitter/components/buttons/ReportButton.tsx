@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, CircularProgress, MenuItem } from '@mui/material';
-import DoneIcon from '@mui/icons-material/Done';
+import { Check } from 'lucide-react';
 import { TwitterEvents } from '@typings/twitter';
 import fetchNui from '@utils/fetchNui';
 import { ServerPromiseResp } from '@typings/common';
@@ -36,8 +36,8 @@ function ReportButton({ handleClose, tweetId, isReported }) {
   if (isReported) {
     return (
       <MenuItem onClick={handleClose}>
-        <DoneIcon />
-        <span style={{ marginLeft: '5px' }}>{t('TWITTER.REPORTED')}</span>
+        <Check />
+        {isReported && <Check size={20} className="text-blue-500 ml-2" />}{t('TWITTER.REPORTED')}
       </MenuItem>
     );
   }

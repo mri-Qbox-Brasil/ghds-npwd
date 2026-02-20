@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useCalculator } from '../hooks/useCalculator';
 import { Grid, Box, Paper, Fab, styled } from '@mui/material';
 import { setClipboard } from '@os/phone/hooks/useClipboard';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
+import { Copy } from 'lucide-react';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import { useTranslation } from 'react-i18next';
 import { CalculatorButton } from './CalculatorButton';
@@ -84,7 +84,7 @@ export const Calculator: React.FC = () => {
     <Box display="flex" flexDirection="column">
       <StyledResultWrapper flexGrow={1} component={Paper} p={4} pt={18} length={resultStr.length}>
         <StyledFab size="small" onClick={handleCopyClipboard}>
-          <FileCopyIcon />
+          <Copy />
         </StyledFab>
         {resultStr}
       </StyledResultWrapper>

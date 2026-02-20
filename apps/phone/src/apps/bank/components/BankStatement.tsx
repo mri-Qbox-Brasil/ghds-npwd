@@ -14,7 +14,7 @@ import {
 import { makeStyles } from '@mui/styles';
 import fetchNui from '@utils/fetchNui';
 import AnimationStyles from '../animations';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { UserCircle } from 'lucide-react';
 import TransactionModal from './TransactionModal';
 
 
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: '600',
     borderRadius: '20px 0px 0px 20px',
     color: '#fff',
-    backgroundColor: theme.palette.primary.main,    
+    backgroundColor: theme.palette.primary.main,
     '&:hover': {
       boxShadow: 'inset 0px 68px 28px -5px rgba(255,255,255,0.2)',
 
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: '700',
     fontFamily: 'Noto Sans JP, sans-serif',
 
-   
+
   },
   list: {
     width: '100%',
@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '4px',
     fontFamily: 'Noto Sans JP, sans-serif',
 
-    
+
   },
   avatar: {
     height: '40px',
@@ -181,21 +181,21 @@ const BankStatement = () => {
     fetchTransactions: async () => {
       setLoading(true);
       await fetchNui('getTransactionsFromClient')
-      .then((result) => {
-        if (result) {
-              setTransactions(result);
-        } else {
-          setTransactions(mockTransactions)
-          console.error('Erro ao obter dados do player fetch getTransactionsFromClietn');
+        .then((result) => {
+          if (result) {
+            setTransactions(result);
+          } else {
+            setTransactions(mockTransactions)
+            console.error('Erro ao obter dados do player fetch getTransactionsFromClietn');
+          }
+        })
+        .catch((error) => {
+          console.error('Erro no envio:', error);
+        })
+        .finally(() => {
+          setLoading(false);
         }
-      })
-      .catch((error) => {
-        console.error('Erro no envio:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      }       
-      )
+        )
     },
   };
 
@@ -206,7 +206,7 @@ const BankStatement = () => {
   return (
     <Paper className={classes.root}>
       <Box className={classes.header}>
-        
+
         <Button className={classes.buttonLeft} onClick={() => setOpenModal(true)}>
           TRANSFERIR
           <TransactionModal open={openModal} onClose={() => setOpenModal(false)} />
@@ -218,10 +218,10 @@ const BankStatement = () => {
       </Box>
       <Typography className={classes.title}>Últimas Transferências</Typography>
       <Typography fontSize={12} fontFamily={'Noto Sans JP'} className={classes.balanceAd}>
-          Visite uma de nossas agências para acessar contas de ORG
-          </Typography>
+        Visite uma de nossas agências para acessar contas de ORG
+      </Typography>
       {loading ? (
-        <Box className={classes.list}><CircularProgress color='primary'/></Box>
+        <Box className={classes.list}><CircularProgress color='primary' /></Box>
       ) : (
         <Box className={classes.list}>
           {transactions.map((transaction) => (
@@ -231,18 +231,18 @@ const BankStatement = () => {
               className={classes.listItem}
               style={{
                 background: transaction.type === 'sent'
-                ? `linear-gradient(360deg, rgba(255, 0, 0, ${theme.palette.mode === 'dark' ? 0.336 : 0.336}), rgba(255, 0, 0, ${theme.palette.mode === 'dark' ? 0.436 : 0.2}))`
-                : 
-                `linear-gradient(360deg, rgba(64, 192, 87, ${theme.palette.mode === 'dark' ? 0.336 : 0.336}), rgba(64, 192, 87, ${theme.palette.mode === 'dark' ? 0.436 : 0.2}))`,
+                  ? `linear-gradient(360deg, rgba(255, 0, 0, ${theme.palette.mode === 'dark' ? 0.336 : 0.336}), rgba(255, 0, 0, ${theme.palette.mode === 'dark' ? 0.436 : 0.2}))`
+                  :
+                  `linear-gradient(360deg, rgba(64, 192, 87, ${theme.palette.mode === 'dark' ? 0.336 : 0.336}), rgba(64, 192, 87, ${theme.palette.mode === 'dark' ? 0.436 : 0.2}))`,
               }}
             >
               <Grid item>
-                <AccountCircleIcon className={classes.avatar} />
+                <UserCircle className={classes.avatar} />
               </Grid>
 
               <Grid item className={classes.transactionDetails}>
                 <Typography fontSize={14} fontFamily={'Noto Sans JP, sans-serif'} fontWeight={'700'}>
-                  {transaction.targetName} 
+                  {transaction.targetName}
                 </Typography>
                 <Typography fontSize={11} fontFamily={'Noto Sans JP, sans-serif'}>
                   {transaction.date} - {transaction.identifier}
@@ -251,7 +251,7 @@ const BankStatement = () => {
 
               <Grid item className={classes.amount}>
                 <Typography
-                className={classes.amountText}
+                  className={classes.amountText}
                   sx={{
                     display: 'flex ',
                     justifyContent: 'start',
@@ -267,7 +267,7 @@ const BankStatement = () => {
         </Box>
       )}
 
-  
+
 
     </Paper>
   );

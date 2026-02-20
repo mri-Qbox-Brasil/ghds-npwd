@@ -10,8 +10,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import { Money } from '@mui/icons-material';
+import { UserCircle, Banknote } from 'lucide-react';
 import fetchNui from '@utils/fetchNui';
 
 const useStyles = makeStyles((theme) => ({
@@ -124,7 +123,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({ open, onClose }) =>
             id="input-with-icon-adornment"
             startAdornment={
               <InputAdornment position="start">
-                <AccountCircle />
+                <UserCircle />
               </InputAdornment>
             }
             value={passaporte}
@@ -137,13 +136,13 @@ const TransactionModal: React.FC<TransactionModalProps> = ({ open, onClose }) =>
             <Typography fontSize={16} color={'#fff'} fontFamily={'Noto Sans JP, sans-serif'}>Valor</Typography>
           </InputLabel>
           <Input
-          type='number'
+            type='number'
             placeholder="1500"
             className={classes.modalInput}
             id="input-with-icon-adornment"
             startAdornment={
               <InputAdornment position="start">
-                <Money />
+                <Banknote />
               </InputAdornment>
             }
             value={valor}

@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
 import { Typography, Grid, IconButton, Slide, Paper, Box, List, Divider } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import SignalIcon from '@mui/icons-material/SignalCellular3Bar';
-import Battery90Icon from '@mui/icons-material/Battery90';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import { Signal, Battery, ChevronUp } from 'lucide-react';
 import Default from '../../../config/default.json';
 import { useNotifications } from '../hooks/useNotifications';
 import { NotificationItem } from './NotificationItem';
@@ -112,7 +110,7 @@ export const NotificationBar = () => {
             </Grid>
           )}
           <Grid item>
-            <SignalIcon fontSize="small" />
+            <Signal size={20} />
           </Grid>
           <Grid item className={classes.item}>
             <Typography className={classes.text} variant="button" sx={{ textTransform: 'none' }}>
@@ -120,7 +118,7 @@ export const NotificationBar = () => {
             </Typography>
           </Grid>
           <Grid item>
-            <Battery90Icon style={{ transform: 'rotate(90deg)', display: 'block' }} />
+            <Battery style={{ transform: 'rotate(90deg)', display: 'block' }} size={20} />
           </Grid>
         </Grid>
       </Grid>
@@ -155,7 +153,7 @@ export const NotificationBar = () => {
               size="small"
               onClick={() => setBarUncollapsed(false)}
             >
-              <ArrowDropUpIcon />
+              <ChevronUp />
             </IconButton>
           </Box>
         </Paper>

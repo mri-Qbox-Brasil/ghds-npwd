@@ -1,7 +1,7 @@
 import React, { FocusEventHandler, useRef, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, IconButton } from '@mui/material';
-import { Cached, KeyboardArrowLeft } from '@mui/icons-material';
+import { RefreshCw, ChevronLeft } from 'lucide-react';
 import { InputBase } from '@ui/components/Input';
 
 const PREFIX = 'BrowserURLBar';
@@ -74,11 +74,11 @@ export const BrowserURLBar: React.FC<BrowserControlsProps> = ({
   return (
     <StyledBox display="flex" py={1} className={classes.root} px={1}>
       <IconButton size="small" onClick={() => reloadPage()}>
-        <Cached />
+        <RefreshCw />
       </IconButton>
       {browserHasHistory && (
         <IconButton size="small" onClick={() => goBack()}>
-          <KeyboardArrowLeft />
+          <ChevronLeft />
         </IconButton>
       )}
       <InputBase

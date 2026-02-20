@@ -4,8 +4,7 @@ import fetchNui from '@utils/fetchNui';
 import { CustomContentProps, SnackbarContent, useSnackbar } from 'notistack';
 import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 interface SystemNotificationBaseProps extends CustomContentProps {
   secondaryTitle?: string;
@@ -77,10 +76,10 @@ export const SystemNotificationBase = forwardRef<HTMLDivElement, SystemNotificat
         {controls && (
           <Box>
             <IconButton size="small" onClick={handleConfirmAction}>
-              <CheckCircleIcon />
+              <CheckCircle />
             </IconButton>
             <IconButton size="small" onClick={handleCancelAction}>
-              <CancelIcon />
+              <XCircle />
             </IconButton>
           </Box>
         )}

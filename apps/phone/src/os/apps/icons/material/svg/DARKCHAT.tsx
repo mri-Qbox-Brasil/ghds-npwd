@@ -1,5 +1,5 @@
-import ForumIcon from '@mui/icons-material/Forum';
+import { MessageCircle } from 'lucide-react';
 
-const DarkchatIcon = () => <ForumIcon fontSize="small" />;
+const DarkchatIcon = () => <MessageCircle size={20} />;
 
 export default DarkchatIcon;

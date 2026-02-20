@@ -8,7 +8,7 @@ import {
 } from '@typings/marketplace';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import { useTranslation } from 'react-i18next';
-import ImageIcon from '@mui/icons-material/Image';
+import { Image } from 'lucide-react';
 import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
 import { useQueryParams } from '@common/hooks/useQueryParams';
@@ -159,7 +159,7 @@ export const ListingForm: React.FC = () => {
 
       <Box display="flex" alignItems="center" paddingLeft={5}>
         <div>
-          <ImageIcon />
+          <Image />
         </div>
         <div>
           <Button onClick={handleChooseImage}>{t('MARKETPLACE.CHOOSE_IMAGE')}</Button>

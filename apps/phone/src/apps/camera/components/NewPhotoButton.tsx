@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Add, Delete } from '@mui/icons-material';
+import { Plus, Trash2 } from 'lucide-react';
 import { Fab, CircularProgress, useTheme, colors } from '@mui/material';
 import { useIsEditing } from '../hooks/state';
 import fetchNui from '@utils/fetchNui';
@@ -64,7 +64,7 @@ const NewPhotoButton = () => {
 
   return (
     <FloatBtn color="primary" onClick={!isEditing ? handleTakePhoto : handleDeletePhotos}>
-      {!isEditing ? <Add style={{color: phoneTheme.palette.primary.main}}/> : <Delete style={{color: phoneTheme.palette.error.main}}/>}
+      {!isEditing ? <Plus style={{ color: phoneTheme.palette.primary.main }} /> : <Trash2 style={{ color: phoneTheme.palette.error.main }} />}
     </FloatBtn>
   );
 };

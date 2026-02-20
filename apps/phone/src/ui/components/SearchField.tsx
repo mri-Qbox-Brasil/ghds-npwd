@@ -1,62 +1,17 @@
 import React from 'react';
-import { emphasize, Paper } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import SearchIcon from '@mui/icons-material/Search';
-import { InputBase } from './Input';
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: emphasize(theme.palette.background.paper, 0.21),
-  '&:hover': {
-    backgroundColor: emphasize(theme.palette.background.paper, 0.28),
-  },
-  marginLeft: theme.spacing(1),
-  width: 'auto',
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 0.7),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const SearchInputBase = styled(InputBase)(({ theme }) => ({
-  fontWeight: 400,
-  fontSize: 18,
-  border: '1px solid',
-  borderColor: theme.palette.divider,
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 4, 1, 4),
-    // vertical padding + font size from searchIcon
-    transition: theme.transitions.create(['width', 'border']),
-    width: '16ch',
-    '&:focus': {
-      width: '24ch',
-      borderLeft: `2px solid ${theme.palette.primary.main} `,
-    },
-  },
-}));
-
-const SearchPaper = styled(Paper)(({ theme }) => ({
-  display: 'flex',
-  height: '60px',
-  justifyContent: 'center',
-  alignItems: 'center',
-}));
+import { Search } from 'lucide-react';
+import { Input } from './ui/input';
+import { cn } from '@utils/css';
 
 interface SearchFieldProps {
   onChange: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   value: string;
   placeholder?: string;
+  className?: string;
 }
 
 const DEFAULT_PROPS = {
-  onChange: () => {},
+  onChange: () => { },
   value: '',
   placeholder: 'Search...',
 };
@@ -65,22 +20,22 @@ export const SearchField: React.FC<SearchFieldProps> = ({
   value,
   onChange,
   placeholder,
+  className,
 } = DEFAULT_PROPS) => {
   return (
-    <>
-      <SearchPaper>
-        <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <SearchInputBase
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            inputProps={{ 'aria-label': 'search' }}
-          />
-        </Search>
-      </SearchPaper>
-    </>
+    <div className={cn("relative flex h-[60px] w-full items-center justify-center rounded-md bg-white/20 px-2 transition-colors hover:bg-white/30 dark:bg-neutral-800/50 dark:hover:bg-neutral-800/80", className)}>
+      <div className="pointer-events-none absolute left-3 flex h-full items-center justify-center">
+        <Search className="h-5 w-5 text-neutral-500 dark:text-neutral-400" />
+      </div>
+      <Input
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        aria-label="search"
+        className="h-10 w-full rounded-md border-0 bg-transparent pl-10 pr-2 transition-all duration-300 focus-visible:ring-0 focus-visible:ring-offset-0"
+      />
+    </div>
   );
 };
+
+export default SearchField;

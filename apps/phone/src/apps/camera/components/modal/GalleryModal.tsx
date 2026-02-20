@@ -1,9 +1,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import useStyles from './modal.styles';
 import { Button, Paper } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ShareIcon from '@mui/icons-material/Share';
+import { ArrowLeft, Trash2, Share } from 'lucide-react';
 import { useHistory } from 'react-router-dom';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 import { ShareModal } from './ShareModal';
@@ -61,15 +59,15 @@ export const GalleryModal = () => {
       <Paper className={classes.modal}>
         <div className={shareOpen ? classes.backgroundModal : null} />
         <Button onClick={_handleClose}>
-          <ArrowBackIcon />
+          <ArrowLeft />
         </Button>
         <div className={classes.image} style={{ backgroundImage: `url(${meta.image})` }} />
         <div className={classes.actionDiv}>
           <Button onClick={handleDeletePhoto}>
-            <DeleteIcon fontSize="large" />
+            <Trash2 size={32} />
           </Button>
           <Button onClick={handleSharePhoto}>
-            <ShareIcon fontSize="large" />
+            <Share size={32} />
           </Button>
         </div>
       </Paper>

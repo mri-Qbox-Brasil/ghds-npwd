@@ -8,8 +8,7 @@ import {
   CircularProgress,
   Tooltip,
 } from '@mui/material';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import GroupIcon from '@mui/icons-material/Group';
+import { Users, UserPlus } from 'lucide-react';
 import useMessages from '../../hooks/useMessages';
 import Conversation, { CONVERSATION_ELEMENT_ID } from './Conversation';
 import MessageSkeletonList from './MessageSkeletonList';
@@ -201,11 +200,11 @@ export const MessageModal = () => {
           )}
           {activeMessageConversation.isGroupChat ? (
             <Button>
-              <GroupIcon onClick={openGroupModal} fontSize="large" />
+              <Users onClick={openGroupModal} size={32} />
             </Button>
           ) : !activeMessageConversation.isGroupChat && !doesContactExist ? (
             <Button>
-              <PersonAddIcon onClick={() => handleAddContact(targetNumber)} fontSize="large" />
+              <UserPlus onClick={() => handleAddContact(targetNumber)} size={32} />
             </Button>
           ) : !activeMessageConversation.isGroupChat && doesContactExist ? null : null}
         </Box>

@@ -1,14 +1,13 @@
-import CallEnd from '@mui/icons-material/CallEnd';
-import {Avatar} from '@mui/material';
-import {SnackbarContent, CustomContentProps} from 'notistack';
-import React, {forwardRef, useMemo} from 'react';
-import {useCurrentCallValue} from '@os/call/hooks/state';
-import {useCall} from '@os/call/hooks/useCall';
+import { Avatar } from '@mui/material';
+import { SnackbarContent, CustomContentProps } from 'notistack';
+import React, { forwardRef, useMemo } from 'react';
+import { useCurrentCallValue } from '@os/call/hooks/state';
+import { useCall } from '@os/call/hooks/useCall';
 import useTimer from '@os/call/hooks/useTimer';
-import {useTranslation} from 'react-i18next';
-import {useContactActions} from '@apps/contacts/hooks/useContactActions';
-import {NPWDButton} from "@npwd/keyos";
-import {Phone} from "lucide-react";
+import { useTranslation } from 'react-i18next';
+import { useContactActions } from '@apps/contacts/hooks/useContactActions';
+import { NPWDButton } from "@npwd/keyos";
+import { Phone, PhoneOff } from "lucide-react";
 
 interface CallNotificationBaseProps extends CustomContentProps {
     title: string;
@@ -22,14 +21,14 @@ const formatTime = (time: number) => (time < 10 ? `0${time}` : time);
 
 export const CallNotificationBase = forwardRef<HTMLDivElement, CallNotificationBaseProps>(
     (props, ref) => {
-        const {endCall, acceptCall, rejectCall} = useCall();
-        const {transmitter, receiver} = props;
+        const { endCall, acceptCall, rejectCall } = useCall();
+        const { transmitter, receiver } = props;
         const call = useCurrentCallValue();
-        const {minutes, seconds, startTimer, resetTimer} = useTimer();
+        const { minutes, seconds, startTimer, resetTimer } = useTimer();
 
-        const {getPictureByNumber} = useContactActions();
+        const { getPictureByNumber } = useContactActions();
 
-        const {t} = useTranslation();
+        const { t } = useTranslation();
 
         const RECEIVER_TEXT = useMemo(
             () =>
@@ -70,12 +69,12 @@ export const CallNotificationBase = forwardRef<HTMLDivElement, CallNotificationB
         return (
             <SnackbarContent
                 ref={ref}
-                style={{minWidth: '370px'}}
+                style={{ minWidth: '370px' }}
                 className="bg-neutral-50 dark:bg-neutral-900 py-3.5 px-4 w-auto flex items-center justify-between rounded-md shadow-md border-2 border-neutral-200 dark:border-neutral-800"
             >
                 <div className="flex items-center text-neutral-900 dark:text-neutral-50 space-x-2">
                     <div className="flex justify-center items-center">
-                        <Avatar src={getDisplayAvatar()} alt="Transmitter"/>
+                        <Avatar src={getDisplayAvatar()} alt="Transmitter" />
                     </div>
                     <div>
                         {call?.isTransmitter ? (
@@ -97,7 +96,7 @@ export const CallNotificationBase = forwardRef<HTMLDivElement, CallNotificationB
                             size="icon"
                             className="rounded-full bg-green-600 hover:bg-green-700"
                         >
-                            <Phone size={18}/>
+                            <Phone size={18} />
                         </NPWDButton>
                     )}
                     <NPWDButton
@@ -105,7 +104,7 @@ export const CallNotificationBase = forwardRef<HTMLDivElement, CallNotificationB
                         size="icon"
                         className="rounded-full bg-red-600 hover:bg-red-700"
                     >
-                        <CallEnd sx={{fontSize: 18}}/>
+                        <PhoneOff size={18} />
                     </NPWDButton>
                 </div>
             </SnackbarContent>

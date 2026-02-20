@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 import { Tooltip } from '@ui/components/Tooltip';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+
 import {
   NPWDButton,
   ListItem as NPWDListItem,
@@ -9,7 +9,7 @@ import {
   SwitchThumb,
   SliderRoot,
 } from '@npwd/keyos';
-import {LucideIcon} from "lucide-react";
+import { LucideIcon, PlayCircle } from "lucide-react";
 
 interface SettingItemProps {
   options?: any;
@@ -74,7 +74,7 @@ export const SoundItem: React.FC<SoundItemProps> = ({
             onPreviewClicked?.(options, label);
           }}
         >
-          <PlayCircleIcon />
+          {!value && <PlayCircle />}
         </NPWDButton>
       </Tooltip>
     }

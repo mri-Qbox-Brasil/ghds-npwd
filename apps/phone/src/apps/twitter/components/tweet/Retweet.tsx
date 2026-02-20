@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Repeat } from '@mui/icons-material';
+import { Repeat } from 'lucide-react';
 import { Box, styled } from '@mui/material';
 
 interface IProps {

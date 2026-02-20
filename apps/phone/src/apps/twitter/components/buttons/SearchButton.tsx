@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Fab, styled } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { Search } from 'lucide-react';
 
 const UpdateButtonRoot = styled(Box)({
   position: 'absolute',
@@ -12,7 +12,7 @@ export function ProfileUpdateButton({ handleClick }) {
   return (
     <UpdateButtonRoot>
       <Fab color="primary" onClick={handleClick}>
-        <SearchIcon />
+        <Search />
       </Fab>
     </UpdateButtonRoot>
   );

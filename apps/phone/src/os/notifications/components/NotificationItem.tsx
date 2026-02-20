@@ -1,5 +1,4 @@
-import React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
+import { X } from 'lucide-react';
 import { IconButton, ListItem, ListItemAvatar, ListItemText, Theme } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { INotification } from '../providers/NotificationsProvider';
@@ -44,9 +43,7 @@ export const NotificationItem = ({
       {icon && <ListItemAvatar>{icon}</ListItemAvatar>}
       <ListItemText secondary={content}>{title}</ListItemText>
       {!cantClose && (
-        <IconButton className={classes.closeNotifBtn} size="small" onClick={onClose}>
-          <CloseIcon color="primary" />
-        </IconButton>
+        <X className="text-blue-500" />
       )}
     </ListItem>
   );

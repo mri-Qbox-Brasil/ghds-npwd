@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, IconButton, styled } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { X } from 'lucide-react';
 import { PictureReveal } from '@ui/components/PictureReveal';
 import { PictureResponsive } from '@ui/components/PictureResponsive';
 
@@ -28,7 +28,7 @@ export const Image = ({ link, handleClick }) => {
     <ImageContainer>
       {handleClick && (
         <ImageButton onClick={handleClick} size="small">
-          <CloseIcon />
+          <X />
         </ImageButton>
       )}
       <PictureReveal>

@@ -1,5 +1,4 @@
-import React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
+import { X } from 'lucide-react';
 import { Box, IconButton, Slide } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { useNotifications } from '../hooks/useNotifications';
@@ -61,7 +60,7 @@ export const NotificationAlert = () => {
                 currentAlert?.onCloseAlert(e);
               }}
             >
-              <CloseIcon fontSize="small" />
+              <X size={20} />
             </IconButton>
           }
           onClick={(e) => {

@@ -4,7 +4,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useChannelsValue } from '../../state/state';
 import { ChannelItem } from '../ui/ChannelItem';
 import { List } from '@ui/components/List';
-import AddIcon from '@mui/icons-material/Add';
+import { Plus } from 'lucide-react';
 import { NewChannelModal } from '../ui/NewChannelModal';
 import Backdrop from '@ui/components/Backdrop';
 
@@ -38,11 +38,11 @@ const ChatList: React.FC = () => {
         ))}
       </List>
       <Box position="absolute" bottom={20} right={20}>
-        <Fab 
+        <Fab
           className={classes.button}
-          onClick={toggleModal} 
+          onClick={toggleModal}
         >
-          <AddIcon />
+          <Plus />
         </Fab>
       </Box>
     </Box>

@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import { ChevronUp } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';
 import usePhoneTime from '../../phone/hooks/usePhoneTime';
 import { NoNotificationText } from './NoNotificationText';
@@ -248,7 +248,7 @@ export const NotificationBar = () => {
                   size="small"
                   onClick={() => setBarUncollapsed(false)}
                 >
-                  <ArrowDropUpIcon />
+                  <ChevronUp />
                 </IconButton>
               </Box>
             </Paper>

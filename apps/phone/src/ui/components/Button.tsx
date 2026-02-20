@@ -1,36 +1,48 @@
 import React from 'react';
-import MaterialButton from '@mui/material/Button';
-import { ButtonProps } from '@mui/material';
-import { cva, VariantProps } from 'class-variance-authority';
+import { Button as ShadcnButton, buttonVariants } from './ui/button';
+import { VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 
-export const Button: React.FC<ButtonProps> = ({ ...props }) => (
-  <MaterialButton aria-label="button" {...props}>
-    {props.children}
-  </MaterialButton>
-);
+// Compatibilidade para atributos antigos (como color, variant do mui)
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | string;
+  variant?: 'contained' | 'outlined' | 'text' | string;
+  size?: 'small' | 'medium' | 'large' | string;
+  component?: React.ElementType; // Compatibilidade com MUI
+}
 
-const classes = cva('rounded-md w-full active:scale-95', {
-  variants: {
-    variant: {
-      primary: ['dark:bg-blue-100 dark:text-blue-800 text-white'],
-    },
-    size: {
-      sm: 'px-2 py-1.5 text-sm',
-      md: 'px-2 py-2 text-base',
-      lg: 'px-4 py-2',
-    },
-  },
-  compoundVariants: [{ size: 'sm', variant: 'primary' }],
-  defaultVariants: {
-    size: 'md',
-    variant: 'primary',
-  },
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ color, variant, size, className, children, ...props }, ref) => {
+  // Map MUI props to shadcn variants
+  let shadcnVariant: VariantProps<typeof buttonVariants>['variant'] = 'default';
+
+  if (variant === 'outlined') shadcnVariant = 'outline';
+  else if (variant === 'text') shadcnVariant = 'ghost';
+  else if (color === 'error' || color === 'error') shadcnVariant = 'destructive';
+  else if (color === 'secondary') shadcnVariant = 'secondary';
+
+  let shadcnSize: VariantProps<typeof buttonVariants>['size'] = 'default';
+  if (size === 'small') shadcnSize = 'sm';
+  else if (size === 'large') shadcnSize = 'lg';
+
+  return (
+    <ShadcnButton
+      ref={ref}
+      variant={shadcnVariant}
+      size={shadcnSize}
+      className={className}
+      aria-label="button"
+      {...props}
+    >
+      {children}
+    </ShadcnButton>
+  );
 });
+Button.displayName = 'Button';
 
 export type NPWDButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
-  VariantProps<typeof classes>;
+  VariantProps<typeof buttonVariants>;
 
+// Mantém NPWDButton original compatível, agora redirecionando para o ShadcnButton
 export const NPWDButton: React.FC<NPWDButtonProps> = ({
   children,
   size,
@@ -39,8 +51,13 @@ export const NPWDButton: React.FC<NPWDButtonProps> = ({
   ...props
 }) => {
   return (
-    <button {...props} className={twMerge(classes({ size, variant, className }))}>
+    <ShadcnButton
+      variant={variant || 'default'}
+      size={size || 'default'}
+      className={className}
+      {...props}
+    >
       {children}
-    </button>
+    </ShadcnButton>
   );
 };

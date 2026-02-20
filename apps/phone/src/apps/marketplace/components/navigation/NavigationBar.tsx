@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import { Link } from 'react-router-dom';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
-import { AddCircle, Home } from '@mui/icons-material/';
+import { Home, PlusCircle } from 'lucide-react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,7 +27,7 @@ export const NavigationBar: React.FC = () => {
       className={classes.root}
     >
       <BottomNavigationAction component={Link} icon={<Home />} to="/marketplace" />
-      <BottomNavigationAction component={Link} icon={<AddCircle />} to="/marketplace/new" />
+      <BottomNavigationAction component={Link} icon={<PlusCircle />} to="/marketplace/new" />
     </BottomNavigation>
   );
 };

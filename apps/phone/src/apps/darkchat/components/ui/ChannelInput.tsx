@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Paper, Tooltip } from '@mui/material';
 import { TextField } from '@ui/components/Input';
-import SendIcon from '@mui/icons-material/Send';
-import IosShareIcon from '@mui/icons-material/IosShare';
+import { Send, Share } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useDarkchatAPI } from '../../hooks/useDarkchatAPI';
 import { useActiveDarkchatValue } from '../../state/state';
@@ -59,12 +58,12 @@ const ChannelInput: React.FC = () => {
       <Box>
         <Button color="secondary" onClick={() => setModalVisible(true)}>
           <Tooltip title={t('DARKCHAT.MEDIA_UPLOAD')}>
-            <IosShareIcon />
+            <Share />
           </Tooltip>
         </Button>
         <Button onClick={handleSendMessage} color="secondary">
           <Tooltip title={t('GENERIC.SEND')}>
-            <SendIcon />
+            <Send />
           </Tooltip>
         </Button>
       </Box>

@@ -1,11 +1,11 @@
 import { Box, Slide, Paper, Typography, Container } from '@mui/material';
 import React, { useEffect, useState, useRef } from 'react';
-import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import useStyles from './modal.styles';
 import { useTranslation } from 'react-i18next';
 import { useModalVisible, useSelectedNote } from '../hooks/state';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useNotesAPI } from '../hooks/useNotesAPI';
+import { ChevronLeft } from 'lucide-react';
 import { useTheme } from '@mui/material';
 import { RiDeleteBin2Line } from '@react-icons/all-files/ri/RiDeleteBin2Line';
 import { RiEditBoxLine } from "@react-icons/all-files/ri/RiEditBoxLine";
@@ -104,7 +104,7 @@ export const NoteModal: React.FC = () => {
               onClick={_handleClose}
               sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
             >
-              <ArrowBackIosNewRoundedIcon
+              <ChevronLeft
                 style={{
                   color: phoneTheme.palette.primary.main,
                   marginRight: '2px',
@@ -198,6 +198,6 @@ export const NoteModal: React.FC = () => {
           </RiEditBoxLine>
         </Container>
       </Paper>
-    </Slide>
+    </Slide >
   );
 };

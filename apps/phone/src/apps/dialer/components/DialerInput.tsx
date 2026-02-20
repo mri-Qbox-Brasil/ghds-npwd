@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Box, IconButton, Paper, Typography, Link } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
-import PhoneIcon from '@mui/icons-material/Phone';
+import { Phone } from 'lucide-react';
 import { DialInputCtx, IDialInputCtx } from '../context/InputContext';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -24,16 +24,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   input: {
     flex: 1,
-    fontSize: '24px', 
-    fontWeight: 400,  
+    fontSize: '24px',
+    fontWeight: 400,
     textAlign: 'center',
-    marginBottom: theme.spacing(0), 
+    marginBottom: theme.spacing(0),
   },
   addNumberLink: {
     position: 'absolute',
     fontSize: '16px',
     top: theme.spacing(13),
-    color: '#007AFF', 
+    color: '#007AFF',
     textDecoration: 'none',
     marginBottom: theme.spacing(3),
     '&:hover': {
@@ -102,7 +102,7 @@ export const DialerInput: React.FC = () => {
         onClick={() => handleCall(inputVal)}
         size="large"
       >
-        <PhoneIcon fontSize="large" />
+        <Phone size={32} />
       </IconButton>
     </Box>
   );

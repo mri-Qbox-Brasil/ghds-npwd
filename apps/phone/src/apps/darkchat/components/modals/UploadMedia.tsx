@@ -2,8 +2,7 @@ import React from 'react';
 import { Modal } from '@ui/components/Modal';
 import { useModal } from '../../hooks/useModal';
 import { Box, Button, styled, TextField } from '@mui/material';
-import CollectionsIcon from '@mui/icons-material/Collections';
-import SendIcon from '@mui/icons-material/Send';
+import { Image, Camera, Send } from 'lucide-react';
 import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
 import { isImageValid } from '../../../../common/utils/isImageValid';
@@ -68,7 +67,7 @@ export const UploadMediaModal = () => {
         <Button
           variant="text"
           color="secondary"
-          startIcon={<CollectionsIcon />}
+          startIcon={<Image />}
           onClick={handleImageGallery}
         >
           {t('DARKCHAT.MEDIA_GALLERY')}
@@ -76,7 +75,7 @@ export const UploadMediaModal = () => {
         <Button
           variant="text"
           color="secondary"
-          startIcon={<SendIcon />}
+          startIcon={<Send />}
           onClick={handleSendImage}
         >
           {t('GENERIC.SEND')}

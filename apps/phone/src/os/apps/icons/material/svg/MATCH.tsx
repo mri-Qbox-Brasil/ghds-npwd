@@ -1,6 +1,6 @@
 import React from 'react';
-import { Favorite } from '@mui/icons-material';
+import { Heart } from 'lucide-react';
 
-const MatchIcon: React.FC = () => <Favorite fontSize="small" />;
+const MatchIcon: React.FC = () => <Heart size={20} />;
 
 export default MatchIcon;

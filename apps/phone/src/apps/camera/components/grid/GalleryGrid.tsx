@@ -6,7 +6,7 @@ import { useQueryParams } from '@common/hooks/useQueryParams';
 import { addQueryToLocation } from '@common/utils/addQueryToLocation';
 import { getLocationFromUrl } from '@common/utils/getLocationFromUrl';
 import { usePhotosValue, useIsEditing, useCheckedPhotos } from '../../hooks/state';
-import EditIcon from '@mui/icons-material/Edit';
+import { Edit } from 'lucide-react';
 
 export const GalleryGrid = () => {
   const classes = useStyles();
@@ -45,7 +45,7 @@ export const GalleryGrid = () => {
         {!!photos.length && (
           <Box position="absolute" top={10} right={3}>
             <IconButton onClick={toggleEdit}>
-              <EditIcon />
+              <Edit />
             </IconButton>
           </Box>
         )}

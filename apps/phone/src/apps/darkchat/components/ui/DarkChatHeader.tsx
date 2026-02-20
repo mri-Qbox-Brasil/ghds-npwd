@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Box, IconButton, Paper, Typography, Button } from '@mui/material';
 import { useApp } from '@os/apps/hooks/useApps';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import EditIcon from '@mui/icons-material/Edit';
-import CheckIcon from '@mui/icons-material/Check';
+import { ArrowLeft, Edit, Check, Shield } from 'lucide-react';
 import styled from '@emotion/styled';
 import { useHistory } from 'react-router-dom';
 import { useActiveDarkchatValue } from '../../state/state';
@@ -11,7 +9,6 @@ import { useDarkchatAPI } from '../../hooks/useDarkchatAPI';
 import { useMyPhoneNumber } from '@os/simcard/hooks/useMyPhoneNumber';
 import { TextField } from '@ui/components/Input';
 import { useModal } from '@apps/darkchat/hooks/useModal';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { useTranslation } from 'react-i18next';
 
 interface HeaderProps {
@@ -68,7 +65,7 @@ const DarkChatHeader: React.FC = () => {
     <Header background={backgroundColor}>
       <Box display="flex" alignItems="center" flexDirection="row" gap={1}>
         <IconButton onClick={goBack}>
-          <ArrowBackIcon />
+          <ArrowLeft />
         </IconButton>
         <Box display="flex" gap={2} alignItems="center">
           {isEditing ? (
@@ -84,7 +81,7 @@ const DarkChatHeader: React.FC = () => {
             <Box>
               {isEditing ? (
                 <IconButton disableFocusRipple disableTouchRipple onClick={handleUpdateLabel}>
-                  <CheckIcon />
+                  <Check />
                 </IconButton>
               ) : (
                 <IconButton
@@ -92,7 +89,7 @@ const DarkChatHeader: React.FC = () => {
                   disableTouchRipple
                   onClick={() => setIsEditing(true)}
                 >
-                  <EditIcon />
+                  <Edit />
                 </IconButton>
               )}
             </Box>
@@ -102,7 +99,7 @@ const DarkChatHeader: React.FC = () => {
       <Box pr={2}>
         {isOwner ? (
           <IconButton onClick={openOwnerModal}>
-            <AdminPanelSettingsIcon />
+            <Shield />
           </IconButton>
         ) : (
           <LeaveButton onClick={handleLeaveChannel}>{t('DARKCHAT.LEAVE')}</LeaveButton>

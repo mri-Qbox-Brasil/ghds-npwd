@@ -8,16 +8,12 @@ import {
   Paper,
   Tooltip,
 } from '@mui/material';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import CloseIcon from '@mui/icons-material/Close';
-import StopIcon from '@mui/icons-material/Stop';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
+import { CircleDot, X, Square, Play, Pause, Send } from 'lucide-react';
 import { useRecorder } from '@os/audio/hooks/useRecorder';
 import { useAudioPlayer } from '@os/audio/hooks/useAudioPlayer';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import SendIcon from '@mui/icons-material/Send';
+
 import { useAudioMessageAPI } from '@apps/messages/hooks/useAudioMessageAPI';
 
 dayjs.extend(duration);
@@ -142,11 +138,11 @@ const AudioContextMenu: React.FC<AudioContextMenuProps> = ({ onClose }) => {
         <Box pt={1} pb={1} pr={1}>
           {!recordingState.isRecording && recordedAudio && blob && (
             <IconButton onClick={handleSendRecording} size="small">
-              <SendIcon color="primary" />
+              <Send />
             </IconButton>
           )}
           <IconButton disabled={recordingState.isRecording} size="small" onClick={onClose}>
-            <CloseIcon color="error" />
+            <X />
           </IconButton>
         </Box>
       </Box>
@@ -163,12 +159,12 @@ const RecordingButtons: React.FC<RecordingButtonsProps> = ({
     <ButtonGroup>
       <Tooltip title="Record voice message" placement="right">
         <IconButton disabled={isRecording} color="error" size="small" onClick={startRecording}>
-          <RadioButtonCheckedIcon />
+          <CircleDot />
         </IconButton>
       </Tooltip>
       {isRecording && (
         <IconButton color="error" size="small" onClick={isRecording && stopRecording}>
-          <StopIcon />
+          <Square />
         </IconButton>
       )}
     </ButtonGroup>
@@ -179,7 +175,7 @@ const InteractButtons: React.FC<InteractButtonsProps> = ({ playing, play, pause 
   <Box>
     <ButtonGroup>
       <IconButton size="small">
-        {playing ? <PauseIcon onClick={pause} /> : <PlayArrowIcon onClick={play} />}
+        {playing ? <Pause onClick={pause} /> : <Play onClick={play} />}
       </IconButton>
     </ButtonGroup>
   </Box>

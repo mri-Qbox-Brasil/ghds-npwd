@@ -15,15 +15,11 @@ import { useHistory, useLocation } from 'react-router-dom';
 import StyledMessage, { AudioMessage } from './StyledMessage';
 import { useContactActions } from '../../../contacts/hooks/useContactActions';
 import fetchNui from '../../../../utils/fetchNui';
-import TravelExplore from '@mui/icons-material/TravelExplore';
-import { MessageEvents } from '@typings/messages';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import { Globe, MoreVertical, FileText, Play, Pause } from 'lucide-react';
 import { NoteItem } from '@typings/notes';
 import qs from 'qs';
 import { useAudioPlayer } from '@os/audio/hooks/useAudioPlayer';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
+
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
@@ -89,7 +85,7 @@ const ContactEmbed = ({
       )}
       {isMine && (
         <IconButton color="primary" onClick={openMenu}>
-          <MoreVertIcon />
+          <MoreVertical />
         </IconButton>
       )}
     </StyledMessage>
@@ -128,12 +124,12 @@ const NoteEmbed = ({
       <Box>
         <Tooltip title={t('MESSAGES.NOTE_TOOLTIP')}>
           <IconButton color="primary" onClick={handleViewNote}>
-            <TextSnippetIcon />
+            <FileText />
           </IconButton>
         </Tooltip>
         {isMine && (
           <IconButton color="primary" onClick={openMenu}>
-            <MoreVertIcon />
+            <MoreVertical />
           </IconButton>
         )}
       </Box>
@@ -168,12 +164,12 @@ const LocationEmbed = ({
       <Box>
         <Tooltip title={t('MESSAGES.LOCATION_TOOLTIP')}>
           <IconButton color="primary" onClick={handleSetWaypoint}>
-            <TravelExplore />
+            <Globe />
           </IconButton>
         </Tooltip>
         {isMine && (
           <IconButton color="primary" onClick={openMenu}>
-            <MoreVertIcon />
+            <MoreVertical />
           </IconButton>
         )}
       </Box>
@@ -202,9 +198,9 @@ const AudioEmbed = ({
       <Box display="flex" alignItems="center">
         <IconButton onClick={playing ? pause : play}>
           {playing ? (
-            <PauseIcon sx={{ color: '#232323' }} />
+            <Pause className="text-[#232323]" />
           ) : (
-            <PlayArrowIcon sx={{ color: '#232323' }} />
+            <Play className="text-[#232323]" />
           )}
         </IconButton>
         <Box sx={{ width: '60%' }}>
@@ -216,7 +212,7 @@ const AudioEmbed = ({
         </Box>
         {isMine && (
           <IconButton color="white" onClick={openMenu}>
-            <MoreVertIcon />
+            <MoreVertical />
           </IconButton>
         )}
       </Box>

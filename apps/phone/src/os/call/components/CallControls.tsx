@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import CallIcon from '@mui/icons-material/Call';
-import CallEndIcon from '@mui/icons-material/CallEnd';
+import { Phone, PhoneOff, MicOff, Mic } from 'lucide-react';
 import { useCall } from '../hooks/useCall';
 import { useCallModal } from '../hooks/useCallModal';
 import { StatusIconButton } from '@ui/components/StatusIconButton';
 import { Box } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { useHistory } from 'react-router-dom';
-import MutedIcon from '@mui/icons-material/VolumeOff';
-import UnmutedIcon from '@mui/icons-material/VolumeUp';
+
 
 const useStyles = makeStyles({
   icon: {
@@ -66,7 +64,7 @@ export const CallControls = ({ isSmall }: { isSmall?: boolean }) => {
           onClick={handleEndCall}
           className={isSmall ? classes.smallIconWrapper : classes.iconWrapper}
         >
-          <CallEndIcon className={classes.icon} />
+          <PhoneOff className={classes.icon} />
         </StatusIconButton>
         {call?.is_accepted && (
           <StatusIconButton
@@ -79,9 +77,9 @@ export const CallControls = ({ isSmall }: { isSmall?: boolean }) => {
             className={isSmall ? classes.smallIconWrapper : classes.iconWrapper}
           >
             {muted ? (
-              <MutedIcon className={classes.icon} />
+              <MicOff className={classes.icon} />
             ) : (
-              <UnmutedIcon className={classes.icon} />
+              <Mic className={classes.icon} />
             )}
           </StatusIconButton>
         )}
@@ -96,7 +94,7 @@ export const CallControls = ({ isSmall }: { isSmall?: boolean }) => {
         onClick={handleRejectCall}
         className={isSmall ? classes.smallIconWrapper : classes.iconWrapper}
       >
-        <CallEndIcon className={classes.icon} />
+        <PhoneOff className={classes.icon} />
       </StatusIconButton>
       <StatusIconButton
         color="success"
@@ -104,7 +102,7 @@ export const CallControls = ({ isSmall }: { isSmall?: boolean }) => {
         onClick={handleAcceptCall}
         className={isSmall ? classes.smallIconWrapper : classes.iconWrapper}
       >
-        <CallIcon className={classes.icon} />
+        <Phone className={classes.icon} />
       </StatusIconButton>
     </Box>
   );

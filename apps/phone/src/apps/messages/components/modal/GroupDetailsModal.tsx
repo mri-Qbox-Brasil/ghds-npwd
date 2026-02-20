@@ -1,8 +1,7 @@
 import React from 'react';
 import Modal from '@ui/components/Modal';
 import { Box, Button, Stack, Typography } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { User, UserPlus } from 'lucide-react';
 import { findParticipants } from '../../utils/helpers';
 import { useMyPhoneNumber } from '@os/simcard/hooks/useMyPhoneNumber';
 import { useContactActions } from '../../../contacts/hooks/useContactActions';
@@ -48,12 +47,12 @@ const GroupDetailsModal: React.FC<GroupDetailsModalProps> = ({
           <Box mt={2} key={participant}>
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Stack direction="row" spacing={2}>
-                <PersonIcon fontSize="medium" />
+                <User width={24} height={24} />
                 <Typography fontSize={18}>{contact?.display ?? participant}</Typography>
               </Stack>
               {!contact && (
                 <Button onClick={() => handleAddContact(participant)}>
-                  <PersonAddIcon fontSize="medium" />
+                  <UserPlus width={24} height={24} />
                 </Button>
               )}
             </Box>

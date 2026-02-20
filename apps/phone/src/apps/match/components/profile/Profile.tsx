@@ -12,8 +12,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import { FormattedProfile, FormattedMatch } from '@typings/match';
 import { useAudioPlayer } from '@os/audio/hooks/useAudioPlayer';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
+import { Play, Pause } from 'lucide-react';
 
 const useStyles = makeStyles({
   tags: {
@@ -91,9 +90,9 @@ const Profile = ({ profile }: IProps) => {
             <Box display="flex" alignItems="center">
               <IconButton onClick={playing ? pause : play}>
                 {playing ? (
-                  <PauseIcon sx={{ color: '#232323' }} />
+                  <Pause color="#232323" />
                 ) : (
-                  <PlayArrowIcon sx={{ color: '#232323' }} />
+                  <Play color="#232323" />
                 )}
               </IconButton>
               <Box sx={{ width: '60%' }}>

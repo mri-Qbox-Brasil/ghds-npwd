@@ -1,9 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Paper, Box, Button, ButtonGroup } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
-import MicIcon from '@mui/icons-material/Mic';
-import IosShareIcon from '@mui/icons-material/IosShare';
+
 import { NPWDInput, NPWDTextarea, TextField } from '@ui/components/Input';
 import { useMessageAPI } from '../../hooks/useMessageAPI';
 import { MessageConversation } from '@typings/messages';

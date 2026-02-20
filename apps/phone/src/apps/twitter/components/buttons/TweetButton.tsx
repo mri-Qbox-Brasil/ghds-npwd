@@ -1,4 +1,4 @@
-import CreateIcon from '@mui/icons-material/Create';
+import { Edit } from 'lucide-react';
 import { toggleKeys } from '@ui/components';
 import { cn } from '@utils/css';
 
@@ -15,7 +15,7 @@ export function TweetButton({ openModal }) {
           toggleKeys(false);
         }}
       >
-        <CreateIcon />
+        <Edit />
       </button>
     </div>
   );

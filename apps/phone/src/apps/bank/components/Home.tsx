@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, IconButton, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Eye, EyeOff, UserCircle } from 'lucide-react';
 import { Route, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import logoWhite from '../../imgs/fleeca-bank/fleeca-bank.webp';
 import logoDark from '../../imgs/fleeca-bank/fleeca-bank.webp';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 import { DotIcon } from 'lucide-react';
 import fetchNui from '@utils/fetchNui';
 import BankStatement from './BankStatement';
@@ -30,7 +29,7 @@ const Home: React.FC = () => {
     fetchPlayerData: async () => {
       try {
         const result = await fetchNui('getBankCredentials');
-        
+
         if (result && result.balance !== undefined) {
           setBalance(result.balance);
         } else {
@@ -127,11 +126,11 @@ const Home: React.FC = () => {
 
         <Grid item mt={1}>
           <IconButton onClick={() => setShowBalance(!showBalance)}>
-            {showBalance ? <VisibilityIcon /> : <VisibilityOffIcon />}
+            {showBalance ? <Eye /> : <EyeOff />}
           </IconButton>
 
           <IconButton onClick={() => console.log('clicado userprofile')}>
-            <AccountCircleIcon />
+            <UserCircle />
           </IconButton>
         </Grid>
         <Grid item fontSize={16} className={classes.balanceTitle}>
@@ -148,20 +147,20 @@ const Home: React.FC = () => {
             {showBalance
               ? `${fc.numberFormat(balance)}`
               : Array(8)
-                  .fill(8)
-                  .map((_, index) => (
-                    <Box key={index} style={{ marginRight: '-28px', flexDirection: 'row' }}>
-                      <DotIcon size={50} />
-                    </Box>
-                  ))}
+                .fill(8)
+                .map((_, index) => (
+                  <Box key={index} style={{ marginRight: '-28px', flexDirection: 'row' }}>
+                    <DotIcon size={50} />
+                  </Box>
+                ))}
           </Typography>
         </Grid>
       </Grid>
-  
+
       <Grid item>
-        
+
         <BankStatement></BankStatement>
-     
+
       </Grid>
     </Grid>
   );

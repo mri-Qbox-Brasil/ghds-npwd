@@ -14,7 +14,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 import qs from 'qs';
 import { Box, Button, styled } from '@mui/material';
-import ImageIcon from '@mui/icons-material/Image';
+
 import { ImagePlus } from 'lucide-react';
 
 const ProfileRoot = styled(Box)({

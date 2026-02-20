@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { RefreshOutlined } from '@mui/icons-material';
+import { RefreshCw } from 'lucide-react';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { TFunction } from 'react-i18next';
@@ -69,7 +69,7 @@ export class ExternalAppBoundary extends React.Component<ExternalAppBoundaryProp
               color="inherit"
               fullWidth
               onClick={() => this.setState({ hasError: false })}
-              startIcon={<RefreshOutlined />}
+              startIcon={<RefreshCw />}
             >
               {this.props.t('MISC.APP_CRASHED_ACTION')}
             </Button>
