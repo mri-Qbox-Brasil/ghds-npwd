@@ -1,10 +1,9 @@
 import React from 'react';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
-const CameraAppIcon = (props: SvgIconProps) => {
+
+const CameraAppIcon = (props: React.SVGProps<SVGSVGElement> & { htmlColor?: string; }) => {
   return (
-    <SvgIcon {...props}>
-      <svg
+    <svg {...props}
         xmlns="http://www.w3.org/2000/svg"
         fillRule="evenodd"
         strokeLinejoin="round"
@@ -21,7 +20,7 @@ const CameraAppIcon = (props: SvgIconProps) => {
           <path d="M57.194 57.138s-2.102-.509-5.096-.428a17.56 17.56 0 00-5.198.941c-2.218.759-4.441 2.097-6.18 4.195-1.116 1.347-2.008 3.038-2.535 5.046a16.988 16.988 0 00-.574 4.945c.068 2.075.399 4.308 1.144 6.889a1.345 1.345 0 102.671-.318c.116-2.844.654-5.097 1.295-7.08.289-.894.668-1.66 1.02-2.404.561-1.188 1.281-2.119 1.987-2.973.66-.797 1.306-1.522 2.039-2.109.873-.698 1.719-1.325 2.618-1.795 3.412-1.783 6.597-2.227 6.597-2.227a1.345 1.345 0 00.212-2.682z"></path>
         </g>
       </svg>
-    </SvgIcon>
+    
   );
 };
 

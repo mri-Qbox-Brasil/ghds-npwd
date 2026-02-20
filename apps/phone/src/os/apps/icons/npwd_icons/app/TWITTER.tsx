@@ -1,10 +1,9 @@
 import React from 'react';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
-const TwitterAppIcon = (props: SvgIconProps) => {
+
+const TwitterAppIcon = (props: React.SVGProps<SVGSVGElement> & { htmlColor?: string; }) => {
   return (
-    <SvgIcon {...props}>
-      <svg
+    <svg {...props}
         xmlns="http://www.w3.org/2000/svg"
         fillRule="evenodd"
         strokeLinejoin="round"
@@ -34,7 +33,7 @@ const TwitterAppIcon = (props: SvgIconProps) => {
           </g>
         </g>
       </svg>
-    </SvgIcon>
+    
   );
 };
 

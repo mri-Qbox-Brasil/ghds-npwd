@@ -3,28 +3,14 @@ import { Phone, PhoneOff, MicOff, Mic } from 'lucide-react';
 import { useCall } from '../hooks/useCall';
 import { useCallModal } from '../hooks/useCallModal';
 import { StatusIconButton } from '@ui/components/StatusIconButton';
-import { Box } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Flex } from '@ui/components/ui/flex';
 import { useHistory } from 'react-router-dom';
 
-
-const useStyles = makeStyles({
-  icon: {
-    color: 'white',
-    boxShadow: '0 .5rem 3rem -.25em rgba(0,0,0,.3)',
-  },
-  iconWrapper: {
-    height: 60,
-    width: 60,
-  },
-  smallIconWrapper: {
-    height: 40,
-    width: 40,
-  },
-});
+const iconClass = "text-white [filter:drop-shadow(0_0.5rem_3rem_rgba(0,0,0,0.3))]";
+const iconWrapperClass = "h-[60px] w-[60px]";
+const smallIconWrapperClass = "h-[40px] w-[40px]";
 
 export const CallControls = ({ isSmall }: { isSmall?: boolean }) => {
-  const classes = useStyles();
   const history = useHistory();
   const { setModal } = useCallModal();
   const { call, endCall, acceptCall, rejectCall, muteCall } = useCall();
@@ -52,19 +38,17 @@ export const CallControls = ({ isSmall }: { isSmall?: boolean }) => {
   // or we are the one calling
   if (call?.is_accepted || call?.isTransmitter)
     return (
-      <Box
-        display="flex"
-        justifyContent={call?.is_accepted ? 'space-between' : 'center'}
-        px={2}
-        my={2}
+      <Flex
+        justify={call?.is_accepted ? 'between' : 'center'}
+        className="px-4 my-4"
       >
         <StatusIconButton
           color="error"
           size={isSmall ? 'small' : 'medium'}
           onClick={handleEndCall}
-          className={isSmall ? classes.smallIconWrapper : classes.iconWrapper}
+          className={isSmall ? smallIconWrapperClass : iconWrapperClass}
         >
-          <PhoneOff className={classes.icon} />
+          <PhoneOff className={iconClass} />
         </StatusIconButton>
         {call?.is_accepted && (
           <StatusIconButton
@@ -74,36 +58,36 @@ export const CallControls = ({ isSmall }: { isSmall?: boolean }) => {
               setMuted((state) => !state);
               muteCall(!muted);
             }}
-            className={isSmall ? classes.smallIconWrapper : classes.iconWrapper}
+            className={isSmall ? smallIconWrapperClass : iconWrapperClass}
           >
             {muted ? (
-              <MicOff className={classes.icon} />
+              <MicOff className={iconClass} />
             ) : (
-              <Mic className={classes.icon} />
+              <Mic className={iconClass} />
             )}
           </StatusIconButton>
         )}
-      </Box>
+      </Flex>
     );
 
   return (
-    <Box display="flex" alignItems="center" justifyContent="space-between" px={2} my={2}>
+    <Flex align="center" justify="between" className="px-4 my-4">
       <StatusIconButton
         color="error"
         size={isSmall ? 'small' : 'medium'}
         onClick={handleRejectCall}
-        className={isSmall ? classes.smallIconWrapper : classes.iconWrapper}
+        className={isSmall ? smallIconWrapperClass : iconWrapperClass}
       >
-        <PhoneOff className={classes.icon} />
+        <PhoneOff className={iconClass} />
       </StatusIconButton>
       <StatusIconButton
         color="success"
         size={isSmall ? 'small' : 'medium'}
         onClick={handleAcceptCall}
-        className={isSmall ? classes.smallIconWrapper : classes.iconWrapper}
+        className={isSmall ? smallIconWrapperClass : iconWrapperClass}
       >
-        <Phone className={classes.icon} />
+        <Phone className={iconClass} />
       </StatusIconButton>
-    </Box>
+    </Flex>
   );
 };

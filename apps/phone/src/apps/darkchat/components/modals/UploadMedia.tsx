@@ -70,7 +70,7 @@ export const UploadMediaModal = () => {
           startIcon={<Image />}
           onClick={handleImageGallery}
         >
-          {t('DARKCHAT.MEDIA_GALLERY')}
+          {String(t('DARKCHAT.MEDIA_GALLERY'))}
         </Button>
         <Button
           variant="text"
@@ -78,7 +78,7 @@ export const UploadMediaModal = () => {
           startIcon={<Send />}
           onClick={handleSendImage}
         >
-          {t('GENERIC.SEND')}
+          {String(t('GENERIC.SEND'))}
         </Button>
       </ButtonsContainer>
     </Modal>

@@ -1,10 +1,9 @@
 import React from 'react';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
-const BankAppIcon = (props: SvgIconProps) => {
+
+const BankAppIcon = (props: React.SVGProps<SVGSVGElement> & { htmlColor?: string; }) => {
   return (
-    <SvgIcon {...props}>
-      <svg
+    <svg {...props}
         xmlns="http://www.w3.org/2000/svg"
         fillRule="evenodd"
         strokeLinejoin="round"
@@ -37,7 +36,7 @@ const BankAppIcon = (props: SvgIconProps) => {
           </g>
         </g>
       </svg>
-    </SvgIcon>
+    
   );
 };
 

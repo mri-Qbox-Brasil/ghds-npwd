@@ -1,10 +1,9 @@
 import React from 'react';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
-const EmailAppIcon = (props: SvgIconProps) => {
+
+const EmailAppIcon = (props: React.SVGProps<SVGSVGElement> & { htmlColor?: string; }) => {
   return (
-    <SvgIcon {...props}>
-      <svg
+    <svg {...props}
         xmlns="http://www.w3.org/2000/svg"
         fillRule="evenodd"
         strokeLinejoin="round"
@@ -38,7 +37,7 @@ const EmailAppIcon = (props: SvgIconProps) => {
           </g>
         </g>
       </svg>
-    </SvgIcon>
+    
   );
 };
 

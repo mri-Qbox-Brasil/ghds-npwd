@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react';
-import { Typography, Grid, IconButton, Slide, Paper, Box, List, Divider } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Slide } from '@mui/material';
 import { Signal, Battery, ChevronUp } from 'lucide-react';
+import { Flex } from '@ui/components/ui/flex';
+import { Typography } from '@ui/components/ui/typography';
+import { List } from '@ui/components/List';
+import { Divider } from '@ui/components/ui/divider';
+
 import Default from '../../../config/default.json';
 import { useNotifications } from '../hooks/useNotifications';
 import { NotificationItem } from './NotificationItem';
@@ -10,54 +14,7 @@ import { NoNotificationText } from './NoNotificationText';
 import { usePlayer } from '@os/phone/hooks/usePlayer';
 import { usePhone } from '@os/phone/hooks/usePhone';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.default,
-    height: '30px',
-    width: '100%',
-    color: theme.palette.text.primary,
-    zIndex: 99,
-    paddingLeft: '15px',
-    paddingRight: '15px',
-    position: 'relative',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-  item: {
-    margin: '0 6px',
-  },
-  text: {
-    position: 'relative',
-    lineHeight: '30px',
-    color: theme.palette.text.primary,
-  },
-  icon: {
-    padding: '4px',
-    color: theme.palette.text.primary,
-  },
-  drawer: {
-    backgroundColor: theme.palette.background.default,
-    width: '100%',
-    position: 'absolute',
-    top: '30px',
-    zIndex: 98,
-  },
-  closeNotifBtn: {
-    position: 'absolute',
-    right: '8px',
-    top: '8px',
-  },
-  notificationItem: {
-    position: 'relative',
-  },
-  collapseBtn: {
-    margin: '0 auto',
-  },
-}));
-
 export const NotificationBar = () => {
-  const classes = useStyles();
 
   const { icons, notifications, removeNotification, barUncollapsed, setBarUncollapsed } =
     useNotifications();
@@ -77,54 +34,46 @@ export const NotificationBar = () => {
 
   return (
     <>
-      <Grid
-        className={classes.root}
-        container
-        justifyContent="space-between"
-        alignItems="center"
-        wrap="nowrap"
+      <Flex
+        align="center"
+        justify="between"
+        className="bg-background h-[30px] w-full text-foreground z-[99] px-[15px] relative hover:cursor-pointer shrink-0"
         onClick={() => {
-          setBarUncollapsed((curr) => !curr);
+          setBarUncollapsed((curr: boolean) => !curr);
         }}
       >
-        <Grid container item wrap="nowrap">
+        <Flex align="center" style={{ flexWrap: 'nowrap' }}>
           {icons.map((notifIcon) => (
-            <Grid item key={notifIcon.key} component={IconButton} className={classes.icon}>
-              {notifIcon.icon}
-            </Grid>
+            <div key={notifIcon.key} className="p-1 text-foreground flex items-center justify-center">
+              {notifIcon.icon as React.ReactNode}
+            </div>
           ))}
-        </Grid>
+        </Flex>
         {time && (
-          <Grid item className={classes.item}>
-            <Typography className={classes.text} variant="button">
-              {time}
-            </Typography>
-          </Grid>
+          <div className="mx-1.5 flex items-center">
+            <Typography variant="body2" className="leading-[30px]">{time}</Typography>
+          </div>
         )}
-        <Grid container item wrap="nowrap" justifyContent="flex-end" alignItems="center">
+        <Flex align="center" justify="end" style={{ flexWrap: 'nowrap' }}>
           {showId && (
-            <Grid sx={{ marginRight: 1 }} item>
-              <Typography className={classes.text} variant="button">
-                ID: {source}
-              </Typography>
-            </Grid>
+            <div className="mr-2 flex items-center">
+              <Typography variant="body2" className="leading-[30px]">ID: {source}</Typography>
+            </div>
           )}
-          <Grid item>
+          <div className="flex items-center">
             <Signal size={20} />
-          </Grid>
-          <Grid item className={classes.item}>
-            <Typography className={classes.text} variant="button" sx={{ textTransform: 'none' }}>
-              {Default.cellProvider}
-            </Typography>
-          </Grid>
-          <Grid item>
+          </div>
+          <div className="mx-1.5 flex items-center">
+            <Typography variant="body2" className="leading-[30px] normal-case">{Default.cellProvider}</Typography>
+          </div>
+          <div className="flex items-center">
             <Battery style={{ transform: 'rotate(90deg)', display: 'block' }} size={20} />
-          </Grid>
-        </Grid>
-      </Grid>
+          </div>
+        </Flex>
+      </Flex>
       <Slide direction="down" in={barUncollapsed} mountOnEnter unmountOnExit>
-        <Paper square className={classes.drawer}>
-          <Box py={1}>
+        <div className="bg-background w-full absolute top-[30px] z-[98] shadow-md border-b border-border/50">
+          <div className="py-2">
             <List>
               <Divider />
               {notifications.map((notification, idx) => (
@@ -133,7 +82,7 @@ export const NotificationBar = () => {
                   {...notification}
                   onClose={(e) => {
                     e.stopPropagation();
-                    notification.onClose?.(notification);
+                    notification.onClose?.(notification as any);
                     removeNotification(idx);
                   }}
                   onClickClose={() => {
@@ -145,18 +94,17 @@ export const NotificationBar = () => {
                 />
               ))}
             </List>
-          </Box>
-          <Box display="flex" flexDirection="column">
+          </div>
+          <Flex direction="col">
             {!notifications.length && <NoNotificationText />}
-            <IconButton
-              className={classes.collapseBtn}
-              size="small"
+            <button
+              className="mx-auto appearance-none bg-transparent border-none p-1 rounded-full hover:bg-muted/50 transition-colors text-muted-foreground cursor-pointer"
               onClick={() => setBarUncollapsed(false)}
             >
               <ChevronUp />
-            </IconButton>
-          </Box>
-        </Paper>
+            </button>
+          </Flex>
+        </div>
       </Slide>
     </>
   );

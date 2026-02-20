@@ -1,88 +1,53 @@
 import { X } from 'lucide-react';
-import { Box, IconButton, Slide } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import { Alert, AlertTitle } from '@mui/material';
+import { Flex } from '@ui/components/ui/flex';
+import { Slide } from '@mui/material';
 import { useCurrentCallValue } from '@os/call/hooks/state';
 import { useNotification } from '../useNotification';
 
-const useStyles = makeStyles((theme) => ({
-  snackbar: {
-    marginTop: '-710px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  alert: {
-    '& .MuiAlert-action': {
-      top: theme.spacing(1),
-      right: theme.spacing(2),
-      position: 'absolute',
-    },
-    position: 'relative',
-    cursor: 'pointer',
-    width: '370px',
-    height: '80px',
-    zIndex: 50,
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.text.primary,
-    '& .MuiAlert-icon': {
-      color: theme.palette.text.primary,
-    },
-  },
-  alertContent: {
-    wordBreak: 'break-all',
-    display: '-webkit-box',
-    maxWidth: '360px',
-    height: '20px',
-    margin: '0 auto',
-    '-webkit-line-clamp': 3,
-    '-webkit-box-orient': 'vertical',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-}));
-
 export const NotificationAlert = () => {
-  const classes = useStyles();
-  const { currentAlert } = useNotification();
+  const { currentAlert } = useNotification() as any;
   const call = useCurrentCallValue();
 
   return (
-    <div className={classes.snackbar}>
+    <div className="mt-[-710px] flex justify-center items-center">
       <Slide in={!!currentAlert} mountOnEnter unmountOnExit>
-        <Alert
-          action={
-            <IconButton
-              color="primary"
-              size="small"
+        <div style={{ position: 'relative' }}>
+          {currentAlert && (
+            <Flex
               onClick={(e) => {
-                e.stopPropagation();
-                currentAlert?.onCloseAlert(e);
+                if (!call) currentAlert?.onClickAlert(e);
               }}
+              className="relative cursor-pointer w-[370px] h-[80px] z-50 bg-paper text-foreground rounded-xl shadow-[0_5px_15px_rgba(0,0,0,0.35)] border border-border/50 overflow-hidden"
             >
-              <X size={20} />
-            </IconButton>
-          }
-          onClick={(e) => {
-            if (!call) {
-              currentAlert?.onClickAlert(e);
-            }
-          }}
-          icon={currentAlert?.icon || false}
-          className={classes.alert}
-          elevation={6}
-        >
-          <AlertTitle>
-            <Box width="282px" whiteSpace="nowrap">
-              <Box overflow="hidden" component="div" textOverflow="ellipsis">
-                {currentAlert?.title}
-              </Box>
-            </Box>
-          </AlertTitle>
-          <Box component="div" className={classes.alertContent} textOverflow="ellipsis">
-            {currentAlert?.content}
-          </Box>
-        </Alert>
+              <Flex className="absolute top-2 right-4">
+                <button
+                  className="p-1 hover:bg-muted/50 rounded-full text-foreground"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    currentAlert?.onCloseAlert(e);
+                  }}
+                >
+                  <X size={20} />
+                </button>
+              </Flex>
+
+              {currentAlert?.icon && (
+                <Flex align="center" justify="center" className="py-2 pl-4 pr-3 text-foreground">
+                  {currentAlert.icon as React.ReactNode}
+                </Flex>
+              )}
+
+              <Flex direction="col" justify="center" className={`py-2 px-4 w-full ${currentAlert?.icon ? '' : 'pl-4'}`}>
+                <div className="w-[282px] whitespace-nowrap overflow-hidden text-ellipsis font-semibold">
+                  {currentAlert?.title as React.ReactNode}
+                </div>
+                <div className="break-all max-w-[360px] h-[20px] mx-auto line-clamp-3 overflow-hidden text-ellipsis text-sm text-muted-foreground w-full">
+                  {currentAlert?.content as React.ReactNode}
+                </div>
+              </Flex>
+            </Flex>
+          )}
+        </div>
       </Slide>
     </div>
   );

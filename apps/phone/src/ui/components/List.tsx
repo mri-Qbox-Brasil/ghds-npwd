@@ -1,8 +1,19 @@
-import React from 'react';
-import MaterialList, { ListProps } from '@mui/material/List';
+import React, { forwardRef } from 'react';
+import { Flex, type FlexProps } from './ui/flex';
+import { cn } from '@utils/cn';
 
-export const List: React.FC<ListProps> = ({ ...props }) => (
-  <MaterialList aria-label="list" {...props}>
-    {props.children}
-  </MaterialList>
+export interface ListProps extends FlexProps { }
+
+export const List = forwardRef<HTMLDivElement, ListProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <Flex
+        ref={ref}
+        direction="col"
+        className={cn("w-full py-2", className)}
+        {...props}
+      />
+    );
+  }
 );
+List.displayName = 'List';

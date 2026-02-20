@@ -1,20 +1,8 @@
 import { X } from 'lucide-react';
-import { IconButton, ListItem, ListItemAvatar, ListItemText, Theme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { ListItem } from '@ui/components/ListItem';
+import { Typography } from '@ui/components/ui/typography';
 import { INotification } from '../providers/NotificationsProvider';
 import { useCurrentCallValue } from '@os/call/hooks/state';
-
-const useStyles = makeStyles<Theme, { cantClose: boolean }>((theme) => ({
-  closeNotifBtn: {
-    position: 'absolute',
-    right: '8px',
-    top: '8px',
-  },
-  notificationItem: {
-    paddingRight: ({ cantClose }) => (cantClose ? '8px' : '28px'),
-    position: 'relative',
-  },
-}));
 
 export const NotificationItem = ({
   onClose,
@@ -25,12 +13,10 @@ export const NotificationItem = ({
   onClickClose: (e: any) => void;
 }) => {
   const { title, icon, content, cantClose, onClick } = notification;
-  const classes = useStyles({ cantClose });
   const call = useCurrentCallValue();
 
   return (
     <ListItem
-      divider
       button
       onClick={(e) => {
         if (onClick && !call) {
@@ -38,12 +24,20 @@ export const NotificationItem = ({
           onClickClose(e);
         }
       }}
-      className={classes.notificationItem}
+      className={`relative border-b border-border/50 ${cantClose ? 'pr-2' : 'pr-[28px]'}`}
     >
-      {icon && <ListItemAvatar>{icon}</ListItemAvatar>}
-      <ListItemText secondary={content}>{title}</ListItemText>
+      {icon && <div className="min-w-[35px] max-w-[5px] mr-2.5 flex justify-center">{icon as unknown as React.ReactNode}</div>}
+      <div className="flex flex-col flex-grow text-left">
+        <Typography variant="body1">{title as unknown as string}</Typography>
+        <Typography variant="body2" color="muted">{content as unknown as string}</Typography>
+      </div>
       {!cantClose && (
-        <X className="text-blue-500" />
+        <button
+          onClick={onClose}
+          className="absolute right-2 top-2 p-1 text-blue-500 hover:bg-muted/50 rounded-full cursor-pointer appearance-none bg-transparent border-none"
+        >
+          <X size={18} />
+        </button>
       )}
     </ListItem>
   );

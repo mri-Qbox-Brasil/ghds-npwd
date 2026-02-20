@@ -1,40 +1,26 @@
-import React from 'react';
-import { Snackbar } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import React, { useEffect } from 'react';
 import { useSnackbar } from '../hooks/useSnackbar';
 import Alert from '../../../ui/components/Alert';
 
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 'auto',
-    maxWidth: 280,
-    overflow: 'auto',
-    margin: '0 auto',
-    position: 'absolute',
-    left: 0,
-    bottom: 75,
-    right: 0,
-    transform: 'none',
-  },
-});
-
 export const PhoneSnackbar: React.FC = () => {
-  const classes = useStyles();
   const { alert, isOpen, handleClose } = useSnackbar();
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const duration = alert?.duration ?? 3000;
+    const timer = setTimeout(() => {
+      handleClose();
+    }, duration);
+    return () => clearTimeout(timer);
+  }, [isOpen, alert, handleClose]);
+
+  if (!isOpen) return null;
+
   return (
-    <Snackbar
-      autoHideDuration={alert?.duration ?? 3000}
-      open={isOpen}
-      className={classes.root}
-      onClose={handleClose}
-    >
-      <Alert severity={alert?.type || 'info'} onClose={handleClose}>
+    <div className="flex justify-center items-center h-auto max-w-[280px] overflow-auto mx-auto absolute left-0 bottom-[75px] right-0 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
+      <Alert severity={alert?.type || 'info'}>
         {alert?.message || ''}
       </Alert>
-    </Snackbar>
+    </div>
   );
 };

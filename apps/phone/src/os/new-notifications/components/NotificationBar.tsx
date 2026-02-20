@@ -1,16 +1,9 @@
 import React, { useEffect } from 'react';
-import { useTheme } from '@mui/material';
 
-import {
-  Typography,
-  IconButton,
-  Slide,
-  Paper,
-  Box,
-  List,
-  Button,
-} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Slide } from '@mui/material';
+import { Flex } from '@ui/components/ui/flex';
+import { Typography } from '@ui/components/ui/typography';
+import { List } from '@ui/components/List';
 
 import { ChevronUp } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';
@@ -27,121 +20,23 @@ import { useNotification } from '../useNotification';
 import { cn } from '@utils/css';
 
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: 'transparent',
-    width: '100%',
-    color: theme.palette.text.primary,
-    zIndex: 99,
-    padding: '25px',
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexShrink: 0,
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-
-  timeText: {
-    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif',
-    fontSize: '15px',
-    fontWeight: 600,
-    letterSpacing: '-0.3px',
-    color: theme.palette.mode === 'dark' ? '#ffffff' : '#000000',
-    lineHeight: 1,
-  },
-
-  notiIcons: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
-  },
-
-  statusIcons: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-
-  drawer: {
-    position: 'absolute',
-    left: '6%',
-    top: '60px',
-    width: '88%',
-    zIndex: 98,
-    borderRadius: '20px',
-    overflow: 'hidden',
-    backdropFilter: 'blur(5px)',
-    WebkitBackdropFilter: 'blur(5px)',
-    backgroundColor: theme.palette.mode === 'dark'
-      ? 'rgba(28, 28, 30, 0.50)'
-      : 'rgba(242, 242, 247, 0.50)',
-    border: theme.palette.mode === 'dark'
-      ? '0.5px solid rgba(255, 255, 255, 0.12)'
-      : '0.5px solid rgba(0, 0, 0, 0.08)',
-  },
-
-  drawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '14px 16px 6px',
-  },
-
-  drawerTitle: {
-    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif',
-    fontSize: '13px',
-    fontWeight: 700,
-    letterSpacing: '0.4px',
-    textTransform: 'uppercase' as const,
-    color: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)',
-  },
-
-  clearBtn: {
-    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif',
-    fontSize: '13px',
-    fontWeight: 500,
-    color: theme.palette.mode === 'dark' ? '#0a84ff' : '#007AFF',
-    textTransform: 'none' as const,
-    padding: '0',
-    minWidth: 'auto',
-  },
-
-  collapseBtn: {
-    margin: '0 auto',
-    color: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.3)',
-  },
-
-  text: {
-    position: 'relative',
-    color: theme.palette.text.primary,
-  },
-
-  icon: {
-    padding: '4px',
-    color: theme.palette.text.primary,
-  },
-}));
-
 interface WrapperGridProps {
   tgtNoti?: UnreadNotificationBarProps;
 }
 
 const IconUnreadGrid: React.FC<WrapperGridProps> = ({ tgtNoti }) => {
-  const tgtNotiId = tgtNoti?.notiId;
+  const tgtNotiId = (tgtNoti as any)?.notiId || (tgtNoti as any)?.id;
   const app = useApp(tgtNoti?.appId);
   if (!app || !tgtNotiId) return null;
   return (
-    <NotificationItem key={tgtNotiId} {...tgtNoti} />
+    <NotificationItem key={tgtNotiId} {...tgtNoti} id={tgtNotiId} />
   );
 };
 
 const UnreadNotificationListItem: React.FC<{ tgtNotiId: string }> = ({ tgtNotiId }) => {
-  const notiContents = useUnreadNotifications().find((n) => n.notiId === tgtNotiId);
+  const notiContents = useUnreadNotifications().find((n) => (n as any).notiId === tgtNotiId || (n as any).id === tgtNotiId);
   if (!notiContents) return null;
-  return <NotificationItem key={tgtNotiId} {...notiContents} />;
+  return <NotificationItem key={tgtNotiId} {...notiContents} id={tgtNotiId} />;
 };
 
 const SignalIcon: React.FC<{ color: string }> = ({ color }) => (
@@ -162,16 +57,12 @@ const BatteryIcon: React.FC<{ color: string }> = ({ color }) => (
 );
 
 export const NotificationBar = () => {
-  const classes = useStyles();
   const time = usePhoneTime();
-  const theme = useTheme();
 
   const [barCollapsed, setBarUncollapsed] = useNavbarUncollapsed();
   const unreadNotificationIds = useUnreadNotificationIds();
   const unreadNotifications = useUnreadNotifications();
   const { markAllAsRead } = useNotification();
-
-  const iconColor = theme.palette.mode === 'dark' ? '#ffffff' : '#000000';
 
   const handleClearNotis = async () => {
     setBarUncollapsed(false);
@@ -187,16 +78,16 @@ export const NotificationBar = () => {
   return (
     <>
       <div
-        className={classes.root}
+        className="w-full text-foreground z-[99] p-[25px] relative flex items-center justify-between shrink-0 hover:cursor-pointer bg-transparent"
         onClick={() => setBarUncollapsed((curr) => !curr)}
       >
         {time && (
-          <Typography className={classes.timeText}>
+          <div className="font-sans text-[15px] font-semibold tracking-tight text-foreground leading-none">
             {time}
-          </Typography>
+          </div>
         )}
 
-        <div className={classes.notiIcons}>
+        <div className="flex items-center gap-1">
           {unreadNotifications &&
             unreadNotifications
               .filter((val, idx, self) => idx === self.findIndex((t) => t.appId === val.appId))
@@ -205,33 +96,31 @@ export const NotificationBar = () => {
               ))}
         </div>
 
-        <div className={classes.statusIcons}>
-          <SignalIcon color={iconColor} />
-          <BatteryIcon color={iconColor} />
+        <div className="flex items-center gap-1.5 fill-foreground stroke-foreground text-foreground">
+          <SignalIcon color="currentColor" />
+          <BatteryIcon color="currentColor" />
         </div>
       </div>
 
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflow: 'hidden', zIndex: 97, pointerEvents: barCollapsed ? 'auto' : 'none' }}>
         <Slide direction="down" in={barCollapsed} mountOnEnter unmountOnExit>
           <div style={{ position: 'absolute', top: 10, left: 0, width: '100%', height: '100%' }}>
-            <Paper
-              square
-              elevation={0}
-              className={classes.drawer}
+            <div
+              className="absolute left-[6%] top-[60px] w-[88%] z-[98] rounded-[20px] overflow-hidden backdrop-blur-sm bg-background/50 border border-border"
             >
-              <div className={classes.drawerHeader}>
-                <Typography className={classes.drawerTitle}>
+              <div className="flex items-center justify-between px-4 pt-3.5 pb-1.5">
+                <Typography variant="body2" className="text-[13px] font-bold tracking-tight uppercase text-muted-foreground">
                   Notificações
                 </Typography>
                 {unreadNotificationIds?.length > 0 && (
-                  <Button className={classes.clearBtn} onClick={handleClearNotis} disableRipple>
+                  <button className="font-sans text-[13px] font-medium text-primary uppercase appearance-none p-0 min-w-auto bg-transparent border-none cursor-pointer" onClick={handleClearNotis}>
                     Limpar tudo
-                  </Button>
+                  </button>
                 )}
               </div>
 
-              <Box pb={1} px={1}>
-                <List disablePadding>
+              <div className="pb-2 px-2">
+                <List>
                   {unreadNotificationIds &&
                     unreadNotificationIds
                       .filter((val, idx, self) => idx === self.findIndex((t: string) => t === val))
@@ -240,18 +129,17 @@ export const NotificationBar = () => {
                       ))}
                 </List>
                 {!unreadNotificationIds.length && <NoNotificationText />}
-              </Box>
+              </div>
 
-              <Box display="flex" justifyContent="center" pb={0.5}>
-                <IconButton
-                  className={classes.collapseBtn}
-                  size="small"
+              <Flex justify="center" className="pb-1">
+                <button
+                  className="mx-auto text-muted-foreground hover:text-foreground cursor-pointer appearance-none bg-transparent border-none p-1 rounded-full hover:bg-muted/50 transition-colors"
                   onClick={() => setBarUncollapsed(false)}
                 >
                   <ChevronUp />
-                </IconButton>
-              </Box>
-            </Paper>
+                </button>
+              </Flex>
+            </div>
           </div>
         </Slide>
       </div>

@@ -1,25 +1,16 @@
 import React from 'react';
-import { Box } from '@mui/material';
 import { CallControls } from './CallControls';
-import { styled } from '@mui/styles';
-
-// Absolute usage here should definitely be revisted and
-// avoided when possible. Especially with these weird CSS semantics.
-const StyledControls = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  bottom: theme.spacing(1),
-  right: '0',
-}));
+import { Flex } from '@ui/components/ui/flex';
 
 interface CallNotificationProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export const CallNotification: React.FC<CallNotificationProps> = ({ children }) => (
-  <Box paddingBottom="48px">
-    <Box>{children}</Box>
-    <StyledControls>
+  <Flex direction="col" className="pb-12 relative w-full h-full">
+    <Flex className="w-full">{children}</Flex>
+    <Flex className="absolute bottom-2 right-0">
       <CallControls isSmall />
-    </StyledControls>
-  </Box>
+    </Flex>
+  </Flex>
 );

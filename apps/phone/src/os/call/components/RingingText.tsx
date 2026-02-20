@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography } from '@mui/material';
+import { Typography } from '@ui/components/ui/typography';
 import { useTranslation } from 'react-i18next';
 
 const RingingText = () => {

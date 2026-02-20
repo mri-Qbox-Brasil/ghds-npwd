@@ -1,10 +1,11 @@
 import React from 'react';
-import { ListItem, ListItemAvatar, ListItemText, useTheme } from '@mui/material';
 import { useApp } from '@os/apps/hooks/useApps';
 import { useRecoilValue } from 'recoil';
 import { notifications, useSetNavbarUncollapsed } from '@os/new-notifications/state';
 import { useNotification } from '@os/new-notifications/useNotification';
 import { useHistory } from 'react-router-dom';
+import { ListItem } from '@ui/components/ListItem';
+import { Typography } from '@ui/components/ui/typography';
 
 interface NotificationItemProps {
   id: string;
@@ -17,7 +18,6 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ id, key }) =
   const { icon } = useApp(appId);
   const history = useHistory();
   const closeBar = useSetNavbarUncollapsed();
-  const theme = useTheme();
 
   const handleOnClose = () => {
     markAsRead(id);
@@ -29,31 +29,11 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ id, key }) =
     <ListItem
       button
       onClick={handleOnClose}
-      sx={{ 
-        position: 'relative', 
-        backgroundColor: theme.palette.mode === 'dark' ? '#333' : '#fff',
-        borderRadius: '20px',
-        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-        opacity: '0.94',
-        marginBottom: '10px',
-        '&:hover': {
-          cursor: 'pointer',
-          backgroundColor: theme.palette.mode === 'dark' ? '#333' : '#fff',
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4)',
-          opacity: '0.97',
-        },
-        '& .MuiListItemAvatar-root': {
-          minWidth: '35px',
-          marginRight: '10px',
-        },
-
-      }}
+      className="relative bg-background opacity-95 mb-2.5 rounded-[20px] shadow-lg hover:opacity-100 hover:shadow-xl dark:bg-[#333]"
       key={key}
     >
-      {icon && <ListItemAvatar
-        sx={{ maxWidth: '5px', marginRight: '10px' }}
-      >{icon}</ListItemAvatar>}
-      <ListItemText primary={content} />
+      {icon && <div className="min-w-[35px] max-w-[5px] mr-2.5 flex justify-center">{icon as unknown as React.ReactNode}</div>}
+      <Typography variant="body1">{content}</Typography>
     </ListItem>
   );
 };
