@@ -11,13 +11,17 @@ import { Dock } from './Dock';
 export const HomeApp: React.FC = () => {
   const { apps } = useApps();
   const externalApps = useExternalApps();
+
+  const dockApps = apps?.filter((a) => a.isDockApp) || [];
+  const gridApps = apps?.filter((a) => !a.isDockApp) || [];
+
   return (
     <AppWrapper>
       <Box component="div" mt={3} px={1.6}>
-        {apps && <GridMenu xs={3} items={[...apps, ...externalApps]} />}
+        {apps && <GridMenu xs={3} items={[...gridApps, ...externalApps]} />}
       </Box>
 
-      {apps && <Dock apps={apps.slice(0, 4)} />}
+      {dockApps.length > 0 && <Dock apps={dockApps} />}
     </AppWrapper>
   );
 };

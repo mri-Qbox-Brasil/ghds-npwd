@@ -68,6 +68,7 @@ export interface IAppConfig {
   disable?: boolean;
   Route: React.FC<{ settings?: IPhoneSettings; i18n?: i18n; theme?: Theme }>;
   icon: JSX.Element;
+  isDockApp?: boolean;
 }
 
 export type IApp = IAppConfig & {
@@ -88,6 +89,7 @@ export const APPS: IAppConfig[] = [
     icon: <DialerAppIcon />,
     color: DIALER_APP_TEXT_COLOR,
     path: '/phone',
+    isDockApp: true,
     Route: () => <AppRoute id="DIALER" path="/phone" component={DialerApp} emitOnOpen={false} />,
   },
   {
@@ -97,6 +99,7 @@ export const APPS: IAppConfig[] = [
     icon: <ContactIcon />,
     color: CONTACTS_APP_TEXT_COLOR,
     path: '/contacts',
+    isDockApp: true,
     Route: () => (
       <AppRoute id="CONTACTS" path="/contacts" component={ContactsApp} emitOnOpen={false} />
     ),
@@ -107,6 +110,7 @@ export const APPS: IAppConfig[] = [
     path: '/browser',
     icon: <BrowserIcon />,
     color: common.white,
+    isDockApp: true,
     Route: () => (
       <AppRoute id="BROWSER" path="/browser" component={BrowserApp} emitOnOpen={false} />
     ),
@@ -118,6 +122,7 @@ export const APPS: IAppConfig[] = [
     backgroundColor: "rgba(0, 0, 0, 0)",
     color: MESSAGES_APP_TEXT_COLOR,
     path: '/messages',
+    isDockApp: true,
     Route: () => (
       <AppRoute id="MESSAGES" path="/messages" component={MessagesApp} emitOnOpen={false} />
     ),
