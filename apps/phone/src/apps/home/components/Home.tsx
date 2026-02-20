@@ -7,8 +7,9 @@ import { useExternalApps } from '@common/hooks/useExternalApps';
 import { Link } from 'react-router-dom';
 
 const BottomHomeButtons = styled(Box)`
-  border-radius: 35px;
+  border-radius: 28px;
 `;
+
 export const HomeApp: React.FC = () => {
   const { apps } = useApps();
   const externalApps = useExternalApps();
@@ -18,8 +19,16 @@ export const HomeApp: React.FC = () => {
         {apps && <GridMenu xs={3} items={[...apps, ...externalApps]} />}
       </Box>
 
-      <div className="absolute bottom-0 left-5 right-5">
-        <BottomHomeButtons className="h-24 w-full bg-gray-200/30">
+      <div style={{ position: 'absolute', bottom: '8px', left: '4%', right: '4%' }}>
+        <BottomHomeButtons
+          className="h-24 w-full"
+          style={{
+            backdropFilter: 'blur(25px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(25px) saturate(180%)',
+            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+            border: '0.5px solid rgba(255, 255, 255, 0.2)',
+          }}
+        >
           {apps &&
             apps.slice(0, 4).map((app) => (
               <div className="float-left h-full w-1/4" key={app.id}>

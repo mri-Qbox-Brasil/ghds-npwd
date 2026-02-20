@@ -3,136 +3,177 @@ import { useTheme } from '@mui/material';
 
 import {
   Typography,
-  Grid,
   IconButton,
   Slide,
   Paper,
   Box,
   List,
-  Divider,
-  GridProps,
   Button,
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import Default from '../../../config/default.json';
 import { NotificationItem } from './NotificationItem';
 import usePhoneTime from '../../phone/hooks/usePhoneTime';
 import { NoNotificationText } from './NoNotificationText';
 import {
-  notifications,
   useNavbarUncollapsed,
   useUnreadNotificationIds,
   useUnreadNotifications,
 } from '@os/new-notifications/state';
-import { useRecoilValue } from 'recoil';
 import { useApp } from '@os/apps/hooks/useApps';
 import { UnreadNotificationBarProps } from '@typings/notifications';
 import { useNotification } from '../useNotification';
-import batteryImg from '../../../apps/imgs/battery.png';
-import batteryDark from '../../../apps/imgs/battery-dark.png';
 import { cn } from '@utils/css';
-import { IoIosCloseCircle } from '@react-icons/all-files/io/IoIosCloseCircle';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: 'transparent',
-    marginTop: '20px',
-    height: '30px',
+    height: '44px',
     width: '100%',
     color: theme.palette.text.primary,
     zIndex: 99,
-    paddingLeft: '30px',
-    paddingRight: '30px',
+    paddingLeft: '20px',
+    paddingRight: '16px',
     position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexShrink: 0,
     '&:hover': {
       cursor: 'pointer',
     },
   },
+
+  timeText: {
+    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif',
+    fontSize: '15px',
+    fontWeight: 600,
+    letterSpacing: '-0.3px',
+    color: theme.palette.mode === 'dark' ? '#ffffff' : '#000000',
+    lineHeight: 1,
+  },
+
+  notiIcons: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
+
+  statusIcons: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+
   drawer: {
-    backgroundColor: 'transparent',
-    width: '92%',
     position: 'absolute',
-    left: '4%',
-    top: '50px',
+    left: '6%',
+    top: '60px',
+    width: '88%',
     zIndex: 98,
-    borderRadius: '20px', // Cantos arredondados
-    boxShadow: 'none',
-    // boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)', // Leve sombra
+    borderRadius: '20px',
+    overflow: 'hidden',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    backgroundColor: theme.palette.mode === 'dark'
+      ? 'rgba(28, 28, 30, 0.50)'
+      : 'rgba(242, 242, 247, 0.50)',
+    border: theme.palette.mode === 'dark'
+      ? '0.5px solid rgba(255, 255, 255, 0.12)'
+      : '0.5px solid rgba(0, 0, 0, 0.08)',
   },
-  paper: {
-    borderRadius: '15px',
-    marginBottom: '10px',
-    padding: '15px',
-    // boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    backgroundColor: theme.palette.mode === 'dark' ? '#333' : '#fff', // Ajuste dinâmico de cor
+
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '14px 16px 6px',
   },
+
+  drawerTitle: {
+    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif',
+    fontSize: '13px',
+    fontWeight: 700,
+    letterSpacing: '0.4px',
+    textTransform: 'uppercase' as const,
+    color: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)',
+  },
+
+  clearBtn: {
+    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif',
+    fontSize: '13px',
+    fontWeight: 500,
+    color: theme.palette.mode === 'dark' ? '#0a84ff' : '#007AFF',
+    textTransform: 'none' as const,
+    padding: '0',
+    minWidth: 'auto',
+  },
+
+  collapseBtn: {
+    margin: '0 auto',
+    color: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.3)',
+  },
+
   text: {
     position: 'relative',
-    lineHeight: '50px',
     color: theme.palette.text.primary,
   },
+
   icon: {
     padding: '4px',
     color: theme.palette.text.primary,
   },
-  collapseBtn: {
-    margin: '0 auto',
-  },
-  timeText: {
-    fontSize: '18px', // Tamanho maior para o texto do horário
-    fontWeight: 500, // Mais próximo ao estilo do iOS
-  },
 }));
 
-interface WrapperGridProps extends GridProps {
+interface WrapperGridProps {
   tgtNoti?: UnreadNotificationBarProps;
-  key: string | number;
 }
 
 const IconUnreadGrid: React.FC<WrapperGridProps> = ({ tgtNoti }) => {
-  const notificationTgtApp = useApp(tgtNoti.appId);
-
+  const tgtNotiId = tgtNoti?.notiId;
+  const app = useApp(tgtNoti?.appId);
+  if (!app || !tgtNotiId) return null;
   return (
-    <Grid
-      item
-      key={tgtNoti.id}
-      component={IconButton}
-      sx={{
-        color: 'text.primary',
-        fontSize: 'small',
-      }}
-    >
-      {notificationTgtApp.notificationIcon}
-    </Grid>
+    <NotificationItem key={tgtNotiId} {...tgtNoti} />
   );
 };
 
-interface UnreadNotificationListItemProps {
-  tgtNotiId: string;
-  key: string | number;
-}
-
-const UnreadNotificationListItem: React.FC<UnreadNotificationListItemProps> = ({ tgtNotiId }) => {
-  const notiContents = useRecoilValue(notifications(tgtNotiId));
-
+const UnreadNotificationListItem: React.FC<{ tgtNotiId: string }> = ({ tgtNotiId }) => {
+  const notiContents = useUnreadNotifications().find((n) => n.notiId === tgtNotiId);
+  if (!notiContents) return null;
   return <NotificationItem key={tgtNotiId} {...notiContents} />;
 };
+
+const SignalIcon: React.FC<{ color: string }> = ({ color }) => (
+  <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="8" width="3" height="4" rx="0.8" fill={color} />
+    <rect x="4.2" y="5.5" width="3" height="6.5" rx="0.8" fill={color} />
+    <rect x="8.4" y="2.5" width="3" height="9.5" rx="0.8" fill={color} />
+    <rect x="12.6" y="0" width="3" height="12" rx="0.8" fill={color} />
+  </svg>
+);
+
+const BatteryIcon: React.FC<{ color: string }> = ({ color }) => (
+  <svg width="25" height="12" viewBox="0 0 25 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke={color} strokeOpacity="0.35" />
+    <rect x="2" y="2" width="16" height="8" rx="2" fill={color} />
+    <path d="M23 4v4a2 2 0 000-4z" fill={color} fillOpacity="0.4" />
+  </svg>
+);
 
 export const NotificationBar = () => {
   const classes = useStyles();
   const time = usePhoneTime();
   const theme = useTheme();
-  // const time = '04:20'; //  mock dev ghds
 
   const [barCollapsed, setBarUncollapsed] = useNavbarUncollapsed();
-
   const unreadNotificationIds = useUnreadNotificationIds();
-
   const unreadNotifications = useUnreadNotifications();
-
   const { markAllAsRead } = useNotification();
+
+  const iconColor = theme.palette.mode === 'dark' ? '#ffffff' : '#000000';
 
   const handleClearNotis = async () => {
     setBarUncollapsed(false);
@@ -148,103 +189,74 @@ export const NotificationBar = () => {
   return (
     <>
       <div
-        className={cn(classes.root, 'flex flex-nowrap items-center justify-between')}
-        onClick={() => {
-          setBarUncollapsed((curr) => !curr);
-        }}
+        className={classes.root}
+        onClick={() => setBarUncollapsed((curr) => !curr)}
       >
         {time && (
-          <Grid item className={classes.item}>
-            <Typography className={classes.text} variant="button">
-              {time}
-            </Typography>
-          </Grid>
+          <Typography className={classes.timeText}>
+            {time}
+          </Typography>
         )}
-        <Grid container item wrap="nowrap">
+
+        <div className={classes.notiIcons}>
           {unreadNotifications &&
             unreadNotifications
               .filter((val, idx, self) => idx === self.findIndex((t) => t.appId === val.appId))
-              .map((notification, idx) => {
-                return <IconUnreadGrid tgtNoti={notification} key={idx} />;
-              })}
-        </Grid>
+              .map((notification, idx) => (
+                <IconUnreadGrid tgtNoti={notification} key={idx} />
+              ))}
+        </div>
 
-        <div className="flex items-center justify-end">
-          <div>
-            <svg
-              width="19"
-              height="13"
-              viewBox="0 0 19 13"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.5751 3.79376C10.5751 3.24192 11.0224 2.79456 11.5743 2.79456H12.5735C13.1253 2.79456 13.5727 3.24192 13.5727 3.79376V11.7874C13.5727 12.3393 13.1253 12.7866 12.5735 12.7866H11.5743C11.0224 12.7866 10.5751 12.3393 10.5751 11.7874V3.79376Z"
-                fill={theme.palette.mode === 'dark' ? '#FFF' : '#000'} // Cor dinâmica do SVG
-              />
-              <path
-                d="M15.5711 1.79535C15.5711 1.2435 16.0185 0.796143 16.5703 0.796143H17.5695C18.1214 0.796143 18.5687 1.2435 18.5687 1.79535V11.7874C18.5687 12.3393 18.1214 12.7866 17.5695 12.7866H16.5703C16.0185 12.7866 15.5711 12.3393 15.5711 11.7874V1.79535Z"
-                fill={theme.palette.mode === 'dark' ? '#FFF' : '#000'} // Cor dinâmica do SVG
-              />
-              <path
-                d="M5.57904 7.29099C5.57904 6.73914 6.0264 6.29178 6.57825 6.29178H7.57746C8.1293 6.29178 8.57666 6.73914 8.57666 7.29099V11.7874C8.57666 12.3393 8.1293 12.7866 7.57746 12.7866H6.57825C6.0264 12.7866 5.57904 12.3393 5.57904 11.7874V7.29099Z"
-                fill={theme.palette.mode === 'dark' ? '#FFF' : '#000'} // Cor dinâmica do SVG
-              />
-              <path
-                d="M0.583008 9.78901C0.583008 9.23716 1.03037 8.7898 1.58221 8.7898H2.58142C3.13327 8.7898 3.58063 9.23716 3.58063 9.78901V11.7874C3.58063 12.3393 3.13327 12.7866 2.58142 12.7866H1.58221C1.03037 12.7866 0.583008 12.3393 0.583008 11.7874V9.78901Z"
-                fill={theme.palette.mode === 'dark' ? '#FFF' : '#000'} // Cor dinâmica do SVG
-              />
-            </svg>
-          </div>
-          <div className="ml-3 w-8">
-            {/* <BatteryFull /> */}
-
-            <img src={theme.palette.mode === 'dark' ? batteryImg : batteryDark}></img>
-          </div>
+        <div className={classes.statusIcons}>
+          <SignalIcon color={iconColor} />
+          <BatteryIcon color={iconColor} />
         </div>
       </div>
-      <Slide direction="down" in={barCollapsed} mountOnEnter unmountOnExit>
-        <div
-          style={{
-            height: '100%',
-            position: 'absolute',
-            width: '100%',
-            zIndex: 1,
-            // backgroundColor: theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.8)',
-          }}
-        >
-          <Paper square className={classes.drawer}>
-            <Box py={1}>
-              {unreadNotificationIds?.length !== 0 && (
-                <Box pl={2}>
-                  <Button color="inherit" size="small" onClick={handleClearNotis}>
-                    {/* <IoIosCloseCircle fontSize={'24px'} color=""></IoIosCloseCircle> */}
-                    Limpar
+
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflow: 'hidden', zIndex: 97, pointerEvents: barCollapsed ? 'auto' : 'none' }}>
+        <Slide direction="down" in={barCollapsed} mountOnEnter unmountOnExit>
+          <div style={{ position: 'absolute', top: 10, left: 0, width: '100%', height: '100%' }}>
+            <Paper
+              square
+              elevation={0}
+              className={classes.drawer}
+            >
+              <div className={classes.drawerHeader}>
+                <Typography className={classes.drawerTitle}>
+                  Notificações
+                </Typography>
+                {unreadNotificationIds?.length > 0 && (
+                  <Button className={classes.clearBtn} onClick={handleClearNotis} disableRipple>
+                    Limpar tudo
                   </Button>
-                </Box>
-              )}
-              <List>
-                {unreadNotificationIds &&
-                  unreadNotificationIds
-                    .filter((val, idx, self) => idx === self.findIndex((t: string) => t === val))
-                    .map((notification, idx) => (
-                      <UnreadNotificationListItem key={idx} tgtNotiId={notification} />
-                    ))}
-              </List>
-            </Box>
-            <Box display="flex" flexDirection="column">
-              {!unreadNotificationIds.length && <NoNotificationText />}
-              <IconButton
-                className={classes.collapseBtn}
-                size="small"
-                onClick={() => setBarUncollapsed(false)}
-              >
-                <ArrowDropUpIcon />
-              </IconButton>
-            </Box>
-          </Paper>
-        </div>
-      </Slide>
+                )}
+              </div>
+
+              <Box pb={1} px={1}>
+                <List disablePadding>
+                  {unreadNotificationIds &&
+                    unreadNotificationIds
+                      .filter((val, idx, self) => idx === self.findIndex((t: string) => t === val))
+                      .map((notification, idx) => (
+                        <UnreadNotificationListItem key={idx} tgtNotiId={notification} />
+                      ))}
+                </List>
+                {!unreadNotificationIds.length && <NoNotificationText />}
+              </Box>
+
+              <Box display="flex" justifyContent="center" pb={0.5}>
+                <IconButton
+                  className={classes.collapseBtn}
+                  size="small"
+                  onClick={() => setBarUncollapsed(false)}
+                >
+                  <ArrowDropUpIcon />
+                </IconButton>
+              </Box>
+            </Paper>
+          </div>
+        </Slide>
+      </div>
     </>
   );
 };
