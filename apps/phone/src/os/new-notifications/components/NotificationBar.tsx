@@ -30,12 +30,10 @@ import { cn } from '@utils/css';
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: 'transparent',
-    height: '44px',
     width: '100%',
     color: theme.palette.text.primary,
     zIndex: 99,
-    paddingLeft: '20px',
-    paddingRight: '16px',
+    padding: '25px',
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
@@ -75,8 +73,8 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 98,
     borderRadius: '20px',
     overflow: 'hidden',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
+    backdropFilter: 'blur(5px)',
+    WebkitBackdropFilter: 'blur(5px)',
     backgroundColor: theme.palette.mode === 'dark'
       ? 'rgba(28, 28, 30, 0.50)'
       : 'rgba(242, 242, 247, 0.50)',

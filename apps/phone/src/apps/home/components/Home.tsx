@@ -23,8 +23,8 @@ export const HomeApp: React.FC = () => {
         <BottomHomeButtons
           className="h-24 w-full"
           style={{
-            backdropFilter: 'blur(25px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(25px) saturate(180%)',
+            backdropFilter: 'blur(5px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(5px) saturate(180%)',
             backgroundColor: 'rgba(255, 255, 255, 0.15)',
             border: '0.5px solid rgba(255, 255, 255, 0.2)',
           }}
