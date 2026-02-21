@@ -1,5 +1,5 @@
 import React from 'react';
-import img from '../../../../../../src/apps/imgs/notes.png'
+import img from '../../../../../../src/apps/imgs/notes.svg'
 
 const NotesIcon: React.FC = () => <img src={img} alt="Notes Icon" />;
 

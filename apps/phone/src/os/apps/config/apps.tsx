@@ -84,6 +84,7 @@ export const APPS: IAppConfig[] = [
     nameLocale: 'BROWSER.NAME',
     path: '/browser',
     icon: <BrowserIcon />,
+    backgroundColor: "rgba(0, 0, 0, 0)",
     color: '#ffffff',
     isDockApp: true,
     Route: () => (
@@ -128,7 +129,7 @@ export const APPS: IAppConfig[] = [
     id: 'DARKCHAT',
     nameLocale: 'APPS_DARKCHAT',
     icon: <DarkchatIcon />,
-    backgroundColor: "#ffffff",
+    backgroundColor: "rgba(0, 0, 0, 0)",
     color: '#171717', // neutral-900
     path: '/darkchat',
     Route: () => (
@@ -148,7 +149,7 @@ export const APPS: IAppConfig[] = [
     id: 'TWITTER',
     nameLocale: 'APPS_TWITTER',
     icon: <TwitterIcon />,
-    backgroundColor: '#1DA1F2',
+    backgroundColor: "rgba(0, 0, 0, 0)",
     color: '#ffffff',
     path: '/twitter',
     Route: () => (
@@ -159,7 +160,7 @@ export const APPS: IAppConfig[] = [
     id: 'MARKETPLACE',
     nameLocale: 'APPS_MARKETPLACE',
     icon: <MarketplaceIcon />,
-    backgroundColor: '#ffffff',
+    backgroundColor: "rgba(0, 0, 0, 0)",
     color: '#ffffff',
     path: '/marketplace',
     Route: () => (
@@ -184,7 +185,7 @@ export const APPS: IAppConfig[] = [
     id: 'CAMERA',
     nameLocale: 'APPS_CAMERA',
     icon: <Camera />,
-    backgroundColor: '#303030', // grey 800
+    backgroundColor: "rgba(0, 0, 0, 0)", // grey 800
     color: '#ffffff',
     path: '/camera',
     Route: () => <AppRoute id="CAMERA" path="/camera" component={CameraApp} emitOnOpen={false} />,

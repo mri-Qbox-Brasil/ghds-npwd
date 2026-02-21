@@ -1,5 +1,4 @@
 import React from 'react';
-import { IconButton } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 interface INotificationIcon {
@@ -9,8 +8,11 @@ interface INotificationIcon {
 
 export const NotificationIcon = ({ icon, to }: INotificationIcon) => {
   return (
-    <IconButton component={NavLink} to={to} size="small">
+    <NavLink
+      to={to}
+      className="p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors inline-flex items-center justify-center text-neutral-600 dark:text-neutral-300"
+    >
       {icon}
-    </IconButton>
+    </NavLink>
   );
 };
