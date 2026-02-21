@@ -7,13 +7,6 @@
   "homepage": "/dist/html",
   "dependencies": {
     "@babel/runtime": "^7.17.2",
-    "@emotion/css": "^11.10.5",
-    "@emotion/react": "^11.7.0",
-    "@emotion/styled": "^11.6.0",
-    "@mui/icons-material": "^5.11.0",
-    "@mui/lab": "^5.0.0-alpha.131",
-    "@mui/material": "^5.13.2",
-    "@mui/styles": "^5.13.2",
     "@npwd/keyos": "workspace:^1.0.0",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-slot": "^1.2.4",

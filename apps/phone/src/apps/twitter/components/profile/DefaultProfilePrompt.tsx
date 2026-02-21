@@ -26,7 +26,6 @@ export const DefaultProfilePrompt: React.FC<DefaultProfilePromptProps> = ({
           <UserCheck size={32} />
         </div>
         <h2 className="text-xl font-bold text-neutral-900 dark:text-white">
-          {t('TWITTER.EDIT_DEFAULT_PROFILE_NAME')}
         </h2>
         <p className="text-sm text-neutral-400 font-medium">
           Escolha um dos nomes disponíveis para começar a twittar.

@@ -1,11 +1,8 @@
-import React, { useMemo } from 'react';
-import { createTheme, ThemeProvider, StyledEngineProvider, CircularProgress } from '@mui/material';
-import { deepMergeObjects } from '@shared/deepMergeObjects';
-import { usePhoneTheme } from '@os/phone/hooks/usePhoneTheme';
+import React from 'react';
 import { IApp } from '../config/apps';
-import styled from '@emotion/styled';
 import { ExternalAppBoundary } from './externalAppBoundary';
 import { useTranslation } from 'react-i18next';
+import { LoadingSpinner } from '@ui/components/LoadingSpinner';
 
 const colorShade = (col: any, amt: number) => {
   col = col.replace(/^#/, '');
@@ -25,63 +22,11 @@ const colorShade = (col: any, amt: number) => {
   return `#${rr}${gg}${bb}`;
 };
 
-const Container = styled.div<{ background: string; color: string }>`
-  height: 100%;
-  width: 100%;
-
-  color: ${({ color }) => color ?? '#fff'};
-  background: ${({ background }) => background ?? '#222'};
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background-size: 400% 400%;
-  animation: gradient 6s ease infinite;
-
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-`;
-
-const ProgressContainer = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 2rem;
-`;
-
-const IconWrapper = styled.div`
-  svg {
-    width: 3.5rem;
-    height: 3.5rem;
-  }
-
-  animation: 3s linear 0.25s infinite alternate breath;
-
-  @keyframes breath {
-    0% {
-      transform: scale(1);
-    }
-
-    100% {
-      transform: scale(1.5);
-    }
-  }
-`;
-
 const generateBackground = (bg: string) => {
+  if (!bg) return 'linear-gradient(45deg, #121212, #1a1a1a)';
   const light = colorShade(bg, 30);
   const dark = colorShade(bg, -30);
-  return `linear-gradient(45deg,${light}, ${dark}, ${light}, ${dark}, ${dark})`;
+  return `linear-gradient(45deg, ${light}, ${dark}, ${light}, ${dark}, ${dark})`;
 };
 
 const SplashScreen = (props: IApp) => {
@@ -89,33 +34,43 @@ const SplashScreen = (props: IApp) => {
   const background = generateBackground(backgroundColor);
 
   return (
-    <Container {...props} background={background}>
-      <IconWrapper>{icon}</IconWrapper>
+    <div
+      className="h-full w-full flex flex-col items-center justify-center animate-in fade-in duration-500"
+      style={{ background, backgroundSize: '400% 400%' }}
+    >
+      <div className="animate-breath scale-110 mb-8 opacity-90">
+        <div className="w-20 h-20 flex items-center justify-center">
+          {icon}
+        </div>
+      </div>
 
-      <ProgressContainer>
-        <CircularProgress color="inherit" />
-      </ProgressContainer>
-    </Container>
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 scale-75 opacity-50">
+        <LoadingSpinner />
+      </div>
+
+      <style>{`
+        @keyframes breath {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+        .animate-breath {
+            animation: breath 2s ease-in-out infinite alternate;
+        }
+      `}</style>
+    </div>
   );
 };
 
 export function createExternalAppProvider(config: IApp) {
   return ({ children }: { children: React.ReactNode }) => {
     const { t } = useTranslation();
-    const phoneTheme = usePhoneTheme();
     const background = generateBackground(config.backgroundColor ?? '#222');
-
-    const mergedTheme = useMemo(() => {
-      return createTheme(deepMergeObjects(phoneTheme, config?.theme));
-    }, [phoneTheme]);
 
     return (
       <ExternalAppBoundary background={background} color={config.color} t={t}>
-        <StyledEngineProvider injectFirst>
-          <React.Suspense fallback={<SplashScreen {...config} />}>
-            <ThemeProvider theme={mergedTheme}>{children}</ThemeProvider>
-          </React.Suspense>
-        </StyledEngineProvider>
+        <React.Suspense fallback={<SplashScreen {...config} />}>
+          {children}
+        </React.Suspense>
       </ExternalAppBoundary>
     );
   };

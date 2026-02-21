@@ -1,19 +1,14 @@
-import { useMemo } from 'react';
-import { createTheme } from '@mui/material';
 import { useSettings } from '../../../apps/settings/hooks/useSettings';
-import { PhoneThemes } from '../../../config/ThemeConfig';
-import themeOverrides from '../../../styles/themeOverrides';
 
 export const usePhoneTheme = () => {
   const [settings] = useSettings();
-  return useMemo(
-    () => createTheme(PhoneThemes[settings.theme.value], themeOverrides),
-    [settings.theme],
-  );
+  return {
+    mode: settings.theme.value.includes('dark') ? 'dark' : 'light',
+    themeName: settings.theme.value
+  };
 };
 
 export const usePhoneTheme2 = () => {
-  // tailwind with dark class, save to localstorage
   const toggleTheme = (theme: 'light' | 'dark') => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');

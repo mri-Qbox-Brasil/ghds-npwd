@@ -1,34 +1,10 @@
 import { AppWrapper } from '@ui/components';
-import { styled } from '@mui/material/styles';
-import React, {Reducer, useEffect, useReducer, useRef} from 'react';
+import React, { Reducer, useEffect, useReducer, useRef } from 'react';
 import { AppContent } from '@ui/components/AppContent';
-import { Box } from '@mui/material';
 import { BrowserURLBar } from './BrowserURLBar';
 import { promiseTimeout } from '../../../utils/promiseTimeout';
 import { usePhoneConfig } from '../../../config/hooks/usePhoneConfig';
-import {useConfig, usePhone} from "@os/phone/hooks";
-
-const PREFIX = 'BrowserApp';
-
-const classes = {
-  iframe: `${PREFIX}-iframe`,
-  root: `${PREFIX}-root`,
-};
-
-const StyledAppWrapper = styled(AppWrapper)(() => ({
-  [`& .${classes.iframe}`]: {
-    height: '100%',
-    width: '100%',
-    zoom: 0.5,
-    border: 'none',
-  },
-
-  [`& .${classes.root}`]: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-}));
+import { usePhone } from "@os/phone/hooks";
 
 interface BrowserState {
   browserUrl: string;
@@ -59,7 +35,6 @@ const browserReducer: Reducer<BrowserState, ReducerAction> = (state, action) => 
 };
 
 export const BrowserApp: React.FC = () => {
-  const [{ appSettings }] = usePhoneConfig();
   const { ResourceConfig } = usePhone();
 
   const [browserState, dispatch] = useReducer(browserReducer, {
@@ -78,10 +53,7 @@ export const BrowserApp: React.FC = () => {
 
   const handleGoBack = () => {
     if (browserHistory.length <= 1) return;
-    // Get last page from history
     const lastPage = browserHistory[browserHistory.length - 1];
-
-    // Bail if last page is same as current
     if (lastPage === browserUrl) return;
     _setBrowserUrl(lastPage);
   };
@@ -100,8 +72,8 @@ export const BrowserApp: React.FC = () => {
   }, [ResourceConfig.browser.homepageUrl]);
 
   return (
-    <StyledAppWrapper id="browser">
-      <AppContent className={classes.root}>
+    <AppWrapper id="browser" className="bg-white dark:bg-black">
+      <AppContent className="flex flex-col h-full grow scrollbar-hide">
         <BrowserURLBar
           browserUrl={browserUrl}
           browserHasHistory={browserHistory.length > 1}
@@ -109,22 +81,16 @@ export const BrowserApp: React.FC = () => {
           goBack={handleGoBack}
           reloadPage={reloadPage}
         />
-        <Box flexGrow={1}>
+        <div className="flex-grow w-full h-full relative overflow-hidden bg-white">
           <iframe
             is="x-frame-bypass"
             src={browserUrl}
-            // @ts-ignore
-            className={classes.iframe}
-            style={{
-              height: '100%',
-              width: '100%',
-              border: 'none',
-            }}
+            className="w-full h-full border-none animate-in fade-in duration-1000"
             title="npwd-browser"
             ref={iframeRef}
           />
-        </Box>
+        </div>
       </AppContent>
-    </StyledAppWrapper>
+    </AppWrapper>
   );
 };

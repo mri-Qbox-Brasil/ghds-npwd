@@ -110,8 +110,9 @@ export const textareaClasses = cva('rounded-md outline-none w-full', {
 
 export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & VariantProps<typeof textareaClasses>;
 
-export const NPWDInput: React.FC<NPWDInputProps> = ({ size, variant, className, ...props }) => {
+export const NPWDInput = forwardRef<HTMLInputElement, NPWDInputProps>(({ size, variant, className, ...props }, ref) => {
   return <input
+    ref={ref}
     {...props}
     className={cn(classes({ size, variant, className }))}
     onMouseUp={(e) => {
@@ -127,7 +128,7 @@ export const NPWDInput: React.FC<NPWDInputProps> = ({ size, variant, className, 
       }
     }}
   />;
-};
+});
 
 export const NPWDTextarea: React.FC<TextareaProps> = ({ size, variant, className, ...props }) => {
   return <textarea

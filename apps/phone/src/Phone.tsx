@@ -32,7 +32,6 @@ import { PhoneSnackbar } from '@os/snackbar/components/PhoneSnackbar';
 import { useInvalidSettingsHandler } from './apps/settings/hooks/useInvalidSettingsHandler';
 import { useKeyboardService } from '@os/keyboard/hooks/useKeyboardService';
 import { useExternalApps } from '@common/hooks/useExternalApps';
-import { useTheme } from '@mui/material';
 import { useDarkchatService } from './apps/darkchat/hooks/useDarkchatService';
 import { useNotificationListener } from '@os/new-notifications/useNotificationListener';
 import { useSystemNotificationListener } from '@os/new-notifications/components/system/useSystemNotificationListener';
@@ -46,7 +45,6 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
   const { i18n } = useTranslation();
   const { apps } = useApps();
   const [settings] = useSettings();
-  const theme = useTheme();
 
   // Set language from local storage
   // This will only trigger on first mount & settings changes
@@ -55,7 +53,7 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
   }, [i18n, settings.language]);
 
   useEffect(() => {
-    if (settings.theme.value === 'taso-dark') {
+    if (settings.theme.value.includes('dark')) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
@@ -85,13 +83,13 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
   const { modal: callModal } = useCallModal();
 
   return (
-    <div>
+    <div className="antialiased">
       <GameBlur />
       <TopLevelErrorComponent>
         <WindowSnackbar />
         <PhoneWrapper>
           <NotificationBar />
-          <div className="PhoneAppContainer" id="notificationAppContainer" ref={notiRefCB}>
+          <div className="PhoneAppContainer scrollbar-hide" id="notificationAppContainer" ref={notiRefCB}>
             <>
               <Route exact path="/" component={HomeApp} />
               {callModal && <Route exact path="/call" component={CallModal} />}
@@ -101,7 +99,7 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
 
               {externalApps.map((App) => (
                 <Fragment key={App.id}>
-                  <App.Route settings={settings} i18n={i18n} theme={theme} />
+                  <App.Route settings={settings} i18n={i18n} />
                 </Fragment>
               ))}
             </>
