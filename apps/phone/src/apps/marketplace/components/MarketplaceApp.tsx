@@ -16,9 +16,9 @@ export const MarketplaceApp: React.FC = () => {
 
 	return (
 		<Provider>
-			<AppWrapper id="marketplace-app">
+			<AppWrapper id="marketplace-app" className="bg-[#f8f9fa] dark:bg-black">
 				<AppTitle app={marketplaceApp} />
-				<AppContent>
+				<AppContent className="pb-[72px] scrollbar-hide">
 					<WordFilterProvider>
 						<Switch>
 							<Route

@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { CircularProgress, Button } from '@mui/material';
 import { TwitterEvents } from '@typings/twitter';
 import fetchNui from '../../../../utils/fetchNui';
 import { ServerPromiseResp } from '@typings/common';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
-import { NPWDButton } from '@npwd/keyos';
 import { Repeat } from 'lucide-react';
+import { cn } from '@utils/cn';
 
 interface IProps {
   tweetId: number;
@@ -14,8 +13,7 @@ interface IProps {
   isRetweet: boolean | number;
 }
 
-
-const LOADING_TIME = 1250;
+const LOADING_TIME = 1000;
 
 export const RetweetButton = ({ tweetId, isRetweet, retweetId }: IProps) => {
   const [retweeted, setRetweeted] = useState(false);
@@ -23,22 +21,19 @@ export const RetweetButton = ({ tweetId, isRetweet, retweetId }: IProps) => {
   const { t } = useTranslation();
   const { addAlert } = useSnackbar();
 
-  const handleClick = () => {
-    // don't allow someone to spam retweet
-    // note that this is enforced by the server currently, not the UI
-    // so if a player refreshes the page they won't see the filled
-    // button anymore
-    if (retweeted) return;
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (retweeted || loading) return;
 
-    // if someone is retweeting something that is itself a retweet
-    // then we want to retweet the original post (if we haven't already)
     const idToRetweet = isRetweet ? retweetId : tweetId;
+    setLoading(true);
 
     fetchNui<ServerPromiseResp<void>>(TwitterEvents.RETWEET, { tweetId: idToRetweet }).then(
       (resp) => {
         if (resp.status !== 'ok') {
+          setLoading(false);
           return addAlert({
-            message: t(resp.errorMsg),
+            message: t(resp.errorMsg as string) as string,
             type: 'error',
           });
         }
@@ -51,18 +46,26 @@ export const RetweetButton = ({ tweetId, isRetweet, retweetId }: IProps) => {
     );
   };
 
-  if (loading) {
-    return (
-      <Button disabled>
-        <CircularProgress size={22} />
-      </Button>
-    );
-  }
-
   return (
-    <NPWDButton onClick={handleClick} size='sm' variant='ghost'>
-      <Repeat size={20} className='text-sky-400' />
-    </NPWDButton>
+    <button
+      onClick={handleClick}
+      disabled={loading || retweeted}
+      className={cn(
+        "flex items-center gap-1.5 p-2 rounded-xl transition-all",
+        retweeted
+          ? "text-green-500 bg-green-50 dark:bg-green-500/10 shadow-sm shadow-green-500/5 rotate-180 scale-110"
+          : "text-neutral-400 hover:text-green-500 hover:bg-green-50 dark:hover:bg-green-500/10 active:scale-90"
+      )}
+    >
+      <Repeat
+        size={18}
+        strokeWidth={retweeted ? 3 : 2}
+        className={cn(
+          "transition-transform duration-700",
+          loading && "animate-spin"
+        )}
+      />
+    </button>
   )
 };
 

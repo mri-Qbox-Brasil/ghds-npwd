@@ -2,16 +2,7 @@ import React, { memo, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePhone } from '@os/phone/hooks/usePhone';
 import { getNewLineCount } from '../../utils/message';
-import { NPWDTextarea, TextField } from '@ui/components/Input';
-import { styled } from '@mui/material';
-
-const MessageInput = styled(TextField)({
-  flex: '1 1 100%',
-  padding: '10px 15px',
-  marginTop: '15px',
-  overflowY: 'auto',
-  maxHeight: '300px',
-});
+import { NPWDTextarea } from '@ui/components/Input';
 
 export const TweetMessage = ({ modalVisible, message, handleChange, onEnter }) => {
   const textFieldInputRef = useRef<HTMLTextAreaElement>(null);
@@ -40,42 +31,30 @@ export const TweetMessage = ({ modalVisible, message, handleChange, onEnter }) =
     errorMessage = newLineWarningPrompt;
   }
 
-  const handleOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (overNewLineLimit) return;
+  // Handle enter key to submit tweet
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (overNewLineLimit || overCharacterLimit) return;
 
     if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
       onEnter();
     }
   };
 
   return (
-    <NPWDTextarea
-      value={message}
-      onChange={(e) => handleChange(e.currentTarget.value)}
-      ref={textFieldInputRef}
-      placeholder={t('TWITTER.TWEET_MESSAGE_PLACEHOLDER')}
-      className="min-h-20 w-full resize-none rounded-md border border-neutral-600 bg-neutral-700 p-2 text-base text-white outline-none focus:ring-2 focus:ring-sky-400"
-    />
-  );
-
-  return (
-    <MessageInput
-      value={message}
-      inputProps={{
-        style: {
-          fontSize: '18px',
-          paddingTop: '8px',
-        },
-      }}
-      onChange={(e) => handleChange(e.currentTarget.value)}
-      onKeyPress={handleOnEnter}
-      fullWidth
-      multiline
-      placeholder={t('TWITTER.TWEET_MESSAGE_PLACEHOLDER')}
-      inputRef={textFieldInputRef}
-      error={errorMessage !== null}
-      helperText={errorMessage || null}
-    />
+    <div className="w-full flex flex-col gap-1">
+      <NPWDTextarea
+        value={message}
+        onChange={(e) => handleChange(e.currentTarget.value)}
+        ref={textFieldInputRef}
+        onKeyDown={handleKeyDown}
+        placeholder={t('TWITTER.TWEET_MESSAGE_PLACEHOLDER') as unknown as string}
+        className="min-h-[100px] w-full resize-none rounded-md border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 p-3 text-base text-neutral-900 dark:text-white outline-none focus:ring-2 focus:ring-sky-500 transition-all"
+      />
+      {errorMessage && (
+        <span className="text-xs text-red-500 px-1 font-medium">{errorMessage as unknown as string}</span>
+      )}
+    </div>
   );
 };
 

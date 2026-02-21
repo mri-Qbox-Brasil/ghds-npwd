@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import { Profile as IProfile, FormattedProfile, MatchEvents } from '@typings/match';
 import ProfileField from '@ui/components/ProfileField';
 import UpdateButton from '@ui/components/UpdateButton';
-import { Box, Card, IconButton, LinearProgress, Stack, Typography } from '@mui/material';
 import Profile from './Profile';
 import { usePhone } from '@os/phone/hooks/usePhone';
 import PageText from '../PageText';
@@ -12,36 +10,16 @@ import fetchNui from '@utils/fetchNui';
 import { ServerPromiseResp } from '@typings/common';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import { useSetMyProfile } from '../../hooks/state';
-import { Button } from '@ui/components/Button';
 import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 import { deleteQueryFromLocation } from '@common/utils/deleteQueryFromLocation';
-import { Mic, Play, Pause } from 'lucide-react';
+import { Mic, Play, Pause, ImageIcon, Music } from 'lucide-react';
 import { useAudioPlayer } from '@os/audio/hooks/useAudioPlayer';
 import RecordVoiceMessage from '../RecordVoiceMessage';
-import Backdrop from '@ui/components/Backdrop';
 import { blobToBase64 } from '@utils/seralize';
 import { AudioEvents, AudioRequest, AudioResponse } from '@typings/audio';
-
-const useStyles = makeStyles({
-  root: {
-    position: 'relative',
-    width: '100%',
-    height: 'calc(100% - 40px)',
-    padding: '15px',
-  },
-  card: {
-    position: 'absolute',
-    margin: '15px 15px 25px 15px',
-    height: 'calc(100% - 80px)',
-    width: 'calc(100% - 30px)',
-    overflow: 'hidden',
-  },
-  spacer: {
-    height: '8px',
-  },
-});
+import { cn } from '@utils/cn';
 
 interface IProps {
   profile: FormattedProfile;
@@ -49,7 +27,6 @@ interface IProps {
 }
 
 export function ProfileForm({ profile, showPreview }: IProps) {
-  const classes = useStyles();
   const [t] = useTranslation();
   const { ResourceConfig } = usePhone();
   const { addAlert } = useSnackbar();
@@ -58,11 +35,6 @@ export function ProfileForm({ profile, showPreview }: IProps) {
   const { pathname, search } = useLocation();
   const query = useQueryParams();
 
-  // note that this assumes we are defensively checking
-  // that profile is not null in a parent above this component.
-  // Annoyingling adding conditionals above this line to not render
-  // when profile === null results in a react error that different
-  // amounts of hooks are rendering
   const [image, setImage] = useState(profile?.image || '');
   const [name, setName] = useState(profile?.name || '');
   const [bio, setBio] = useState(profile?.bio || '');
@@ -71,10 +43,10 @@ export function ProfileForm({ profile, showPreview }: IProps) {
   const [tags, setTags] = useState(profile?.tags || '');
   const [voiceMessage, setVoiceMessage] = useState<Blob | null>(null);
   const [recordVoiceMessage, setRecordVoiceMessage] = useState(false);
-  const { play, pause, playing, currentTime, duration } = useAudioPlayer(profile.voiceMessage);
+  const { play, pause, playing, currentTime, duration } = useAudioPlayer(profile?.voiceMessage);
 
   const closeVoiceMessageModal = () => {
-    setRecordVoiceMessage((curVal) => !curVal);
+    setRecordVoiceMessage(false);
   };
 
   const handleSetVoiceMessage = (voiceMessage: Blob) => {
@@ -82,7 +54,7 @@ export function ProfileForm({ profile, showPreview }: IProps) {
   };
 
   const calculateProgress =
-    isNaN(duration) || duration == Infinity
+    isNaN(duration) || duration === Infinity
       ? 0
       : (Math.trunc(currentTime) / Math.trunc(duration)) * 100;
 
@@ -97,7 +69,7 @@ export function ProfileForm({ profile, showPreview }: IProps) {
     bio,
     location,
     job,
-    tagList: tags.split(',').map((tag) => tag.trim()),
+    tagList: tags ? tags.split(',').map((tag) => tag.trim()) : [],
   };
 
   const handleUpdate = async () => {
@@ -113,7 +85,7 @@ export function ProfileForm({ profile, showPreview }: IProps) {
         if (audioRes.status !== 'ok') {
           return addAlert({
             type: 'error',
-            message: audioRes.errorMsg,
+            message: audioRes.errorMsg as string,
           });
         }
         voiceMessageURL = audioRes.data.url;
@@ -125,22 +97,21 @@ export function ProfileForm({ profile, showPreview }: IProps) {
       name: update.name.trim(),
       image: update.image.trim(),
       tags: update.tagList.join(','),
-      voiceMessage: voiceMessageURL,
+      voiceMessage: voiceMessageURL || profile?.voiceMessage,
     };
 
     const event = profile ? MatchEvents.UPDATE_MY_PROFILE : MatchEvents.CREATE_MY_PROFILE;
     fetchNui<ServerPromiseResp<FormattedProfile>>(event, updatedProfile).then((resp) => {
       if (resp.status !== 'ok') {
         return addAlert({
-          message: t(resp.errorMsg),
+          message: t(resp.errorMsg as string) as string,
           type: 'error',
         });
       }
 
       setMyProfile(resp.data);
-
       addAlert({
-        message: t('MATCH.FEEDBACK.UPDATE_PROFILE_SUCCEEDED'),
+        message: t('MATCH.FEEDBACK.UPDATE_PROFILE_SUCCEEDED') as string,
         type: 'success',
       });
     });
@@ -148,101 +119,137 @@ export function ProfileForm({ profile, showPreview }: IProps) {
 
   useEffect(() => {
     if (!query?.image) return;
-    setImage(query.image);
+    setImage(query.image as string);
     history.replace(deleteQueryFromLocation({ pathname, search }, 'image'));
-  }, [query, history, setImage, pathname, search]);
+  }, [query, history, pathname, search]);
 
   if (!profile && !ResourceConfig.match.allowEditableProfileName) {
-    return <PageText text={t('MATCH.PROFILE_CONFIGURATION')} />;
+    return <PageText text={t('MATCH.PROFILE_CONFIGURATION') as string} />;
   }
 
   if (showPreview) {
     return (
-      <Card raised className={classes.card}>
+      <div className="h-full w-full p-4 animate-in fade-in duration-500">
         <Profile profile={update} />
-      </Card>
+      </div>
     );
   }
 
   return (
-    <div className={classes.root}>
+    <div className="flex flex-col h-full bg-background animate-in fade-in duration-300">
       <RecordVoiceMessage
         open={recordVoiceMessage}
         closeModal={closeVoiceMessageModal}
         setVoiceMessage={handleSetVoiceMessage}
       />
-      {recordVoiceMessage && <Backdrop />}
-      <Box>
-        <ProfileField
-          label={t('MATCH.EDIT_PROFILE_IMAGE')}
-          value={update.image}
-          handleChange={setImage}
-          allowChange
-        />
-        <Box mt={1} mb={2}>
-          <Button variant="contained" onClick={handleOpenGallery}>
-            Choose image
-          </Button>
-        </Box>
-      </Box>
-      <ProfileField
-        label={t('MATCH.EDIT_PROFILE_NAME')}
-        value={name}
-        handleChange={setName}
-        allowChange={ResourceConfig.match.allowEditableProfileName}
-      />
-      <ProfileField
-        label={t('MATCH.EDIT_PROFILE_BIO')}
-        value={update.bio}
-        handleChange={setBio}
-        multiline
-        maxLength={250}
-      />
-      <ProfileField
-        label={t('MATCH.EDIT_PROFILE_LOCATION')}
-        value={update.location}
-        handleChange={setLocation}
-      />
-      <ProfileField
-        label={t('MATCH.EDIT_PROFILE_JOB')}
-        value={update.job}
-        handleChange={setJob}
-        maxLength={50}
-      />
-      <ProfileField label={t('MATCH.EDIT_PROFILE_TAGS')} value={tags} handleChange={setTags} />
 
-      {ResourceConfig && ResourceConfig.voiceMessage && (
-        <>
-          <Typography variant="body2" color="textSecondary" component="p" sx={{ marginTop: '8px' }}>
-            {t('MATCH.EDIT_VOICE_MESSAGE')}
-          </Typography>
+      <div className="flex-1 overflow-y-auto space-y-6 p-6 pb-32">
+        {/* Foto de Perfil */}
+        <section className="space-y-3">
+          <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">
+            {t('MATCH.EDIT_PROFILE_IMAGE') as string}
+          </label>
+          <div className="flex items-center gap-4">
+            <div className="h-24 w-24 rounded-2xl overflow-hidden bg-neutral-100 dark:bg-neutral-800 border border-neutral-100 dark:border-neutral-800 shadow-inner">
+              {image ? (
+                <img src={image} alt="Profile" className="h-full w-full object-cover" />
+              ) : (
+                <div className="h-full w-full flex items-center justify-center text-neutral-300">
+                  <ImageIcon size={32} />
+                </div>
+              )}
+            </div>
+            <button
+              onClick={handleOpenGallery}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-95 text-sm"
+            >
+              <ImageIcon size={18} />
+              Escolher da Galeria
+            </button>
+          </div>
+        </section>
 
-          <Stack direction="row">
-            <IconButton onClick={() => setRecordVoiceMessage(true)}>
-              <Mic />
-            </IconButton>
+        {/* Campos do Perfil */}
+        <div className="space-y-4">
+          <ProfileField
+            label={t('MATCH.EDIT_PROFILE_NAME') as string}
+            value={name}
+            handleChange={setName}
+            allowChange={ResourceConfig.match.allowEditableProfileName}
+          />
+          <ProfileField
+            label={t('MATCH.EDIT_PROFILE_BIO') as string}
+            value={bio}
+            handleChange={setBio}
+            multiline
+            maxLength={250}
+          />
+          <div className="grid grid-cols-2 gap-4">
+            <ProfileField
+              label={t('MATCH.EDIT_PROFILE_LOCATION') as string}
+              value={location}
+              handleChange={setLocation}
+            />
+            <ProfileField
+              label={t('MATCH.EDIT_PROFILE_JOB') as string}
+              value={job}
+              handleChange={setJob}
+              maxLength={50}
+            />
+          </div>
+          <ProfileField
+            label={t('MATCH.EDIT_PROFILE_TAGS') as string}
+            value={tags}
+            handleChange={setTags}
+          />
+        </div>
 
-            {profile.voiceMessage && (
-              <Box sx={{ width: '100%' }}>
-                <Box display="flex" alignItems="center">
-                  <IconButton onClick={playing ? pause : play}>
-                    {playing ? <Pause /> : <Play />}
-                  </IconButton>
-                  <Box sx={{ width: '60%' }}>
-                    {!calculateProgress && playing ? (
-                      <LinearProgress />
-                    ) : (
-                      <LinearProgress variant="determinate" value={calculateProgress} />
-                    )}
-                  </Box>
-                </Box>
-              </Box>
-            )}
-          </Stack>
-        </>
-      )}
+        {/* Mensagem de Voz */}
+        {ResourceConfig && ResourceConfig.voiceMessage && (
+          <section className="space-y-3 pt-4">
+            <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center gap-2">
+              <Music size={14} />
+              {t('MATCH.EDIT_VOICE_MESSAGE') as string}
+            </label>
 
-      <UpdateButton handleClick={handleUpdate} />
+            <div className="p-4 bg-pink-50 dark:bg-pink-500/10 rounded-2xl border border-pink-100 dark:border-pink-500/20 flex items-center justify-between gap-4">
+              <button
+                onClick={() => setRecordVoiceMessage(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-pink-500 text-white font-bold rounded-xl shadow-lg hover:bg-pink-600 transition-all active:scale-95 text-sm"
+              >
+                <Mic size={18} />
+                {profile?.voiceMessage ? "Gravar Nova" : "Gravar Bio"}
+              </button>
+
+              {profile?.voiceMessage && (
+                <div className="flex-1 flex items-center gap-3">
+                  <button
+                    onClick={playing ? pause : play}
+                    className="h-10 w-10 shrink-0 flex items-center justify-center rounded-full bg-white dark:bg-neutral-800 text-pink-500 shadow-sm border border-pink-100 dark:border-pink-900/30"
+                  >
+                    {playing ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+                  </button>
+                  <div className="flex-1 h-1.5 bg-pink-200 dark:bg-pink-900/50 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-pink-500 transition-all duration-300"
+                      style={{ width: `${calculateProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+      </div>
+
+      <div className="p-6 bg-background/80 backdrop-blur-md border-t border-neutral-100 dark:border-neutral-800 fixed bottom-0 w-full z-10 lg:w-[350px]">
+        <button
+          onClick={handleUpdate}
+          className="w-full h-14 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-2xl shadow-lg shadow-pink-500/30 transition-all active:scale-95"
+        >
+          Salvar Perfil
+        </button>
+      </div>
     </div>
   );
 }

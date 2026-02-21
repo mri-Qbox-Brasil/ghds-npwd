@@ -2,21 +2,23 @@ import React, { memo } from 'react';
 import data from 'emoji-mart/data/google.json';
 
 import { NimblePicker } from 'emoji-mart';
-import { useTheme } from '@mui/material';
 
 export const EmojiSelect = ({ visible, onEmojiClick }) => {
-  const theme = useTheme();
-
   if (!visible) return null;
 
+  const isDarkMode = document.documentElement.classList.contains('dark');
+
   return (
-    <NimblePicker
-      data={data}
-      onClick={onEmojiClick}
-      set="google"
-      theme={theme.palette.mode}
-      showPreview={false}
-    />
+    <div className="w-full flex justify-center py-2">
+      <NimblePicker
+        data={data}
+        onClick={onEmojiClick}
+        set="google"
+        theme={isDarkMode ? 'dark' : 'light'}
+        showPreview={false}
+        width="100%"
+      />
+    </div>
   );
 };
 

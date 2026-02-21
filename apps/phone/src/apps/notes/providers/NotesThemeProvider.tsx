@@ -1,4 +1,5 @@
-import { createAppThemeProvider } from '@os/apps/utils/createAppThemeProvider';
-import notesTheme from '../notes.theme';
+import React from 'react';
 
-export const NotesThemeProvider = createAppThemeProvider(notesTheme);
+export const NotesThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    return <>{children}</>;
+};

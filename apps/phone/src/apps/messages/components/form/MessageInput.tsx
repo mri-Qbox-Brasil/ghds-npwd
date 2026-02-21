@@ -1,18 +1,15 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Paper, Box, Button, ButtonGroup } from '@mui/material';
-
-import { NPWDInput, NPWDTextarea, TextField } from '@ui/components/Input';
+import { NPWDTextarea } from '@ui/components/Input';
 import { useMessageAPI } from '../../hooks/useMessageAPI';
 import { MessageConversation } from '@typings/messages';
 import useMessages from '../../hooks/useMessages';
 import { useWordFilter } from '@os/wordfilter/hooks/useWordFilter';
-import { useConfig } from '@os/phone/hooks';
-import { Image, Mic, SendHorizonal, SendHorizontal } from 'lucide-react';
+import { Image, Mic, SendHorizontal, Plus } from 'lucide-react';
+import { cn } from '@utils/cn';
 
 interface IProps {
   onAddImageClick(): void;
-
   onVoiceClick: () => void;
   messageConversation: MessageConversation | undefined;
   messageGroupName: string | undefined;
@@ -55,39 +52,52 @@ const MessageInput = ({
     setMessage(e.currentTarget.value);
   };
 
-  if (!messageConversation.id) return null;
+  if (!messageConversation?.id) return null;
 
   return (
-    <div className="px-2">
-      <div className="flex items-center space-x-2 rounded-md px-2 dark:bg-neutral-800">
+    <div className="px-4 py-3 bg-background/95 backdrop-blur-md border-t border-neutral-100 dark:border-neutral-800 flex items-end gap-2 animate-in slide-in-from-bottom duration-500">
+      <div className="flex items-center self-center">
         <button
           onClick={onAddImageClick}
-          className="h-14 dark:text-white hover:dark:text-green-500"
+          className="p-2.5 rounded-full text-neutral-400 hover:text-blue-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all active:scale-90"
         >
-          <Image size={24} />
+          <Plus size={24} />
         </button>
+      </div>
+
+      <div className="flex-1 min-w-0 bg-neutral-100 dark:bg-neutral-800 rounded-[22px] px-4 py-1.5 flex items-end border border-transparent focus-within:border-blue-500/30 transition-all shadow-inner">
         <NPWDTextarea
           rows={1}
-          className="resize-none"
+          className="bg-transparent border-none focus:ring-0 text-[15px] py-1 max-h-32 min-h-[32px] resize-none scrollbar-hide text-neutral-900 dark:text-white placeholder:text-neutral-400 font-medium leading-tight"
           onKeyDown={handleKeyPress}
           value={message}
           onChange={handleChange}
-          placeholder={t('MESSAGES.NEW_MESSAGE')}
+          placeholder={t('MESSAGES.NEW_MESSAGE') as string}
         />
-        <div className="flex items-center space-x-2">
-          {voiceEnabled && (
-            <button onClick={onVoiceClick} className="hover:text-green-500">
-              <Mic size={24} />
-            </button>
-          )}
 
+        {voiceEnabled && message.trim().length === 0 && (
           <button
-            onClick={handleSubmit}
-            className="rounded-lg bg-green-600 p-2 text-white hover:bg-green-700"
+            onClick={onVoiceClick}
+            className="p-2 -mr-1 text-neutral-400 hover:text-blue-500 transition-colors"
           >
-            <SendHorizontal size={24} />
+            <Mic size={20} />
           </button>
-        </div>
+        )}
+      </div>
+
+      <div className="flex items-center self-center">
+        <button
+          onClick={handleSubmit}
+          disabled={!message.trim()}
+          className={cn(
+            "flex h-11 w-11 items-center justify-center rounded-full transition-all active:scale-90 shadow-md",
+            message.trim()
+              ? "bg-blue-500 text-white shadow-blue-500/20 hover:bg-blue-600 scale-100"
+              : "bg-neutral-200 dark:bg-neutral-800 text-neutral-400 pointer-events-none scale-90"
+          )}
+        >
+          <SendHorizontal size={22} />
+        </button>
       </div>
     </div>
   );

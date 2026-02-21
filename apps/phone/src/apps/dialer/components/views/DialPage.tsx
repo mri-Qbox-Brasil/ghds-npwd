@@ -1,29 +1,16 @@
 import React, { useState } from 'react';
-import { Theme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 import DialGrid from '../DialPadGrid';
 import { DialerInput } from '../DialerInput';
 import { DialInputCtx } from '../../context/InputContext';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-    minHeight: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    gap:'2.5rem',
-  },
-}));
-
 const DialPage: React.FC = () => {
-  const classes = useStyles();
   const query = useQueryParams();
   const queryNumber = query.number;
   const [inputVal, setInputVal] = useState(queryNumber || '');
 
   return (
-    <div className={classes.root}>
+    <div className="flex flex-col h-full bg-background pt-8 pb-4 animate-in fade-in duration-300">
       <DialInputCtx.Provider
         value={{
           inputVal,
@@ -33,10 +20,17 @@ const DialPage: React.FC = () => {
           set: (val: string) => setInputVal(val),
         }}
       >
-        <DialerInput />
-        <DialGrid />
+        <div className="flex-1 flex flex-col justify-between max-w-sm mx-auto w-full px-6">
+          <div className="flex flex-col items-center">
+            <DialerInput />
+          </div>
+          <div className="pb-12">
+            <DialGrid />
+          </div>
+        </div>
       </DialInputCtx.Provider>
     </div>
   );
 };
+
 export default DialPage;

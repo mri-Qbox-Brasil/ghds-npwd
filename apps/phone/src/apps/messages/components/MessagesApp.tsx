@@ -1,45 +1,40 @@
 import React from 'react';
-import {AppWrapper} from '@ui/components';
-import {AppTitle} from '@ui/components/AppTitle';
-import {AppContent} from '@ui/components/AppContent';
-import {useApp} from '@os/apps/hooks/useApps';
+import { AppWrapper, AppContent } from '@ui/components';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import MessageGroupModal from './modal/MessageGroupModal';
 import MessagesList from './list/MessagesList';
-import {Route, Switch, useHistory, useLocation} from 'react-router-dom';
-import {MessageModal} from './modal/MessageModal';
+import { MessageModal } from './modal/MessageModal';
 import NewMessageGroupButton from './form/NewMessageGroupButton';
-import {MessagesThemeProvider} from '../providers/MessagesThemeProvider';
-import {LoadingSpinner} from '@ui/components/LoadingSpinner';
-import {WordFilterProvider} from '@os/wordfilter/providers/WordFilterProvider';
+import { MessagesThemeProvider } from '../providers/MessagesThemeProvider';
+import { LoadingSpinner } from '@ui/components/LoadingSpinner';
+import { WordFilterProvider } from '@os/wordfilter/providers/WordFilterProvider';
 
 export const MessagesApp = () => {
-    const messages = useApp('MESSAGES');
     const history = useHistory();
-    const {pathname} = useLocation();
 
     return (
         <MessagesThemeProvider>
             <AppWrapper id="messages-app">
                 <WordFilterProvider>
-                    <AppContent>
-                        <React.Suspense fallback={<LoadingSpinner/>}>
+                    <AppContent className="relative flex flex-col h-full overflow-hidden bg-background">
+                        <React.Suspense fallback={<LoadingSpinner />}>
                             <Switch>
                                 <Route path="/messages/conversations/:groupId">
-                                    <MessageModal/>
+                                    <MessageModal />
                                 </Route>
                                 <Route exact path="/messages">
-                                    <MessagesList/>
+                                    <MessagesList />
                                 </Route>
                             </Switch>
                             <Switch>
                                 <Route exact path={['/messages/new/:phoneNumber', '/messages/new']}>
-                                    <MessageGroupModal/>
+                                    <MessageGroupModal />
                                 </Route>
                             </Switch>
                         </React.Suspense>
                     </AppContent>
                     <Route exact path="/messages">
-                        <NewMessageGroupButton onClick={() => history.push('/messages/new')}/>
+                        <NewMessageGroupButton onClick={() => history.push('/messages/new')} />
                     </Route>
                 </WordFilterProvider>
             </AppWrapper>

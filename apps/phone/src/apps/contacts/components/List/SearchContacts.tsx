@@ -1,34 +1,34 @@
-import React, {useEffect, useState} from 'react';
-
-import {useTranslation} from 'react-i18next';
-
-import {useDebounce} from '@os/phone/hooks/useDebounce';
-import {useSetContactFilterInput} from '../../hooks/state';
-import {NPWDInput, NPWDSearchInput} from '@ui/components';
-import {Search} from "lucide-react";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useContactFilterInput } from '../../hooks/state';
+import { NPWDInput } from '@ui/components/Input';
+import { Search, X } from 'lucide-react';
 
 export const SearchContacts: React.FC = () => {
     const [t] = useTranslation();
-    const setFilterVal = useSetContactFilterInput();
-    const [inputVal, setInputVal] = useState('');
+    const [search, setSearch] = useContactFilterInput();
 
-    const debouncedVal = useDebounce<string>(inputVal, 500);
-
-    useEffect(() => {
-        setFilterVal(debouncedVal);
-    }, [debouncedVal, setFilterVal]);
+    const clearSearch = () => setSearch("");
 
     return (
-        <div className="w-full py-2">
-            <div className="flex items-center justify-start bg-neutral-200 dark:bg-neutral-800 rounded-md px-2 space-x-2 border dark:border-neutral-700">
-                <Search className="h-5 w-5 dark:text-neutral-400"/>
-                <NPWDInput
-                    className="group-focus:ring-2"
-                    onChange={(e) => setInputVal(e.target.value)}
-                    placeholder={t('CONTACTS.PLACEHOLDER_SEARCH_CONTACTS')}
-                    value={inputVal}
-                />
+        <div className="relative w-full group">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 transition-colors group-focus-within:text-blue-500">
+                <Search size={18} />
             </div>
+            <NPWDInput
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={t('CONTACTS.SEARCH') + "..."}
+                className="w-full pl-10 pr-10 h-11 bg-neutral-100 dark:bg-neutral-800 border-none rounded-2xl text-sm focus:ring-2 focus:ring-blue-500/20 transition-all placeholder:text-neutral-400"
+            />
+            {search.length > 0 && (
+                <button
+                    onClick={clearSearch}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full bg-neutral-300 dark:bg-neutral-600 text-white hover:bg-neutral-400 dark:hover:bg-neutral-500 transition-colors animate-in zoom-in"
+                >
+                    <X size={12} />
+                </button>
+            )}
         </div>
     );
 };

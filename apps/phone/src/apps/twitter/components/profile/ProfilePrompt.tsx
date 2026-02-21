@@ -11,14 +11,7 @@ import DefaultProfilePrompt from './DefaultProfilePrompt';
 import { ServerPromiseResp } from '@typings/common';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import fetchNui from '@utils/fetchNui';
-import { Box, styled } from '@mui/material';
-
-const PromptRoot = styled(Box)({
-  position: 'relative',
-  width: '100%',
-  height: '100%',
-  padding: '15px',
-});
+import { cn } from '@utils/cn';
 
 export function ProfilePrompt() {
   const [t] = useTranslation();
@@ -46,8 +39,6 @@ export function ProfilePrompt() {
     });
   };
 
-  // case where profile doesn't exist, couldn't be created automatically
-  // and the player is not allowed to edit their own profile name
   if (showDefaultProfileNames) {
     return (
       <DefaultProfilePrompt
@@ -59,18 +50,18 @@ export function ProfilePrompt() {
     );
   }
 
-  // case where profile doesn't exist, couldn't be created automatically
-  // but the player IS allowed to edit their own profile name
   return (
-    <PromptRoot>
+    <div className="relative w-full h-full p-[15px] flex flex-col gap-4">
       <ProfileField
         label={t('TWITTER.EDIT_PROFILE_NAME')}
         value={profileName}
         handleChange={setProfileName}
         allowChange
       />
-      <ProfileUpdateButton handleClick={handleCreate} />
-    </PromptRoot>
+      <div className="mt-auto">
+        <ProfileUpdateButton handleClick={handleCreate} />
+      </div>
+    </div>
   );
 }
 

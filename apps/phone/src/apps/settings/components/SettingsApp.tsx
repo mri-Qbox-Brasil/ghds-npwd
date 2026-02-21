@@ -1,6 +1,5 @@
 import React from 'react';
 import { AppWrapper } from '@ui/components';
-import { AppTitle } from '@ui/components/AppTitle';
 import { AppContent } from '@ui/components/AppContent';
 import { useContextMenu, MapSettingItem, SettingOption } from '@ui/hooks/useContextMenu';
 import { usePhoneConfig } from '../../../config/hooks/usePhoneConfig';
@@ -14,12 +13,11 @@ import {
 } from './SettingItem';
 import { useTranslation } from 'react-i18next';
 
-import { Copy } from 'lucide-react';
+import { Copy, Settings2 } from 'lucide-react';
 import {
   BookA,
   EyeOff,
   FileMusic,
-  LayoutGrid,
   Wallpaper,
   Palette,
   Phone,
@@ -30,8 +28,6 @@ import {
   ListFilter,
   Eraser,
 } from 'lucide-react';
-import makeStyles from '@mui/styles/makeStyles';
-import { useTheme } from '@mui/material';
 import { useResetSettings, useSettings } from '../hooks/useSettings';
 import { setClipboard } from '@os/phone/hooks/useClipboard';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
@@ -42,19 +38,7 @@ import { IconSetObject } from '@typings/settings';
 import { useCustomWallpaperModal } from '../state/customWallpaper.state';
 import fetchNui from '@utils/fetchNui';
 import { SettingEvents } from '@typings/settings';
-
-const useStyles = makeStyles({
-  backgroundModal: {
-    background: 'black',
-    opacity: '0.6',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 5,
-  },
-});
+import { cn } from '@utils/cn';
 
 export const SettingsApp: React.FC = () => {
   const [config] = usePhoneConfig();
@@ -64,14 +48,13 @@ export const SettingsApp: React.FC = () => {
   const [customWallpaperState, setCustomWallpaperState] = useCustomWallpaperModal();
 
   const { addAlert } = useSnackbar();
-
   const resetSettings = useResetSettings();
 
   const handleSettingChange = (key: string | number, value: unknown) => {
     setSettings({ ...settings, [key]: value });
 
     if (key === 'theme') {
-      if (value.value === 'taso-dark') {
+      if ((value as any).value === 'taso-dark') {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
@@ -127,7 +110,7 @@ export const SettingsApp: React.FC = () => {
   const handleResetOptions = () => {
     resetSettings();
     addAlert({
-      message: t('SETTINGS.MESSAGES.SETTINGS_RESET'),
+      message: t('SETTINGS.MESSAGES.SETTINGS_RESET') as string || 'Configurações resetadas',
       type: 'success',
     });
   };
@@ -137,7 +120,7 @@ export const SettingsApp: React.FC = () => {
       selected: false,
       onClick: () => handleResetOptions(),
       key: 'RESET_SETTINGS',
-      label: t('SETTINGS.OPTIONS.RESET_SETTINGS'),
+      label: t('SETTINGS.OPTIONS.RESET_SETTINGS') as string || 'Resetar Configurações',
     },
   ];
 
@@ -145,7 +128,7 @@ export const SettingsApp: React.FC = () => {
     selected: false,
     onClick: () => setCustomWallpaperState(true),
     key: 'CUSTOM_WALLPAPER',
-    label: t('SETTINGS.OPTIONS.CUSTOM_WALLPAPER.DIALOG_TITLE'),
+    label: t('SETTINGS.OPTIONS.CUSTOM_WALLPAPER.DIALOG_TITLE') as string || 'Papel de Parede Personalizado',
   };
 
   const handleCopyPhoneNumber = () => {
@@ -153,48 +136,43 @@ export const SettingsApp: React.FC = () => {
     addAlert({
       message: t('GENERIC.WRITE_TO_CLIPBOARD_MESSAGE', {
         content: 'number',
-      }),
+      }) as string || 'Número copiado para a área de transferência',
       type: 'success',
     });
   };
 
   const [openMenu, closeMenu, ContextMenu, isMenuOpen] = useContextMenu();
-  const classes = useStyles();
-  const theme = useTheme();
-  return (
-    <AppWrapper>
-      {/* Used for picking and viewing a custom wallpaper */}
-      <WallpaperModal />
-      <div className={customWallpaperState ? classes.backgroundModal : undefined} />
-      {/*
-        Sometimes depending on the height of the app, we sometimes want it to fill its parent
-        and other times we want it to grow with the content. AppContent implementation currently
-        has a style of height: 100%, attached to its main class. We overwrite this here by
-        passing a style prop of height: 'auto'. This isn't ideal but it works without breaking
-        any of the other apps.
 
-        This also fixes Material UI v5's background color properly
-      */}
+  return (
+    <AppWrapper className="bg-[#f0f2f5] dark:bg-black">
+      <WallpaperModal />
+      {customWallpaperState && <div className="absolute inset-0 z-50 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300" />}
+
       <AppContent
         backdrop={isMenuOpen}
         onClickBackdrop={closeMenu}
-        display="flex"
-        style={{
-          height: 'auto',
-        }}
+        className="flex flex-col grow pb-20 scrollbar-hide"
       >
-        <div className="py-4">
+        {/* Modern iOS-style Header */}
+        <header className="px-8 pt-12 pb-6 animate-in slide-in-from-top-4 duration-700">
+          <div className="flex items-center gap-4 mb-2">
+            <div className="p-3 bg-blue-500 rounded-2xl text-white shadow-lg shadow-blue-500/30">
+              <Settings2 size={28} strokeWidth={2.5} />
+            </div>
+            <h1 className="text-4xl font-black text-neutral-900 dark:text-white tracking-tighter uppercase italic">Ajustes</h1>
+          </div>
+          <p className="text-[11px] font-bold text-neutral-400 uppercase tracking-[0.3em] ml-1">Personalize sua experiência</p>
+        </header>
+
+        <div className="flex flex-col gap-2">
           <SettingsCategory title={t('SETTINGS.CATEGORY.PHONE')}>
             <SettingItemIconAction
               label={t('SETTINGS.PHONE_NUMBER')}
               labelSecondary={myNumber}
-              actionLabel={t('GENERIC.WRITE_TO_CLIPBOARD_TOOLTIP', {
-                content: 'number',
-              })}
+              actionLabel={t('GENERIC.WRITE_TO_CLIPBOARD_TOOLTIP', { content: 'number' }) as string}
               Icon={Phone}
-              actionIcon={<Copy />}
+              actionIcon={<Copy size={18} />}
               handleAction={handleCopyPhoneNumber}
-              theme={theme}
             />
             <SoundItem
               label={t('SETTINGS.OPTIONS.RINGTONE')}
@@ -203,10 +181,7 @@ export const SettingsApp: React.FC = () => {
               onClick={openMenu}
               Icon={FileMusic}
               tooltip={t('SETTINGS.PREVIEW_SOUND')}
-              onPreviewClicked={() => {
-                fetchNui(SettingEvents.PREVIEW_RINGTONE);
-              }}
-              theme={theme}
+              onPreviewClicked={() => fetchNui(SettingEvents.PREVIEW_RINGTONE)}
             />
             <SoundItem
               label={t('SETTINGS.OPTIONS.NOTIFICATION')}
@@ -215,43 +190,44 @@ export const SettingsApp: React.FC = () => {
               onClick={openMenu}
               Icon={FileMusic}
               tooltip={t('SETTINGS.PREVIEW_SOUND')}
-              onPreviewClicked={() => {
-                fetchNui(SettingEvents.PREVIEW_ALERT);
-              }}
-              theme={theme}
+              onPreviewClicked={() => fetchNui(SettingEvents.PREVIEW_ALERT)}
             />
             <SettingSwitch
               label={t('SETTINGS.OPTIONS.STREAMER_MODE.TITLE')}
               secondary={t('SETTINGS.OPTIONS.STREAMER_MODE.DESCRIPTION')}
-              icon={<EyeOff />}
+              icon={<EyeOff size={20} />}
               value={settings.streamerMode}
               onClick={(curr) => handleSettingChange('streamerMode', !curr)}
-              theme={theme}
             />
             <SettingSwitch
               label={t('SETTINGS.OPTIONS.ANONYMOUS_MODE.TITLE')}
               secondary={t('SETTINGS.OPTIONS.ANONYMOUS_MODE.DESCRIPTION')}
-              icon={<ShieldOff />}
+              icon={<ShieldOff size={20} />}
               value={settings.anonymousMode}
               onClick={(curr) => handleSettingChange('anonymousMode', !curr)}
-              theme={theme}
             />
             <SettingItemSlider
               label={t('SETTINGS.OPTIONS.CALL_VOLUME')}
-              icon={<Volume2 />}
+              icon={<Volume2 size={20} />}
               value={settings.callVolume}
               onCommit={(val) => handleSettingChange('callVolume', val)}
-              theme={theme}
             />
           </SettingsCategory>
+
           <SettingsCategory title={t('SETTINGS.CATEGORY.APPEARANCE')}>
+            <SettingItem
+              label={t('SETTINGS.OPTIONS.ICON_SET')}
+              value={settings.iconSet.label}
+              options={iconSets}
+              onClick={openMenu}
+              Icon={ListFilter}
+            />
             <SettingItem
               label={t('SETTINGS.OPTIONS.LANGUAGE')}
               value={settings.language.label}
               options={languages}
               onClick={openMenu}
               Icon={BookA}
-              theme={theme}
             />
             <SettingItem
               label={t('SETTINGS.OPTIONS.THEME')}
@@ -259,7 +235,6 @@ export const SettingsApp: React.FC = () => {
               options={themes}
               onClick={openMenu}
               Icon={Palette}
-              theme={theme}
             />
             <SettingItem
               label={t('SETTINGS.OPTIONS.WALLPAPER')}
@@ -267,7 +242,6 @@ export const SettingsApp: React.FC = () => {
               options={[...wallpapers, customWallpaper]}
               onClick={openMenu}
               Icon={Wallpaper}
-              theme={theme}
             />
             <SettingItem
               label={t('SETTINGS.OPTIONS.FRAME')}
@@ -275,7 +249,6 @@ export const SettingsApp: React.FC = () => {
               options={frames}
               onClick={openMenu}
               Icon={Smartphone}
-              theme={theme}
             />
             <SettingItem
               label={t('SETTINGS.OPTIONS.ZOOM')}
@@ -283,9 +256,9 @@ export const SettingsApp: React.FC = () => {
               options={zoomOptions}
               onClick={openMenu}
               Icon={ZoomIn}
-              theme={theme}
             />
           </SettingsCategory>
+
           <SettingsCategory title={t('APPS_TWITTER')}>
             <SettingItem
               label={t('SETTINGS.OPTIONS.NOTIFICATION_FILTER')}
@@ -293,7 +266,6 @@ export const SettingsApp: React.FC = () => {
               options={twitterNotificationFilters}
               onClick={openMenu}
               Icon={ListFilter}
-              theme={theme}
             />
             <SettingItem
               label={t('SETTINGS.OPTIONS.NOTIFICATION')}
@@ -301,26 +273,25 @@ export const SettingsApp: React.FC = () => {
               options={twitterNotifications}
               onClick={openMenu}
               Icon={FileMusic}
-              theme={theme}
             />
             <SettingItemSlider
               label={t('SETTINGS.OPTIONS.NOTIFICATION_VOLUME')}
               value={settings.TWITTER_notiSoundVol}
               onCommit={(val) => handleSettingChange('TWITTER_notiSoundVol', val)}
-              icon={<Volume2 />}
-              theme={theme}
+              icon={<Volume2 size={20} />}
             />
           </SettingsCategory>
+
           <SettingsCategory title={t('APPS_MARKETPLACE')}>
             <SettingSwitch
               label={t('SETTINGS.MARKETPLACE.NOTIFICATION')}
               secondary={t('SETTINGS.MARKETPLACE.NOTIFY_NEW_LISTING')}
               value={settings.MARKETPLACE_notifyNewListing}
-              icon={<ListFilter />}
+              icon={<ListFilter size={20} />}
               onClick={(curr) => handleSettingChange('MARKETPLACE_notifyNewListing', !curr)}
-              theme={theme}
             />
           </SettingsCategory>
+
           <SettingsCategory title={t('SETTINGS.CATEGORY.ACTIONS')}>
             <SettingItem
               label={t('SETTINGS.OPTIONS.RESET_SETTINGS')}
@@ -328,7 +299,6 @@ export const SettingsApp: React.FC = () => {
               Icon={Eraser}
               onClick={openMenu}
               options={resetSettingsOpts}
-              theme={theme}
             />
           </SettingsCategory>
         </div>
@@ -337,3 +307,5 @@ export const SettingsApp: React.FC = () => {
     </AppWrapper>
   );
 };
+
+export default SettingsApp;

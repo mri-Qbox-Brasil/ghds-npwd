@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
-
 import { usePhone } from '@os/phone/hooks/usePhone';
 import { IMG_DEFAULT_AVATAR, IMG_INVALID_AVATAR } from '../utils/constants';
-import { Box, styled } from '@mui/material';
+import { cn } from '@utils/cn';
+import { User } from 'lucide-react';
 
-const AvatarWrapper = styled(Box)({
-  width: '100%',
-});
+interface AvatarProps {
+  avatarUrl?: string | null;
+  showInvalidImage?: boolean;
+  height?: string | number;
+  width?: string | number;
+  className?: string;
+}
 
-const Image = styled('img')({
-  borderRadius: '50%',
-  objectFit: 'cover',
-});
-
-function Avatar({ avatarUrl, showInvalidImage, height, width }) {
+const Avatar: React.FC<AvatarProps> = ({
+  avatarUrl,
+  showInvalidImage = false,
+  height = '48px',
+  width = '48px',
+  className
+}) => {
   const [showImageError, setShowImageError] = useState(false);
   const { ResourceConfig } = usePhone();
 
@@ -23,30 +28,28 @@ function Avatar({ avatarUrl, showInvalidImage, height, width }) {
   if (!ResourceConfig || !ResourceConfig.twitter.enableAvatars) return null;
 
   return (
-    <AvatarWrapper>
-      {showImageError && (
-        <Image
-          src={showInvalidImage ? IMG_INVALID_AVATAR : IMG_DEFAULT_AVATAR}
-          alt="Invalid avatar"
-          style={{ height, width }}
+    <div
+      className={cn("relative overflow-hidden rounded-2xl shrink-0 bg-neutral-100 dark:bg-neutral-800 shadow-sm border border-neutral-100 dark:border-neutral-800", className)}
+      style={{ height, width }}
+    >
+      {(showImageError || !avatarUrl) ? (
+        <div className="w-full h-full flex items-center justify-center text-neutral-400 dark:text-neutral-600 bg-neutral-100 dark:bg-neutral-800">
+          <User size={Math.min(parseInt(String(width)) * 0.6, 24)} />
+        </div>
+      ) : (
+        <img
+          src={avatarUrl}
+          alt="Avatar"
+          onError={handleImageError}
+          onLoad={handleImageLoad}
+          className={cn(
+            "w-full h-full object-cover transition-opacity duration-300",
+            showImageError ? 'opacity-0' : 'opacity-100'
+          )}
         />
       )}
-      <Image
-        src={avatarUrl || IMG_DEFAULT_AVATAR}
-        alt="Your profile avatar"
-        onError={handleImageError}
-        onLoad={handleImageLoad}
-        style={{ display: showImageError ? 'none' : 'block', height, width }}
-      />
-    </AvatarWrapper>
+    </div>
   );
 }
-
-Avatar.defaultProps = {
-  avatarUrl: null,
-  showInvalidImage: false,
-  height: '125px',
-  width: '125px',
-};
 
 export default Avatar;

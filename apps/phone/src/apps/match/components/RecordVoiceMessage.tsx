@@ -1,26 +1,13 @@
 import Modal from '@ui/components/Modal';
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Button, ButtonGroup, IconButton, Tooltip, Typography } from '@mui/material';
-import { CircleDot, Square, Play, Pause } from 'lucide-react';
+import { CircleDot, Square, Play, Pause, X, Loader2 } from 'lucide-react';
 import { useRecorder } from '@os/audio/hooks/useRecorder';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { useAudioMessageAPI } from '@apps/messages/hooks/useAudioMessageAPI';
-import { LoadingButton } from '@mui/lab';
+import { NPWDButton } from '@npwd/keyos';
+import { cn } from '@utils/cn';
 
 dayjs.extend(duration);
-
-interface RecordingButtonsProps {
-  isRecording: boolean;
-  startRecording: () => void;
-  stopRecording: () => void;
-}
-
-interface InteractButtonsProps {
-  playing: boolean;
-  play: () => Promise<void>;
-  pause: () => void;
-}
 
 interface IProps {
   open: boolean;
@@ -36,25 +23,33 @@ const RecordVoiceMessage = ({ open, closeModal, setVoiceMessage }: IProps) => {
     startRecording,
     stopRecording,
   } = useRecorder();
-  const [currentTime, setCurrentTime] = useState<number | null>(null);
+  const [currentTime, setCurrentTime] = useState<number>(0);
   const [playing, setPlaying] = useState<boolean>(false);
 
   const audioRef = useRef(new Audio());
-
-  const duration = audioRef.current.duration;
+  const durationValue = audioRef.current.duration;
 
   useEffect(() => {
-    audioRef.current.src = recordedAudio;
+    if (recordedAudio) {
+      audioRef.current.src = recordedAudio;
+    }
   }, [recordedAudio]);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.ontimeupdate = () => {
-        // we need to trunc becuase dayjs does not like decimals
-        setCurrentTime(Math.trunc(audioRef.current.currentTime));
-      };
-    }
-  });
+    const audio = audioRef.current;
+    const updateTime = () => {
+      setCurrentTime(Math.trunc(audio.currentTime));
+    };
+    const onEnded = () => setPlaying(false);
+
+    audio.addEventListener('timeupdate', updateTime);
+    audio.addEventListener('ended', onEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', updateTime);
+      audio.removeEventListener('ended', onEnded);
+    };
+  }, []);
 
   const play = async () => {
     await audioRef.current.play();
@@ -71,8 +66,6 @@ const RecordVoiceMessage = ({ open, closeModal, setVoiceMessage }: IProps) => {
   };
 
   const handleStopRecording = () => {
-    // Maybe try to get the duration here, maybe even create a timeout
-    // Do want to create a audioRef from useRecorder, or do it all here?
     stopRecording();
   };
 
@@ -84,73 +77,67 @@ const RecordVoiceMessage = ({ open, closeModal, setVoiceMessage }: IProps) => {
 
   return (
     <Modal visible={open} handleClose={closeModal}>
-      <Box display="flex" alignItems="center" justifyContent="flex-start" py={1}>
-        <Box pl={1}>
-          {recordedAudio && !recordingState.isRecording ? (
-            <InteractButtons play={play} pause={pause} playing={playing} />
-          ) : (
-            <RecordingButtons
-              startRecording={handleStartRecord}
-              stopRecording={handleStopRecording}
-              isRecording={recordingState.isRecording}
-            />
-          )}
-        </Box>
-        {!recordedAudio ? (
-          <Typography>Record Voice Message</Typography>
-        ) : recordingState.isRecording ? (
-          <Typography>Recording...</Typography>
-        ) : recordedAudio && !isNaN(duration) ? (
-          <Box>
-            <Typography>
-              {dayjs.duration(currentTime * 1000).format('mm:ss')}
-              {duration === Infinity
-                ? null
-                : ` - ${dayjs.duration(Math.trunc(duration) * 1000).format('mm:ss')}`}
-            </Typography>
-          </Box>
-        ) : (
-          <Typography>Click to play voice message</Typography>
+      <div className="p-6 flex flex-col gap-6 animate-in slide-in-from-bottom-4 duration-300">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">Bio em Áudio</h2>
+          <button onClick={closeModal} className="p-2 text-neutral-400 hover:text-neutral-600 transition-colors">
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="flex flex-col items-center justify-center py-8 bg-neutral-50 dark:bg-neutral-800/50 rounded-3xl border border-neutral-100 dark:border-neutral-700/50 space-y-6">
+          <div className="relative">
+            {recordingState.isRecording && (
+              <div className="absolute inset-0 bg-red-500/20 rounded-full animate-ping scale-150" />
+            )}
+            <button
+              onClick={recordingState.isRecording ? handleStopRecording : handleStartRecord}
+              className={cn(
+                "relative h-20 w-20 rounded-full flex items-center justify-center transition-all shadow-xl active:scale-95 z-10",
+                recordingState.isRecording ? "bg-red-500 text-white" : "bg-neutral-200 dark:bg-neutral-700 text-red-500 hover:bg-neutral-300"
+              )}
+            >
+              {recordingState.isRecording ? <Square size={32} /> : <CircleDot size={32} />}
+            </button>
+          </div>
+
+          <div className="text-center">
+            {recordingState.isRecording ? (
+              <div className="flex items-center gap-2 text-red-500 font-bold uppercase tracking-widest text-xs">
+                <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                Gravando...
+              </div>
+            ) : recordedAudio ? (
+              <div className="flex flex-col items-center gap-2">
+                <button
+                  onClick={playing ? pause : play}
+                  className="flex items-center gap-2 px-6 py-2 bg-pink-500 text-white rounded-full font-bold shadow-lg hover:bg-pink-600 transition-all active:scale-95"
+                >
+                  {playing ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+                  {playing ? "Pausar" : "Ouvir Gravação"}
+                </button>
+                <span className="text-sm font-bold text-neutral-400 uppercase tracking-widest mt-2">
+                  {dayjs.duration(currentTime * 1000).format('mm:ss')}
+                  {durationValue && durationValue !== Infinity ? ` / ${dayjs.duration(Math.trunc(durationValue) * 1000).format('mm:ss')}` : ''}
+                </span>
+              </div>
+            ) : (
+              <p className="text-sm font-medium text-neutral-400">Toque no botão para gravar sua bio</p>
+            )}
+          </div>
+        </div>
+
+        {!recordingState.isRecording && recordedAudio && blob && (
+          <NPWDButton
+            onClick={handleSaveRecording}
+            className="w-full h-14 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-2xl shadow-lg shadow-pink-500/30 transition-all active:scale-95"
+          >
+            Salvar Áudio
+          </NPWDButton>
         )}
-      </Box>
-      {!recordingState.isRecording && recordedAudio && blob && (
-        <Button variant="contained" onClick={handleSaveRecording}>
-          Save
-        </Button>
-      )}
+      </div>
     </Modal>
   );
 };
-
-const RecordingButtons: React.FC<RecordingButtonsProps> = ({
-  isRecording,
-  startRecording,
-  stopRecording,
-}) => (
-  <Box>
-    <ButtonGroup>
-      <Tooltip title="Record voice message" placement="right">
-        <IconButton disabled={isRecording} color="error" size="small" onClick={startRecording}>
-          <CircleDot />
-        </IconButton>
-      </Tooltip>
-      {isRecording && (
-        <IconButton color="error" size="small" onClick={isRecording && stopRecording}>
-          <Square />
-        </IconButton>
-      )}
-    </ButtonGroup>
-  </Box>
-);
-
-const InteractButtons: React.FC<InteractButtonsProps> = ({ playing, play, pause }) => (
-  <Box>
-    <ButtonGroup>
-      <IconButton size="small">
-        {playing ? <Pause onClick={pause} /> : <Play onClick={play} />}
-      </IconButton>
-    </ButtonGroup>
-  </Box>
-);
 
 export default RecordVoiceMessage;

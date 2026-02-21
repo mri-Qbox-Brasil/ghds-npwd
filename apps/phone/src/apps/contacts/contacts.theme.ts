@@ -1,15 +1,12 @@
-import { blue, common } from '@mui/material/colors';
-import { ThemeOptions } from '@mui/material';
+export const CONTACTS_APP_PRIMARY_COLOR = '#2196f3';
+export const CONTACTS_APP_TEXT_COLOR = '#ffffff';
 
-export const CONTACTS_APP_PRIMARY_COLOR = blue[500];
-export const CONTACTS_APP_TEXT_COLOR = common.white;
-
-const theme: ThemeOptions = {
+const theme = {
   palette: {
     primary: {
       main: CONTACTS_APP_PRIMARY_COLOR,
-      dark: blue[700],
-      light: blue[300],
+      dark: '#1976d2',
+      light: '#64b5f6',
       contrastText: CONTACTS_APP_TEXT_COLOR,
     },
     secondary: {

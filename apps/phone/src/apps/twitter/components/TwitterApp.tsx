@@ -5,7 +5,7 @@ import { AppContent } from '@ui/components/AppContent';
 import TweetListContainer from './tweet/TweetListContainer';
 import AddTweetModal from './AddTweetModal';
 import TweetButton from './buttons/TweetButton';
-import { LifeInvaderTitle } from './TwitterTitle';
+import { TwitterTitle } from './TwitterTitle';
 import BottomNavigation from './BottomNavigation';
 import TwitterProfile from './profile/Profile';
 import TwitterSearch from './TwitterSearch';
@@ -17,7 +17,6 @@ import ProfilePrompt from './profile/ProfilePrompt';
 import { TwitterThemeProvider } from '../providers/TwitterThemeProvider';
 import { useSetRecoilState } from 'recoil';
 import { twitterState } from '../hooks/state';
-import ModalBackground from './ModalBackground';
 import { WordFilterProvider } from '@os/wordfilter/providers/WordFilterProvider';
 import InjectDebugData from '@os/debug/InjectDebugData';
 import { TwitterEvents } from '@typings/twitter';
@@ -28,12 +27,10 @@ const TwitterApp = () => {
   const { profile } = useProfile();
   const location = useLocation();
 
-  // before any other action can be taken by the user we force
-  // them have a profile name.
   const promptProfileName = !profile || !profile.profile_name || !profile.profile_name.trim();
 
   const openModal = () => setModalVisible(true);
-  const handlePageChange = (_, page) => setActivePage(page);
+  const handlePageChange = (_: any, page: number) => setActivePage(page);
   const showTweetButton =
     !promptProfileName && activePage === 0 && location.pathname === '/twitter';
 
@@ -43,8 +40,8 @@ const TwitterApp = () => {
         <WordFilterProvider>
           <AddTweetModal />
         </WordFilterProvider>
-        <LifeInvaderTitle />
-        <AppContent>
+        <TwitterTitle />
+        <AppContent className="flex flex-col">
           {promptProfileName ? (
             <ProfilePrompt />
           ) : (

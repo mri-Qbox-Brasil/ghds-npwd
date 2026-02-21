@@ -1,21 +1,15 @@
 import React from 'react';
-import { AppWrapper } from '@ui/components';
-import { AppContent } from '@ui/components/AppContent';
+import { AppWrapper, AppContent } from '@ui/components';
 import { GalleryGrid } from './grid/GalleryGrid';
 import { GalleryModal } from './modal/GalleryModal';
 import { Route, Switch } from 'react-router-dom';
 import { LoadingSpinner } from '@ui/components/LoadingSpinner';
-import { AppTitle } from '@ui/components/AppTitle';
-import { useApp } from '@os/apps/hooks/useApps';
 import NewPhotoButton from './NewPhotoButton';
 
 const CameraApp: React.FC = () => {
-  const camera = useApp('CAMERA');
-
   return (
-    <AppWrapper id="camera-app">
-      <AppTitle app={camera} />
-      <AppContent>
+    <AppWrapper id="camera-app" className="bg-background">
+      <AppContent className="flex flex-col h-full overflow-hidden">
         <Switch>
           <React.Suspense fallback={<LoadingSpinner />}>
             <Route path="/camera" exact component={GalleryGrid} />

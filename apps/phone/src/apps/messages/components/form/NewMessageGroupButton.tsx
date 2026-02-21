@@ -1,18 +1,9 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import { Plus, Trash2 } from 'lucide-react';
-import { Fab } from '@mui/material';
 import { useCheckedConversationsValue, useIsEditing } from '../../hooks/state';
 import { useMessageAPI } from '../../hooks/useMessageAPI';
 import { toggleKeys } from '@ui/components';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    position: 'absolute',
-    bottom: theme.spacing(5),
-    right: theme.spacing(3),
-  },
-}));
+import { cn } from '@utils/cn';
 
 interface NewMessageGroupButtonProps {
   onClick(): void;
@@ -30,14 +21,16 @@ export const NewMessageGroupButton: React.FC<NewMessageGroupButtonProps> = ({ on
 
   return (
     <button
-      className="absolute bottom-10 right-5 flex items-center justify-center rounded-md p-2 bg-green-500 text-white hover:bg-green-600"
-      color="primary"
+      className={cn(
+        "absolute bottom-10 right-5 flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-all active:scale-90 focus:outline-none focus:ring-2 focus:ring-offset-2",
+        !isEditing ? "bg-green-500 hover:bg-green-600 focus:ring-green-400" : "bg-red-500 hover:bg-red-600 focus:ring-red-400"
+      )}
       onClick={!isEditing ? onClick : handleDeleteConversations}
       onMouseUp={() => {
         toggleKeys(false);
       }}
     >
-      {!isEditing ? <Plus /> : <Trash2 />}
+      {!isEditing ? <Plus size={28} /> : <Trash2 size={24} />}
     </button>
   );
 };

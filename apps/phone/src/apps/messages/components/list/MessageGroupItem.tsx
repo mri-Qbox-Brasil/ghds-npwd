@@ -1,21 +1,11 @@
 import React, { useCallback } from 'react';
-import {
-  ListItemText,
-  Checkbox,
-  ListItemAvatar,
-  Avatar as MuiAvatar,
-  Badge,
-  ListItemIcon,
-  colors,
-  useTheme,
-} from '@mui/material';
-
 import { MessageConversation } from '@typings/messages';
 import { useContactActions } from '../../../contacts/hooks/useContactActions';
 import { useContacts } from '../../../contacts/hooks/state';
 import { Contact } from '@typings/contact';
-import { ListItem } from '@npwd/keyos';
 import { initials } from '@utils/misc';
+import { cn } from '@utils/cn';
+import { ChevronRight, Users } from 'lucide-react';
 
 interface IProps {
   messageConversation: MessageConversation;
@@ -32,10 +22,6 @@ const MessageGroupItem = ({
   checked,
   handleToggle,
 }: IProps): any => {
-  const toggleCheckbox = () => {
-    handleToggle(messageConversation.id);
-  };
-
   const contacts = useContacts();
   const { getContactByNumber } = useContactActions();
 
@@ -47,7 +33,6 @@ const MessageGroupItem = ({
   );
 
   const getContact = useCallback((): Contact | null => {
-    // This is the source
     const participant = messageConversation.participant;
     const conversationList = messageConversation.conversationList.split('+');
 
@@ -57,88 +42,98 @@ const MessageGroupItem = ({
         return contact || null;
       }
     }
+    return null;
   }, [contactDisplay, messageConversation]);
 
-  const getLabelOrContact = useCallback((): Contact | string => {
+  const getLabelOrContact = useCallback((): string => {
     const conversationLabel = messageConversation.label;
-    // This is the source
     const participant = messageConversation.participant;
     const conversationList = messageConversation.conversationList.split('+');
 
-    // Label is required if the conversation is a group chat
-    if (messageConversation.isGroupChat) return conversationLabel;
+    if (messageConversation.isGroupChat) return conversationLabel || "Grupo";
 
-    return getContact()?.display || conversationList.filter((p) => p !== participant)[0];
+    const contact = getContact();
+    return contact?.display || conversationList.filter((p) => p !== participant)[0] || "Desconhecido";
   }, [messageConversation, getContact]);
 
+  const isChecked = checked.indexOf(messageConversation.id) !== -1;
+  const contact = getContact();
+
   return (
-    <ListItem
-      key={messageConversation.id}
-      button
-      onClick={!isEditing ? handleClick(messageConversation) : toggleCheckbox}
-      primaryText={getLabelOrContact()}
-      startElement={
-        <div className="flex items-center px-2">
-          {isEditing && (
-            <Checkbox
-              checked={checked.indexOf(messageConversation.id) !== -1}
-              edge="start"
-              disableRipple
-            />
-          )}
-          <div>
-            {messageConversation.isGroupChat ? (
-              <MuiAvatar alt={messageConversation.label} />
-            ) : getContact()?.avatar && getContact()?.avatar.length > 0 ? (
-              <img
-                src={getContact()?.avatar}
-                className="inline-block h-10 w-10 rounded-full"
-                alt={'avatar'}
-              />
-            ) : (
-              <div className="flex h-10 w-10 items-center justify-center rounded-full">
-                <span className="text-gray-600 dark:text-gray-300">
-                  {initials(getContact()?.display)}
-                </span>
-              </div>
-            )}
+    <div
+      onClick={!isEditing ? handleClick(messageConversation) : () => handleToggle(messageConversation.id)}
+      className={cn(
+        "flex items-center gap-4 py-3 px-2 cursor-pointer transition-all active:scale-[0.98] relative overflow-hidden",
+        isChecked ? "bg-blue-50/50 dark:bg-blue-500/5" : "hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+      )}
+    >
+      {/* Seleção de Edição */}
+      {isEditing && (
+        <div className="flex items-center justify-center pl-2 animate-in slide-in-from-left-4 duration-300">
+          <div className={cn(
+            "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all",
+            isChecked ? "bg-red-500 border-red-500" : "border-neutral-300 dark:border-neutral-700"
+          )}>
+            {isChecked && <div className="h-2 w-2 rounded-full bg-white animate-in zoom-in" />}
           </div>
         </div>
-      }
-      endElement={
-        <div>
-          <span className="inline-flex items-center rounded-md bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-inset ring-green-500/20">
-            {messageConversation.unreadCount <= 99 ? messageConversation.unreadCount : '99+'}
+      )}
+
+      {/* Avatar */}
+      <div className="relative shrink-0">
+        {messageConversation.isGroupChat ? (
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500 text-white shadow-lg shadow-blue-500/20">
+            <Users size={28} />
+          </div>
+        ) : contact?.avatar ? (
+          <img
+            src={contact.avatar}
+            className="h-14 w-14 rounded-2xl object-cover shadow-md border border-neutral-100 dark:border-neutral-800"
+            alt="avatar"
+          />
+        ) : (
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-900 shadow-inner">
+            <span className="text-neutral-500 dark:text-neutral-400 font-bold text-lg">
+              {initials(getLabelOrContact())}
+            </span>
+          </div>
+        )}
+
+        {/* Badge de Não Lida */}
+        {!isEditing && messageConversation.unreadCount > 0 && (
+          <span className="absolute -top-1.5 -right-1.5 flex h-6 min-w-[24px] items-center justify-center rounded-full bg-blue-500 px-1.5 text-[11px] font-black text-white ring-4 ring-white dark:ring-neutral-900 shadow-lg animate-in zoom-in">
+            {messageConversation.unreadCount > 99 ? '99+' : messageConversation.unreadCount}
+          </span>
+        )}
+      </div>
+
+      {/* Info Conversa */}
+      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+        <div className="flex items-center justify-between">
+          <h3 className={cn(
+            "font-bold truncate transition-colors",
+            messageConversation.unreadCount > 0 ? "text-neutral-900 dark:text-white" : "text-neutral-700 dark:text-neutral-300"
+          )}>
+            {getLabelOrContact()}
+          </h3>
+          <span className="text-[11px] font-medium text-neutral-400 shrink-0">
+            {/* Timer logic could be added here if needed */}
           </span>
         </div>
-      }
-    >
-      {/* isEditing && (
-        <ListItemIcon>
-          <Checkbox
-            checked={checked.indexOf(messageConversation.id) !== -1}
-            edge="start"
-            disableRipple
-          />
-        </ListItemIcon>
+        <p className={cn(
+          "text-sm truncate",
+          messageConversation.unreadCount > 0 ? "font-bold text-blue-500" : "text-neutral-400 font-medium"
+        )}>
+          {messageConversation.last_message || "Nenhuma mensagem"}
+        </p>
+      </div>
+
+      {!isEditing && (
+        <div className="pr-2 text-neutral-300 dark:text-neutral-700">
+          <ChevronRight size={18} />
+        </div>
       )}
-      <ListItemAvatar>
-        <Badge
-          color="error"
-          badgeContent={
-            messageConversation.unreadCount <= 99 ? messageConversation.unreadCount : '99+'
-          }
-          invisible={messageConversation.unreadCount <= 0}
-        >
-          {messageConversation.isGroupChat ? (
-            <MuiAvatar alt={messageConversation.label} />
-          ) : (
-            <MuiAvatar alt={getContact()?.display ?? ''} src={getContact()?.avatar} />
-          )}
-        </Badge>
-      </ListItemAvatar>
-          <ListItemText sx={{ overflow: 'hidden', color: phoneTheme.palette.text.primary}}>{getLabelOrContact()}</ListItemText> */}
-    </ListItem>
+    </div>
   );
 };
 

@@ -1,19 +1,7 @@
 import React, { memo } from 'react';
-import { Box, Button, styled } from '@mui/material';
 import { Image, Smile } from 'lucide-react';
 import { usePhone } from '@os/phone/hooks/usePhone';
-
-const ButtonContainer = styled(Box)({
-  display: 'flex',
-  flexFlow: 'row nowrap',
-  justifyContent: 'flex-start',
-  paddingLeft: '5px',
-});
-
-const ButtonWrapper = styled(Button)({
-  background: 'transparent',
-  minWidth: '45px',
-});
+import { NPWDButton } from '@npwd/keyos';
 
 export const IconButtons = ({ onImageClick, onEmojiClick }) => {
   const { ResourceConfig } = usePhone();
@@ -22,18 +10,28 @@ export const IconButtons = ({ onImageClick, onEmojiClick }) => {
   const { enableImages, enableEmojis } = ResourceConfig.twitter;
 
   return (
-    <ButtonContainer>
+    <div className="flex flex-row gap-1 px-1">
       {enableImages && (
-        <ButtonWrapper onClick={onImageClick}>
-          <Image className="text-gray-500" />
-        </ButtonWrapper>
+        <NPWDButton
+          onClick={onImageClick}
+          size="icon"
+          variant="ghost"
+          className="rounded-full text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-500/10"
+        >
+          <Image size={20} />
+        </NPWDButton>
       )}
       {enableEmojis && (
-        <ButtonWrapper onClick={onEmojiClick}>
-          <Smile />
-        </ButtonWrapper>
+        <NPWDButton
+          onClick={onEmojiClick}
+          size="icon"
+          variant="ghost"
+          className="rounded-full text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-500/10"
+        >
+          <Smile size={20} />
+        </NPWDButton>
       )}
-    </ButtonContainer>
+    </div>
   );
 };
 

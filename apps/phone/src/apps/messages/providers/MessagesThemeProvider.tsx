@@ -1,4 +1,5 @@
-import { createAppThemeProvider } from '@os/apps/utils/createAppThemeProvider';
-import messagesTheme from '../messages.theme';
+import React from 'react';
 
-export const MessagesThemeProvider = createAppThemeProvider(messagesTheme);
+export const MessagesThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    return <>{children}</>;
+};

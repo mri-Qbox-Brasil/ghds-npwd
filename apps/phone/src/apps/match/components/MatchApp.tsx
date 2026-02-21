@@ -12,3 +12,5 @@ export const MatchApp = () => {
     </MatchThemeProvider>
   );
 };
+
+export default MatchApp;

@@ -1,27 +1,17 @@
-import { ListSubheader } from '@mui/material';
 import React from 'react';
-import { ListProps } from '@mui/material/List';
-import { List } from '@npwd/keyos';
 
-const SubHeaderComp: React.FC<{ text: string }> = ({ text }) => (
-  <ListSubheader color="primary" component="div" disableSticky>
-    {text}
-  </ListSubheader>
-);
-
-interface SettingsCategoryProps extends ListProps {
-  title: string;
-}
-
-export const SettingsCategory: React.FC<SettingsCategoryProps> = ({
-  children,
+export const SettingsCategory: React.FC<{ title: string; children: React.ReactNode }> = ({
   title,
-  ...otherProps
-}) => (
-  <div className='px-4'>
-    <div>
-      <p className='text-neutral-900 dark:text-white font-medium text-base'>{title}</p>
+  children,
+}) => {
+  return (
+    <div className="mb-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+      <h3 className="px-5 mb-2.5 text-[11px] font-black uppercase tracking-[0.2em] text-neutral-400 dark:text-neutral-500 italic">
+        {title}
+      </h3>
+      <div className="mx-4 overflow-hidden rounded-[24px] border border-neutral-100 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/30 shadow-sm backdrop-blur-sm">
+        {children}
+      </div>
     </div>
-    <List {...otherProps}>{children}</List>
-  </div>
-);
+  );
+};

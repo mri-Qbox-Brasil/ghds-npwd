@@ -1,109 +1,73 @@
 import React, { useContext } from 'react';
-import { Box, IconButton, Paper, Typography, Link } from '@mui/material';
-import { Theme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
-import { Phone } from 'lucide-react';
+import { Phone, Delete } from 'lucide-react';
 import { DialInputCtx, IDialInputCtx } from '../context/InputContext';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { InputBase } from '@ui/components/Input';
 import { useCall } from '@os/call/hooks/useCall';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    textAlign: 'center',
-    paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(5),
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(5),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    boxShadow: 'none',
-  },
-  input: {
-    flex: 1,
-    fontSize: '24px',
-    fontWeight: 400,
-    textAlign: 'center',
-    marginBottom: theme.spacing(0),
-  },
-  addNumberLink: {
-    position: 'absolute',
-    fontSize: '16px',
-    top: theme.spacing(13),
-    color: '#007AFF',
-    textDecoration: 'none',
-    marginBottom: theme.spacing(3),
-    '&:hover': {
-      // textDecoration: 'underline',
-    },
-  },
-  absolute: {
-    backgroundColor: '#31C75C',
-    color: 'white',
-    position: 'absolute',
-    transform: 'translate(-50%, -50%)',
-    top: '80%',
-    left: '50%',
-    height: '80px',
-    width: '80px',
-    zIndex: 10,
-    '&.Mui-disabled': {
-      backgroundColor: theme.palette.mode === 'dark' ? '#4c4c4c' : '#AAA',
-      color: '#fff !important',
-    },
-    '&:hover': {
-      backgroundColor: '#26e35c',
-    },
-  },
-}));
+import { cn } from '@utils/cn';
 
 export const DialerInput: React.FC = () => {
-  const classes = useStyles();
   const history = useHistory();
   const [t] = useTranslation();
   const { initializeCall } = useCall();
+  const { inputVal, set, removeOne } = useContext<IDialInputCtx>(DialInputCtx);
 
-  const { inputVal, set } = useContext<IDialInputCtx>(DialInputCtx);
-
-  const handleCall = (number: string) => {
-    initializeCall(number);
+  const handleCall = () => {
+    if (!inputVal) return;
+    initializeCall(inputVal);
   };
 
-  const handleNewContact = (number: string) => {
-    history.push(`/contacts/-1/?addNumber=${number}&referal=/phone/contacts`);
+  const handleNewContact = () => {
+    history.push(`/contacts/-1/?addNumber=${inputVal}&referal=/phone/contacts`);
   };
 
   return (
-    <Box component={Paper} className={classes.root}>
-      <InputBase
-        placeholder={t('DIALER.INPUT_PLACEHOLDER')}
-        className={classes.input}
-        value={inputVal}
-        onChange={(e) => set(e.target.value)}
-        inputProps={{
-          style: { textAlign: 'center' } // Centralizando o texto do número
-        }}
-      />
-      {inputVal && (
-        <Link
-          className={classes.addNumberLink}
-          onClick={() => handleNewContact(inputVal)}
-          component="button"
+    <div className="flex flex-col items-center w-full gap-4 pt-4">
+      <div className="relative w-full flex flex-col items-center min-h-[80px] justify-center">
+        <input
+          type="text"
+          readOnly
+          placeholder={t('DIALER.INPUT_PLACEHOLDER') as unknown as string}
+          className="w-full bg-transparent border-none outline-none text-center text-4xl font-medium text-neutral-900 dark:text-white placeholder:text-neutral-200 dark:placeholder:text-neutral-800"
+          value={inputVal}
+        />
+
+        {inputVal.length > 0 && (
+          <button
+            className="mt-2 text-blue-500 font-medium text-sm hover:underline animate-in fade-in slide-in-from-top-1"
+            onClick={handleNewContact}
+          >
+            {t('CONTACTS.MODAL_BUTTON_ADD')}
+          </button>
+        )}
+      </div>
+
+      <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-20 flex items-center gap-8">
+        <div className="w-12" /> {/* Spacer para equilibrar o botão de apagar */}
+
+        <button
+          disabled={!inputVal}
+          onClick={handleCall}
+          className={cn(
+            "h-20 w-20 rounded-full flex items-center justify-center text-white transition-all shadow-lg active:scale-95",
+            inputVal
+              ? "bg-green-500 shadow-green-500/30 hover:bg-green-600"
+              : "bg-neutral-200 dark:bg-neutral-800 text-neutral-400 opacity-50 cursor-not-allowed"
+          )}
         >
-          {t('CONTACTS.MODAL_BUTTON_ADD')}
-        </Link>
-      )}
-      <IconButton
-        className={classes.absolute}
-        disabled={inputVal <= ''}
-        onClick={() => handleCall(inputVal)}
-        size="large"
-      >
-        <Phone size={32} />
-      </IconButton>
-    </Box>
+          <Phone size={32} fill="currentColor" />
+        </button>
+
+        <button
+          onClick={() => removeOne()}
+          className={cn(
+            "h-12 w-12 flex items-center justify-center text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 transition-all active:scale-90",
+            !inputVal && "opacity-0 pointer-events-none"
+          )}
+        >
+          <Delete size={28} />
+        </button>
+      </div>
+    </div>
   );
 };

@@ -1,22 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Paper,
-  CircularProgress,
-  Button,
-  Avatar,
-  Modal,
-  TextField,
-  Typography,
-  useTheme,
-  Box,
-  Grid,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import fetchNui from '@utils/fetchNui';
-import AnimationStyles from '../animations';
-import { UserCircle } from 'lucide-react';
+import { UserCircle, ArrowUpRight, ArrowDownLeft, Wallet, Calendar, Search } from 'lucide-react';
 import TransactionModal from './TransactionModal';
-
+import { cn } from '@utils/cn';
 
 interface Transaction {
   id: number;
@@ -27,249 +13,142 @@ interface Transaction {
   type: 'sent' | 'received';
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    position: 'relative',
-    width: '397px',
-    textAlign: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: theme.palette.mode === 'dark' ? '#000' : '#f2f2f7',
-    padding: theme.spacing(3),
-    borderRadius: '20px',
-    boxShadow: 'none',
-    color: theme.palette.mode === 'dark' ? '#f2f2f7' : '#000',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'center',
-    width: '100%',
-    marginBottom: theme.spacing(4),
-  },
-  buttonLeft: {
-    fontSize: '1rem',
-    height: '40px',
-    width: '180px',
-    fontWeight: '600',
-    borderRadius: '20px 0px 0px 20px',
-    color: '#fff',
-    backgroundColor: theme.palette.primary.main,
-    '&:hover': {
-      boxShadow: 'inset 0px 68px 28px -5px rgba(255,255,255,0.2)',
-
-      backgroundColor: '#4f4f4f'
-    },
-    fontFamily: 'Noto Sans JP, sans-serif',
-  },
-  buttonRight: {
-    fontSize: '1rem',
-    height: '40px',
-    width: '180px',
-    fontWeight: '600',
-    borderRadius: '0px 20px 20px 0px',
-    color: '#fff',
-    backgroundColor: theme.palette.primary.main,
-    '&:hover': {
-      boxShadow: 'inset 0px 68px 28px -5px rgba(255,255,255,0.2)',
-      backgroundColor: '#4f4f4f'
-    },
-    fontFamily: 'Noto Sans JP, sans-serif',
-  },
-  title: {
-    fontSize: '20px',
-    fontWeight: '700',
-    fontFamily: 'Noto Sans JP, sans-serif',
-
-
-  },
-  list: {
-    width: '100%',
-    minHeight: '600px',
-  },
-  listItem: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: theme.spacing(1.5),
-    borderRadius: '8px',
-    height: '65px',
-    margin: theme.spacing(1, 0),
-    fontSize: '4px',
-    fontFamily: 'Noto Sans JP, sans-serif',
-
-
-  },
-  avatar: {
-    height: '40px',
-    width: '40px'
-  },
-  transactionDetails: {
-    width: '180px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'start',
-    marginLeft: theme.spacing(1),
-
-  },
-  amount: {
-    width: '140px',
-    position: 'absolute',
-    left: 240
-  },
-  amountText: {
-    fontWeight: '400',
-    fontFamily: 'Noto Sans JP, sans-serif',
-
-  },
-  modal: {
-    position: 'absolute',
-    width: '300px',
-    top: '50%',
-    left: '70%',
-    transform: 'translate(-50%, -50%)',
-    color: theme.palette.primary.main,
-    backgroundColor: '#161616',
-    padding: theme.spacing(3),
-    borderRadius: '8px',
-    border: '1px solid ' + theme.palette.primary.main,
-  },
-  modalInput: {
-    color: 'red'
-  },
-  balanceAd: {
-    fontFamily: 'Noto Sans JP, sans-serif',
-    display: 'flex',
-    color: 'red',
-    fontWeight: '400',
-    marginBottom: theme.spacing(4)
-  },
-}));
-
 const mockTransactions: Transaction[] = [
-  { id: 1, amount: 19251500, targetName: 'Lucas Mendes', identifier: 'ABC123', date: '2022/08/13', type: 'received' },
-  { id: 2, amount: 250.00, targetName: 'Paula Soares', identifier: 'XYZ456', date: '2022/08/13', type: 'sent' },
-  { id: 3, amount: 1250.75, targetName: 'Carlos Alberto', identifier: 'LMN789', date: '2022/08/13', type: 'received' },
-  { id: 4, amount: 5000.00, targetName: 'Renata Martins', identifier: 'OPQ012', date: '2022/08/13', type: 'sent' },
-  { id: 5, amount: 780.30, targetName: 'Gabriel Souza', identifier: 'DEF345', date: '2022/08/13', type: 'received' },
-  { id: 6, amount: 920.10, targetName: 'Sandra Lima', identifier: 'GHI678', date: '2022/08/13', type: 'sent' },
-  { id: 7, amount: 300.00, targetName: 'Felipe Rocha', identifier: 'JKL901', date: '2022/08/13', type: 'received' },
-  { id: 8, amount: 1114500.00, targetName: 'Paulin da Motoca Empinada', identifier: 'MNO234', date: '2022/08/13', type: 'sent' },
-  { id: 9, amount: 1850.75, targetName: 'Ricardo Pinto', identifier: 'PQR567', date: '2022/08/13', type: 'received' },
-  { id: 10, amount: 215.00, targetName: 'Júlia Machado de Melo', identifier: 'STU890', date: '2022/08/13', type: 'sent' }
+  { id: 1, amount: 2500, targetName: 'Lucas Mendes', identifier: 'ABC123', date: '13/08/2022', type: 'received' },
+  { id: 2, amount: 250.00, targetName: 'Paula Soares', identifier: 'XYZ456', date: '13/08/2022', type: 'sent' },
+  { id: 3, amount: 1250.75, targetName: 'Carlos Alberto', identifier: 'LMN789', date: '13/08/2022', type: 'received' },
+  { id: 4, amount: 5000.00, targetName: 'Renata Martins', identifier: 'OPQ012', date: '13/08/2022', type: 'sent' },
+  { id: 5, amount: 780.30, targetName: 'Gabriel Souza', identifier: 'DEF345', date: '12/08/2022', type: 'received' },
+  { id: 6, amount: 920.10, targetName: 'Sandra Lima', identifier: 'GHI678', date: '12/08/2022', type: 'sent' },
 ];
-
 
 const BankStatement = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const theme = useTheme();
-  const classes = useStyles();
-  const animationClasses = AnimationStyles();
+  const numberFormat = (value: number) =>
+    new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
 
-  const fc = {
-    numberFormat: (value: number) =>
-      new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      })
-        .format(value)
-        .replace(',00', ''),
-
-    fetchTransactions: async () => {
-      setLoading(true);
-      await fetchNui('getTransactionsFromClient')
-        .then((result) => {
-          if (result) {
-            setTransactions(result);
-          } else {
-            setTransactions(mockTransactions)
-            console.error('Erro ao obter dados do player fetch getTransactionsFromClietn');
-          }
-        })
-        .catch((error) => {
-          console.error('Erro no envio:', error);
-        })
-        .finally(() => {
-          setLoading(false);
-        }
-        )
-    },
+  const fetchTransactions = async () => {
+    setLoading(true);
+    try {
+      const result = await fetchNui('getTransactionsFromClient');
+      if (result && Array.isArray(result)) {
+        setTransactions(result);
+      } else {
+        setTransactions(mockTransactions);
+      }
+    } catch (error) {
+      setTransactions(mockTransactions);
+      console.error('Erro ao buscar transações:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    fc.fetchTransactions();
+    fetchTransactions();
   }, []);
 
+  const filteredTransactions = transactions.filter(t =>
+    t.targetName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    t.identifier.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <Paper className={classes.root}>
-      <Box className={classes.header}>
-
-        <Button className={classes.buttonLeft} onClick={() => setOpenModal(true)}>
-          TRANSFERIR
-          <TransactionModal open={openModal} onClose={() => setOpenModal(false)} />
-
-        </Button>
-        <Button className={classes.buttonRight}>
-          RECEBER
-        </Button>
-      </Box>
-      <Typography className={classes.title}>Últimas Transferências</Typography>
-      <Typography fontSize={12} fontFamily={'Noto Sans JP'} className={classes.balanceAd}>
-        Visite uma de nossas agências para acessar contas de ORG
-      </Typography>
-      {loading ? (
-        <Box className={classes.list}><CircularProgress color='primary' /></Box>
-      ) : (
-        <Box className={classes.list}>
-          {transactions.map((transaction) => (
-            <Grid
-              container
-              key={transaction.id}
-              className={classes.listItem}
-              style={{
-                background: transaction.type === 'sent'
-                  ? `linear-gradient(360deg, rgba(255, 0, 0, ${theme.palette.mode === 'dark' ? 0.336 : 0.336}), rgba(255, 0, 0, ${theme.palette.mode === 'dark' ? 0.436 : 0.2}))`
-                  :
-                  `linear-gradient(360deg, rgba(64, 192, 87, ${theme.palette.mode === 'dark' ? 0.336 : 0.336}), rgba(64, 192, 87, ${theme.palette.mode === 'dark' ? 0.436 : 0.2}))`,
-              }}
+    <div className="flex flex-col h-full bg-white dark:bg-neutral-900/50 rounded-t-[40px] shadow-inner animate-in slide-in-from-bottom duration-700">
+      {/* Search and Filters Header */}
+      <div className="px-6 pt-8 pb-4 space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-black uppercase tracking-[0.2em] text-neutral-400 italic">Últimas Atividades</h3>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setOpenModal(true)}
+              className="p-2 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all active:scale-95"
             >
-              <Grid item>
-                <UserCircle className={classes.avatar} />
-              </Grid>
+              <ArrowUpRight size={18} strokeWidth={3} />
+            </button>
+          </div>
+        </div>
 
-              <Grid item className={classes.transactionDetails}>
-                <Typography fontSize={14} fontFamily={'Noto Sans JP, sans-serif'} fontWeight={'700'}>
-                  {transaction.targetName}
-                </Typography>
-                <Typography fontSize={11} fontFamily={'Noto Sans JP, sans-serif'}>
-                  {transaction.date} - {transaction.identifier}
-                </Typography>
-              </Grid>
+        <div className="relative group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-300 group-focus-within:text-emerald-500 transition-colors" size={18} />
+          <input
+            type="text"
+            placeholder="Buscar por nome ou código..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full h-11 pl-11 pr-4 bg-neutral-50 dark:bg-neutral-800 border-none rounded-2xl text-xs font-bold text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:ring-2 focus:ring-emerald-500/50 transition-all"
+          />
+        </div>
+      </div>
 
-              <Grid item className={classes.amount}>
-                <Typography
-                  className={classes.amountText}
-                  sx={{
-                    display: 'flex ',
-                    justifyContent: 'start',
-                    color: transaction.type === 'sent' ? '#ff0000' : '#40c057',
-                  }}
-                >
-                  {transaction.type === 'sent' ? `- ${fc.numberFormat(transaction.amount)}` : `+ ${fc.numberFormat(transaction.amount)}`}
-                </Typography>
-              </Grid>
-            </Grid>
-          ))}
+      {/* Transaction List */}
+      <div className="flex-1 overflow-y-auto px-6 pb-20 scrollbar-hide space-y-2">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 opacity-20 text-emerald-500 gap-3">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
+            <span className="text-[10px] font-black uppercase tracking-widest italic text-neutral-400">Consultando extrato...</span>
+          </div>
+        ) : filteredTransactions.length > 0 ? (
+          filteredTransactions.map((transaction, index) => (
+            <div
+              key={transaction.id}
+              className="flex items-center justify-between p-4 bg-white dark:bg-neutral-800/40 rounded-3xl border border-neutral-50 dark:border-neutral-800 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] animate-in fade-in slide-in-from-right duration-500"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <div className="flex items-center gap-4">
+                <div className={cn(
+                  "flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
+                  transaction.type === 'sent'
+                    ? "bg-red-50 dark:bg-red-500/10 text-red-500"
+                    : "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500"
+                )}>
+                  {transaction.type === 'sent' ? <ArrowUpRight size={22} strokeWidth={3} /> : <ArrowDownLeft size={22} strokeWidth={3} />}
+                </div>
 
-        </Box>
-      )}
+                <div className="flex flex-col min-w-0">
+                  <span className="font-bold text-sm text-neutral-900 dark:text-white truncate tracking-tight">{transaction.targetName}</span>
+                  <div className="flex items-center gap-2 text-[10px] font-bold text-neutral-400 uppercase tracking-widest mt-0.5">
+                    <span className="flex items-center gap-1"><Calendar size={10} /> {transaction.date}</span>
+                    <span className="opacity-40">/</span>
+                    <span className="truncate max-w-[60px]">{transaction.identifier}</span>
+                  </div>
+                </div>
+              </div>
 
+              <div className="flex flex-col items-end shrink-0">
+                <span className={cn(
+                  "text-[15px] font-black italic tracking-tighter",
+                  transaction.type === 'sent' ? "text-red-500" : "text-emerald-500"
+                )}>
+                  {transaction.type === 'sent' ? `- ${numberFormat(transaction.amount)}` : `+ ${numberFormat(transaction.amount)}`}
+                </span>
+                <span className="text-[9px] font-bold text-neutral-300 dark:text-neutral-600 uppercase tracking-widest">BRL</span>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20 opacity-20 text-neutral-400 gap-4">
+            <Wallet size={48} />
+            <p className="font-bold uppercase tracking-widest text-xs italic">Nenhuma transação encontrada</p>
+          </div>
+        )}
 
+        <div className="py-6 text-center">
+          <p className="text-[10px] font-bold text-neutral-300 dark:text-neutral-600 uppercase tracking-[0.2em] italic">
+            Visite uma agência para contas PJ
+          </p>
+        </div>
+      </div>
 
-    </Paper>
+      <TransactionModal open={openModal} onClose={() => setOpenModal(false)} />
+    </div>
   );
 };
 

@@ -1,13 +1,12 @@
 import { useState } from 'react';
-import { CircularProgress } from '@mui/material';
 import { TwitterEvents } from '@typings/twitter';
 import fetchNui from '../../../../utils/fetchNui';
 import { ServerPromiseResp } from '@typings/common';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import { useTwitterActions } from '@apps/twitter/hooks/useTwitterActions';
-import { NPWDButton } from '@npwd/keyos';
 import { Heart } from 'lucide-react';
+import { cn } from '@utils/cn';
 
 function LikeButton({ tweetId, isLiked, likes }) {
   const [liked, setLiked] = useState(isLiked);
@@ -16,54 +15,48 @@ function LikeButton({ tweetId, isLiked, likes }) {
   const { addAlert } = useSnackbar();
   const { localToggleLike } = useTwitterActions();
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setLoading(true);
     fetchNui<ServerPromiseResp<void>>(TwitterEvents.TOGGLE_LIKE, { tweetId }).then((resp) => {
+      setLoading(false);
       if (resp.status !== 'ok') {
         return addAlert({
-          message: t('TWITTER.FEEDBACK.LIKE_TWEET_FAILED'),
+          message: t('TWITTER.FEEDBACK.LIKE_TWEET_FAILED') as string,
           type: 'error',
         });
       }
 
-      setLoading(false);
       setLiked(!liked);
       localToggleLike(tweetId);
     });
   };
 
-  if (loading) {
-    return (
-      <NPWDButton disabled size="sm" variant="ghost">
-        <CircularProgress size={22} />
-      </NPWDButton>
-    );
-  }
-
   return (
-    <NPWDButton size="sm" variant="ghost" onClick={handleClick} className="space-x-2">
-      <span>
-        {liked ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            className="text-sky-400"
-          >
-            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-          </svg>
-        ) : (
-          <Heart className="text-sky-400" size={20} />
-        )}
-      </span>
-      {likes > 0 && <p className="text-neutral-900 dark:text-white">{likes}</p>}
-    </NPWDButton>
+    <button
+      onClick={handleClick}
+      disabled={loading}
+      className={cn(
+        "flex items-center gap-1.5 p-2 rounded-xl transition-all group",
+        liked
+          ? "text-red-500 bg-red-50 dark:bg-red-500/10 shadow-sm shadow-red-500/5 rotate-0 scale-100"
+          : "text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 active:scale-90"
+      )}
+    >
+      <div className="relative">
+        {liked && <div className="absolute inset-0 bg-red-400/20 rounded-full animate-ping scale-150 pointer-events-none" />}
+        <Heart
+          size={18}
+          fill={liked ? "currentColor" : "none"}
+          className={cn(
+            "transition-transform duration-300",
+            liked && "scale-110",
+            loading && "animate-pulse"
+          )}
+        />
+      </div>
+      {likes > 0 && <span className="text-xs font-bold tracking-tight">{likes}</span>}
+    </button>
   );
 }
 

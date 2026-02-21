@@ -1,40 +1,26 @@
 import React from 'react';
-import { Box, IconButton, styled } from '@mui/material';
 import { X } from 'lucide-react';
 import { PictureReveal } from '@ui/components/PictureReveal';
 import { PictureResponsive } from '@ui/components/PictureResponsive';
-
-const ImageContainer = styled(Box)({
-  position: 'relative',
-  display: 'inline-block',
-});
-
-const ImageButton = styled(IconButton)({
-  position: 'absolute', // show the close button in the top right of the image
-  top: '2px',
-  right: '5px',
-  backgroundColor: '#000',
-  opacity: 0.7,
-  zIndex: 1,
-  '&:hover': {
-    // fixes a bug where when the user closes one image material-ui puts
-    // the hover status on the previous image
-    backgroundColor: '#000',
-  },
-});
+import { NPWDButton } from '@npwd/keyos';
 
 export const Image = ({ link, handleClick }) => {
   return (
-    <ImageContainer>
+    <div className="relative inline-block overflow-hidden rounded-lg group">
       {handleClick && (
-        <ImageButton onClick={handleClick} size="small">
-          <X />
-        </ImageButton>
+        <NPWDButton
+          onClick={handleClick}
+          size="icon"
+          variant="ghost"
+          className="absolute right-1.5 top-1.5 z-10 h-7 w-7 rounded-full bg-black/60 text-white hover:bg-black/80 transition-all opacity-80 hover:opacity-100"
+        >
+          <X size={16} />
+        </NPWDButton>
       )}
       <PictureReveal>
-        <PictureResponsive alt="small avatar" src={link} />
+        <PictureResponsive alt="tweet attachment" src={link} />
       </PictureReveal>
-    </ImageContainer>
+    </div>
   );
 };
 

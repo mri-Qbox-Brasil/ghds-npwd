@@ -1,111 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Theme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
-import { IoIosKeypad } from '@react-icons/all-files/io/IoIosKeypad';
-import { AiOutlineUser } from '@react-icons/all-files/ai/AiOutlineUser';
-import { AiOutlineHistory } from '@react-icons/all-files/ai/AiOutlineHistory';
 import { useTranslation } from 'react-i18next';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: '100%',
-    backgroundColor: 'transparent', 
-    boxShadow: 'none', 
-  },
-  BottomNavigation: {
-    backgroundColor: 'transparent',
-    onClick: 'none',
-  },
-  icon: {
-    width: '30px',
-    height: '30px', 
-    color: '#8e8e93', 
-    marginBottom: '4px',
-  },
-  selectedIcon: {
-    width: '30px',
-    height: '30px', 
-    color: '#007aff',
-    marginBottom: '4px',
-  },
-  label: {
-    fontSize: '8pt',
-    color: '#8e8e93',
-  },
-  selectedLabel: {
-    fontSize: '8pt !important',
-    color: '#007aff',
-    fontWeight: '500',
-  },
-}));
+import { History, LayoutGrid, User } from 'lucide-react';
+import { cn } from '@utils/cn';
 
 const DialerNavBar: React.FC = () => {
-  const classes = useStyles();
   const location = useLocation();
-  const [page, setPage] = useState(location.pathname); // Inicializa com o pathname atual
+  const [page, setPage] = useState(location.pathname);
   const [t] = useTranslation();
 
-  // Sincroniza o estado com a rota ativa
   useEffect(() => {
     setPage(location.pathname);
   }, [location]);
 
-  const handleChange = (_e, newPage) => {
-    setPage(newPage);
-  };
+  const navItems = [
+    {
+      label: t('DIALER.NAVBAR_HISTORY'),
+      value: "/phone",
+      icon: History,
+      to: "/phone",
+      exact: true
+    },
+    {
+      label: t('DIALER.NAVBAR_DIAL'),
+      value: "/phone/dial",
+      icon: LayoutGrid,
+      to: "/phone/dial",
+      exact: false
+    },
+    {
+      label: t('DIALER.NAVBAR_CONTACTS'),
+      value: "/phone/contacts",
+      icon: User,
+      to: "/phone/contacts",
+      exact: false
+    }
+  ];
 
   return (
-    <BottomNavigation
-      value={page}
-      onChange={handleChange}
-      showLabels
-      className={classes.root}
-    >
-      <BottomNavigationAction
-        label={t('DIALER.NAVBAR_HISTORY')}
-        value="/phone"
-        component={NavLink}
-        to="/phone"
-        icon={
-          <AiOutlineHistory
-            className={page === '/phone' ? classes.selectedIcon : classes.icon}
-          />
-        }
-        classes={{
-          label: page === '/phone' ? classes.selectedLabel : classes.label,
-        }}
-      />
-      <BottomNavigationAction
-        label={t('DIALER.NAVBAR_DIAL')}
-        value="/phone/dial"
-        component={NavLink}
-        to="/phone/dial"
-        icon={
-          <IoIosKeypad
-            className={page === '/phone/dial' ? classes.selectedIcon : classes.icon}
-          />
-        }
-        classes={{
-          label: page === '/phone/dial' ? classes.selectedLabel : classes.label,
-        }}
-      />
-      <BottomNavigationAction
-        label={t('DIALER.NAVBAR_CONTACTS')}
-        value="/phone/contacts"
-        component={NavLink}
-        to="/phone/contacts"
-        icon={
-          <AiOutlineUser
-            className={page === '/phone/contacts' ? classes.selectedIcon : classes.icon}
-          />
-        }
-        classes={{
-          label: page === '/phone/contacts' ? classes.selectedLabel : classes.label,
-        }}
-      />
-    </BottomNavigation>
+    <nav className="flex items-center justify-around h-20 bg-background/80 backdrop-blur-md border-t border-neutral-100 dark:border-neutral-800 shrink-0 select-none">
+      {navItems.map((item) => {
+        const isActive = item.exact ? page === item.value : page.startsWith(item.value);
+        const Icon = item.icon;
+
+        return (
+          <NavLink
+            key={item.value}
+            to={item.to}
+            className={cn(
+              "flex flex-col items-center justify-center gap-1 group w-full transition-all active:scale-90",
+              isActive ? "text-blue-500" : "text-neutral-400 hover:text-neutral-500 dark:hover:text-neutral-300"
+            )}
+          >
+            <div className={cn(
+              "p-1 rounded-xl transition-colors",
+              isActive ? "bg-blue-50 dark:bg-blue-500/10" : "group-hover:bg-neutral-50 dark:group-hover:bg-neutral-800/50"
+            )}>
+              <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
+            </div>
+            <span className={cn(
+              "text-[10px] font-bold uppercase tracking-widest",
+              isActive ? "opacity-100" : "opacity-60"
+            )}>
+              {item.label}
+            </span>
+          </NavLink>
+        );
+      })}
+    </nav>
   );
 };
 

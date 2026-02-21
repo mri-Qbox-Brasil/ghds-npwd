@@ -1,90 +1,26 @@
 import React, { useState, useRef } from 'react';
-import { Card, Fab, Box } from '@mui/material';
 import { X, Flame } from 'lucide-react';
-import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
-
 import { FormattedProfile } from '@typings/match';
 import Draggable from './Draggable';
 import StatusDisplay from './StatusDisplay';
 import Profile from './profile/Profile';
 import { Tooltip } from '@ui/components/Tooltip';
-
-const useStyles = makeStyles({
-  root: {
-    position: 'relative',
-    margin: '15px 15px 25px 15px',
-    height: 'calc(95% - 90px)',
-    width: 'calc(100% - 30px)',
-    overflow: 'hidden',
-    cursor: 'pointer',
-  },
-  media: {
-    height: '60%',
-  },
-  content: {
-    height: '40%',
-  },
-  status: {
-    position: 'absolute',
-    zIndex: 20,
-    padding: '5px 15px',
-    top: 40,
-    fontSize: '28px',
-    fontWeight: 'bold',
-  },
-  statusVisible: {
-    transition: 'opacity 0.25s ease-in-out',
-  },
-  // when a user swipes on a profile we need to hide the transition
-  // otherwise the status will be transitioning out when the next
-  // profile shows up
-  statusNull: {
-    transition: 'opacity 0s',
-  },
-  like: {
-    color: 'green',
-    border: '6px solid green',
-    left: 30,
-    transform: 'rotate(-18deg)',
-  },
-  nope: {
-    color: 'red',
-    border: '6px solid red',
-    right: 30,
-    transform: 'rotate(18deg)',
-  },
-  buttons: {
-    position: 'absolute',
-    bottom: 70,
-    width: '100%',
-    height: '55px',
-  },
-  button: {
-    margin: '0px 15px',
-  },
-});
+import { cn } from '@utils/cn';
 
 interface IProps {
   profile: FormattedProfile;
   onSwipe: (id: number, liked: boolean) => void;
 }
 
-// this represents how far from the original mouse
-// click a user has to drag the profile in order for
-// it to be registered as a like or dislike
 const DECISION_THRESHOLD_X_px = 150;
 
 const ActiveProfile = ({ profile, onSwipe }: IProps) => {
-  const c = useStyles();
   const [t] = useTranslation();
-  const [status, setStatus] = useState(null);
-  const statusRef = useRef(null);
-  const idRef = useRef(null);
+  const [status, setStatus] = useState<boolean | null>(null);
+  const statusRef = useRef<boolean | null>(null);
+  const idRef = useRef<number | null>(null);
 
-  // we are reading mutated state from the Draggable element so we
-  // keep track of it using a ref. Without this ref it will appear
-  // from React's point of view that the state is not updating
   statusRef.current = status;
   idRef.current = profile.id;
 
@@ -99,64 +35,68 @@ const ActiveProfile = ({ profile, onSwipe }: IProps) => {
     }
   }
 
-  // handles when user uses mouse to "swipe", or
-  // more specifically drag the card to one side or the other
   const handleSwipe = () => {
-    onSwipe(idRef.current, statusRef.current);
+    if (statusRef.current === null) return;
+    onSwipe(idRef.current as number, statusRef.current);
     setStatus(null);
   };
 
-  // these handlers are explicit and used for when the
-  // user clicks on buttons
   const handleLike = () => {
-    onSwipe(idRef.current, true);
+    onSwipe(idRef.current as number, true);
     setStatus(null);
   };
+
   const handleNope = () => {
-    onSwipe(idRef.current, false);
+    onSwipe(idRef.current as number, false);
     setStatus(null);
   };
 
   const isLiked = status === true;
   const notLiked = status === false;
 
-  const likeClass = `${c.status} ${isLiked ? c.statusVisible : c.statusNull} ${c.like}`;
-  const nopeClass = `${c.status} ${notLiked ? c.statusVisible : c.statusNull} ${c.nope}`;
-
   return (
-    <>
-      <Draggable id="active-profile" onDrag={onDrag} onDrop={handleSwipe}>
-        <Card raised className={c.root}>
-          <StatusDisplay className={likeClass} text={t('MATCH.MESSAGES.LIKED')} visible={isLiked} />
-          <StatusDisplay className={nopeClass} text={t('MATCH.MESSAGES.NOPE')} visible={notLiked} />
-          <Profile profile={profile} />
-        </Card>
-      </Draggable>
-      <Box className={c.buttons} display="flex" justifyContent="center">
-        <Tooltip title={t('MATCH.DISLIKE')} aria-label="dislike">
-          <Fab
-            size="large"
-            color="secondary"
-            aria-label="dislike"
+    <div className="relative h-full w-full flex flex-col p-4 animate-in slide-in-from-bottom-8 duration-500 overflow-hidden">
+      <div className="flex-1 relative mb-24">
+        <Draggable id="active-profile" onDrag={onDrag} onDrop={handleSwipe}>
+          <div className="h-full w-full relative">
+            {/* Status Overlays */}
+            <StatusDisplay
+              className="absolute z-20 top-12 left-8 -rotate-12 text-green-500 border-green-500"
+              text={t('MATCH.MESSAGES.LIKED') as string}
+              visible={isLiked}
+            />
+            <StatusDisplay
+              className="absolute z-20 top-12 right-8 rotate-12 text-red-500 border-red-500"
+              text={t('MATCH.MESSAGES.NOPE') as string}
+              visible={notLiked}
+            />
+
+            <Profile profile={profile} />
+          </div>
+        </Draggable>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="absolute bottom-6 left-0 w-full flex items-center justify-center gap-8 px-8 z-30">
+        <Tooltip title={t('MATCH.DISLIKE') as string} aria-label="dislike">
+          <button
             onClick={handleNope}
-            className={c.button}
+            className="h-16 w-16 flex items-center justify-center rounded-full bg-white dark:bg-neutral-800 text-red-500 shadow-xl border border-neutral-100 dark:border-neutral-700 transition-all active:scale-90 hover:bg-red-50 dark:hover:bg-red-900/10"
           >
-            <X />
-          </Fab>
+            <X size={32} strokeWidth={2.5} />
+          </button>
         </Tooltip>
-        <Tooltip title={t('MATCH.LIKE')} aria-label="like">
-          <Fab
-            size="large"
-            color="primary"
-            aria-label="like"
+
+        <Tooltip title={t('MATCH.LIKE') as string} aria-label="like">
+          <button
             onClick={handleLike}
-            className={c.button}
+            className="h-20 w-20 flex items-center justify-center rounded-full bg-pink-500 text-white shadow-2xl shadow-pink-500/40 transition-all active:scale-90 hover:bg-pink-600 group"
           >
-            <Flame />
-          </Fab>
+            <Flame size={40} className="group-hover:animate-pulse" fill="currentColor" />
+          </button>
         </Tooltip>
-      </Box>
-    </>
+      </div>
+    </div>
   );
 };
 

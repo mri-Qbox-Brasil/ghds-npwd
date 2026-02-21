@@ -1,6 +1,6 @@
 import { memo, useCallback, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import Modal, { Modal2 } from '../../../ui/components/Modal';
+import { Modal2 } from '../../../ui/components/Modal';
 import { IMAGE_DELIMITER } from '../utils/images';
 import { isImageValid } from '@common/utils/isImageValid';
 import { useModal } from '../hooks/useModal';
@@ -19,16 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { promiseTimeout } from '@utils/promiseTimeout';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import { toggleKeys } from '@ui/components';
-import { Box, styled } from '@mui/material';
 import { useWordFilter } from '@os/wordfilter/hooks/useWordFilter';
-
-const ButtonsContainer = styled(Box)({
-  paddingBottom: '8px',
-  display: 'flex',
-  flexFlow: 'row nowrap',
-  justifyContent: 'space-between',
-  flex: '1 0 45px',
-});
 
 interface Image {
   id: string;
@@ -104,7 +95,7 @@ const AddTweetModal = () => {
       if (resp.status !== 'ok') {
         return addAlert({
           type: 'error',
-          message: t('TWITTER.FEEDBACK.CREATE_PROFILE_FAILURE'),
+          message: t('TWITTER.FEEDBACK.CREATE_PROFILE_FAILURE') as unknown as string,
         });
       }
     });
@@ -113,20 +104,8 @@ const AddTweetModal = () => {
   };
 
   const addImage = () => {
-    // strip any whitespace from the link in case the user
-    // added some spaces/returns accidentally
     const cleanedLink = link.replace('/ /g', '');
-    // because we're only storing strings in the database we need
-    // to give this an arbirtrary (but unique) id so that we can
-    // correctly filter an array of images when the user wants to
-    // delete them. This handles an edge case where the user adds
-    // two of the same image.
     const image = { id: uuidv4(), link: cleanedLink };
-    // it's worth noting that we only perform this validation on
-    // the client of the user who is submitting the image. When
-    // other users see this image on their TweetList it will be
-    // from the database and should already have passed through
-    // this logic
     isImageValid(cleanedLink)
       .then(() => setImages([...images, image]))
       .catch((e) => console.error(e));
@@ -137,19 +116,16 @@ const AddTweetModal = () => {
   const removeImage = (id: string) => setImages(images.filter((image) => id !== image.id));
 
   const toggleShowImagePrompt = () => {
-    setShowEmoji(false); // clear the emoji so we can switch between emoji/images
+    setShowEmoji(false);
     setShowImagePrompt(!showImagePrompt);
   };
   const toggleShowEmoji = async () => {
-    // clear the images so we can seemlessly toggle between emoji/images
     setShowImagePrompt(false);
     setShowEmoji(!showEmoji);
 
     await toggleKeys(showEmoji);
   };
 
-  // this is when a user clicks on an emoji icon itself (i.e. a smiley face)
-  // not the emoji icon on the UI
   const handleSelectEmoji = (emojiObject) => {
     setMessage(message.concat(emojiObject.native));
   };
@@ -158,33 +134,35 @@ const AddTweetModal = () => {
 
   return (
     <Modal2 visible={modalVisible} handleClose={_handleClose}>
-      <TweetMessage
-        modalVisible={modalVisible}
-        onEnter={submitTweet}
-        message={message}
-        handleChange={handleMessageChange}
-      />
-      <ImagePrompt visible={showImagePrompt} value={link} handleChange={handleImageChange} />
-      <EmojiSelect visible={showEmoji} onEmojiClick={handleSelectEmoji} />
-      <ImageDisplay
-        visible={!showEmoji && images.length > 0}
-        images={images}
-        removeImage={removeImage}
-      />
-      <ButtonsContainer>
-        <IconButtons
-          onImageClick={
-            images.length < ResourceConfig.twitter.maxImages ? toggleShowImagePrompt : null
-          }
-          onEmojiClick={toggleShowEmoji}
+      <div className="flex flex-col gap-4">
+        <TweetMessage
+          modalVisible={modalVisible}
+          onEnter={submitTweet}
+          message={message}
+          handleChange={handleMessageChange}
         />
-        <ControlButtons
-          showImagePrompt={showImagePrompt}
-          showEmoji={showEmoji}
-          onPrimaryClick={showImagePrompt ? addImage : submitTweet}
-          onCloseClick={showEmoji ? toggleShowEmoji : toggleShowImagePrompt}
+        <ImagePrompt visible={showImagePrompt} value={link} handleChange={handleImageChange} />
+        <EmojiSelect visible={showEmoji} onEmojiClick={handleSelectEmoji} />
+        <ImageDisplay
+          visible={!showEmoji && images.length > 0}
+          images={images}
+          removeImage={removeImage}
         />
-      </ButtonsContainer>
+        <div className="flex flex-row justify-between items-center py-2 border-t border-neutral-200 dark:border-neutral-700 mt-2">
+          <IconButtons
+            onImageClick={
+              images.length < ResourceConfig.twitter.maxImages ? toggleShowImagePrompt : null
+            }
+            onEmojiClick={toggleShowEmoji}
+          />
+          <ControlButtons
+            showImagePrompt={showImagePrompt}
+            showEmoji={showEmoji}
+            onPrimaryClick={showImagePrompt ? addImage : submitTweet}
+            onCloseClick={showEmoji ? toggleShowEmoji : toggleShowImagePrompt}
+          />
+        </div>
+      </div>
     </Modal2>
   );
 };

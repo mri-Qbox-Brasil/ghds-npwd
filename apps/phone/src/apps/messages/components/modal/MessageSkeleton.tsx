@@ -1,24 +1,24 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
-import Skeleton from '@mui/material/Skeleton';
-
-const useStyles = makeStyles({
-  root: {
-    margin: '0px 0px 12px 8px',
-  },
-  skeleton: {
-    borderRadius: '20px',
-    transform: 'none',
-  },
-});
+import { cn } from '@utils/cn';
 
 export default function MessageSkeleton({ height, isMine = false }) {
-  const classes = useStyles();
-
-  const marginLeft = isMine ? '60px' : '8px';
   return (
-    <div className={classes.root} style={{ marginLeft, height: `${height}px` }}>
-      <Skeleton className={classes.skeleton} variant="text" width={325} height={height} />
+    <div
+      className={cn(
+        "w-full flex mb-4 animate-pulse px-2",
+        isMine ? "justify-end" : "justify-start"
+      )}
+    >
+      <div
+        className={cn(
+          "bg-neutral-200 dark:bg-neutral-800 rounded-2xl shadow-sm",
+          isMine ? "rounded-tr-sm" : "rounded-tl-sm"
+        )}
+        style={{
+          width: `${Math.random() * (120) + 120}px`,
+          height: `${height}px`
+        }}
+      />
     </div>
   );
 }

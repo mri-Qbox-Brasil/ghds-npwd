@@ -1,4 +1,5 @@
-import { createAppThemeProvider } from '@os/apps/utils/createAppThemeProvider';
-import dialerTheme from '../dialer.theme';
+import React from 'react';
 
-export const DialerThemeProvider = createAppThemeProvider(dialerTheme);
+export const DialerThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    return <>{children}</>;
+};

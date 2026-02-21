@@ -1,85 +1,63 @@
 import React, { useContext } from 'react';
-import { Box, Button, Grid, Typography, styled, useTheme } from '@mui/material';
-import { Theme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
 import { DialInputCtx } from '../context/InputContext';
-
-// Componente de botão personalizado
-const CustomDialButton = styled(Button)<{ isDarkMode: boolean }>`
-  border-radius: 100%;
-  background-color: ${(props) => (props.isDarkMode ? '#4c4c4c' : '#e2e2e2')}; // Ajuste para cinza escuro no modo escuro
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin-bottom: 12px;
-  margin-left: 52px;
-  
-  &:hover {
-    background-color: ${(props) => (props.isDarkMode ? '#80808061' : '#80808061')}; // Cor de hover para ambos os temas
-  }
-`;
-
-const useStyles = makeStyles((theme: Theme) => ({
-  gridItem: {
-    fontSize: '28pt',
-    fontWeight: 'semi-bold',
-    color: theme.palette.mode === 'dark' ? '#fff' : '#000', // Verifica o modo do tema
-    height: '80px',
-    width: '80px',
-  },
-  letterText: {
-    position: 'absolute',
-    height: '5px',
-    letterSpacing: '2px',
-    bottom: 22,
-    color: theme.palette.mode === 'dark' ? '#fff' : '#000', // Verifica o modo do tema para as letras
-  },
-}));
-
+import { cn } from '@utils/cn';
 
 interface ButtonItemProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   label: string | number;
   letters: string;
-  isDarkMode: boolean;
 }
 
-const ButtonItem: React.FC<ButtonItemProps> = ({ letters, label, onClick, isDarkMode }) => {
-  const classes = useStyles();
+const ButtonItem: React.FC<ButtonItemProps> = ({ letters, label, onClick }) => {
   return (
-    <Grid key={label} item xs={4}>
-      <CustomDialButton className={classes.gridItem} onClick={onClick} isDarkMode={isDarkMode}>
-        {label}
-        <Typography className={classes.letterText} fontSize={12}>
+    <button
+      onClick={onClick}
+      className={cn(
+        "flex flex-col items-center justify-center rounded-full h-[72px] w-[72px] transition-all",
+        "bg-neutral-100/80 dark:bg-neutral-800/80 hover:bg-neutral-200 dark:hover:bg-neutral-700",
+        "active:bg-neutral-300 dark:active:bg-neutral-600 active:scale-95",
+        "text-neutral-900 dark:text-white shadow-sm"
+      )}
+    >
+      <span className="text-3xl font-medium leading-none">{label}</span>
+      {letters && (
+        <span className="text-[9px] font-bold uppercase tracking-[2px] mt-0.5 opacity-50">
           {letters}
-        </Typography>
-      </CustomDialButton>
-    </Grid>
+        </span>
+      )}
+    </button>
   );
 };
 
 export const DialGrid = () => {
-  const { add, removeOne, clear } = useContext(DialInputCtx);
-  const theme = useTheme(); // Hook para acessar o tema atual do Material UI
-  const isDarkMode = theme.palette.mode === 'dark'; // Verifica se o tema atual é escuro
+  const { add, clear } = useContext(DialInputCtx);
+
+  const dialButtons = [
+    { label: 1, letters: '' },
+    { label: 2, letters: 'ABC' },
+    { label: 3, letters: 'DEF' },
+    { label: 4, letters: 'GHI' },
+    { label: 5, letters: 'JKL' },
+    { label: 6, letters: 'MNO' },
+    { label: 7, letters: 'PQRS' },
+    { label: 8, letters: 'TUV' },
+    { label: 9, letters: 'WXYZ' },
+    { label: '*', letters: '' },
+    { label: 0, letters: '+' },
+    { label: '#', letters: '' },
+  ];
 
   return (
-    <Box height="100%" width="80%">
-      <Grid container justifyContent="space-around">
-        <ButtonItem letters={''} label={1} onClick={() => add(1)} isDarkMode={isDarkMode} />
-        <ButtonItem letters={'ABC'} label={2} onClick={() => add(2)} isDarkMode={isDarkMode} />
-        <ButtonItem letters={'DEF'} label={3} onClick={() => add(3)} isDarkMode={isDarkMode} />
-        <ButtonItem letters={'GHI'} label={4} onClick={() => add(4)} isDarkMode={isDarkMode} />
-        <ButtonItem letters={'JKL'} label={5} onClick={() => add(5)} isDarkMode={isDarkMode} />
-        <ButtonItem letters={'MNO'} label={6} onClick={() => add(6)} isDarkMode={isDarkMode} />
-        <ButtonItem letters={'PQRS'} label={7} onClick={() => add(7)} isDarkMode={isDarkMode} />
-        <ButtonItem letters={'TUY'} label={8} onClick={() => add(8)} isDarkMode={isDarkMode} />
-        <ButtonItem letters={'WKYZ'} label={9} onClick={() => add(9)} isDarkMode={isDarkMode} />
-        <ButtonItem letters={''} label="-" onClick={() => add('-')} isDarkMode={isDarkMode} />
-        <ButtonItem letters={'+'} label={0} onClick={() => add(0)} isDarkMode={isDarkMode} />
-        <ButtonItem letters={''} label="#" onClick={clear} isDarkMode={isDarkMode} />
-      </Grid>
-    </Box>
+    <div className="grid grid-cols-3 gap-x-6 gap-y-4 justify-items-center w-full max-w-[280px] mx-auto">
+      {dialButtons.map((btn) => (
+        <ButtonItem
+          key={btn.label}
+          label={btn.label}
+          letters={btn.letters}
+          onClick={() => btn.label === '#' ? clear() : add(String(btn.label))}
+        />
+      ))}
+    </div>
   );
 };
 

@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { Image as ImageType } from '@typings/twitter';
 import React from 'react';
 import Image from './Image';
@@ -13,20 +12,16 @@ export const ImageDisplay: React.FC<ImageDisplayProps> = ({ visible, images, rem
   if (!visible || !images || images.length === 0) return null;
 
   return (
-    <Box p={1}>
+    <div className="p-2 flex flex-wrap gap-2 w-full">
       {images.map((image) => (
         <Image
           key={image.id}
           link={image.link}
-          handleClick={removeImage ? () => removeImage(image.id) : null}
+          handleClick={removeImage ? () => removeImage(image.id) : undefined}
         />
       ))}
-    </Box>
+    </div>
   );
-};
-
-ImageDisplay.defaultProps = {
-  removeImage: null,
 };
 
 export default ImageDisplay;

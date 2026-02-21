@@ -1,13 +1,9 @@
 import React, { useEffect } from 'react';
-import { AppWrapper } from '@ui/components';
-import { AppContent } from '@ui/components/AppContent';
-import { AppTitle } from '@ui/components/AppTitle';
+import { AppWrapper, AppContent, AppTitle } from '@ui/components';
 import { useApp } from '@os/apps/hooks/useApps';
 import NoteList from './list/NoteList';
 import { NoteModal } from './modal/NoteModal';
-import { Fab, Typography, Box } from '@mui/material';
 import { RiEditBoxLine } from "@react-icons/all-files/ri/RiEditBoxLine";
-import useStyles from './notes.styles';
 import { NotesThemeProvider } from './providers/NotesThemeProvider';
 import { Route } from 'react-router-dom';
 import { useSetModalVisible, useSetSelectedNote, useNotesValue } from './hooks/state';
@@ -16,7 +12,6 @@ import { useQueryParams } from '@common/hooks/useQueryParams';
 import { AddNoteExportData } from '@typings/notes';
 
 export const NotesApp: React.FC = () => {
-  const classes = useStyles();
   const notesApp = useApp('NOTES');
   const setSelectedNote = useSetSelectedNote();
   const setModalVisible = useSetModalVisible();
@@ -41,34 +36,30 @@ export const NotesApp: React.FC = () => {
 
   return (
     <NotesThemeProvider>
-      <AppWrapper id="notes-app">
+      <AppWrapper id="notes-app" className="bg-background">
         <AppTitle app={notesApp} />
         <NoteModal />
-        <AppContent>
+        <AppContent className="flex flex-col h-full overflow-hidden">
           <React.Suspense fallback={<LoadingSpinner />}>
             <Route path="/notes" component={NoteList} />
           </React.Suspense>
         </AppContent>
-        
-        <Box sx={{ textAlign: 'center', paddingY: '16px' }}>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+
+        <div className="flex justify-center py-4 border-t border-neutral-100 dark:border-neutral-800">
+          <p className="text-xs text-neutral-500 font-medium">
             {notes.length} {notes.length === 1 ? 'Nota' : 'Notas'}
-          </Typography>
-        </Box>
-        
-        <RiEditBoxLine className={`${classes.absolute} ${classes.button}`} onClick={onClickCreate}>
-        </RiEditBoxLine>
+          </p>
+        </div>
+
+        <button
+          className="absolute right-6 bottom-20 z-10 p-3 rounded-full bg-blue-500 text-white shadow-lg shadow-blue-500/30 transition-all hover:bg-blue-600 active:scale-90"
+          onClick={onClickCreate}
+        >
+          <RiEditBoxLine size={24} />
+        </button>
       </AppWrapper>
     </NotesThemeProvider>
   );
 };
 
-// v2.0:
-// Redesign finalizado
-// 2.1:
-// Correção do darkmode
-
-// Futuras implementações?
-// Adicionar Data
-// Adicionar Buscar
-// Adicionar Emojis
+export default NotesApp;

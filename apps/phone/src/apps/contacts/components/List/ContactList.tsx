@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchContacts } from './SearchContacts';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useFilteredContacts } from '../../hooks/state';
 import { Contact, ContactEvents } from "@typings/contact";
 import { useCall } from '@os/call/hooks/useCall';
@@ -8,7 +8,7 @@ import useMessages from '@apps/messages/hooks/useMessages';
 import LogDebugEvent from '@os/debug/LogDebugEvents';
 import { useContactActions } from '@apps/contacts/hooks/useContactActions';
 import { useMyPhoneNumber } from '@os/simcard/hooks/useMyPhoneNumber';
-import { Phone, MessageSquare, Plus, Clipboard, UsersRound } from 'lucide-react';
+import { Phone, MessageSquare, Plus, Clipboard, UsersRound, User } from 'lucide-react';
 import { List, ListItem, NPWDButton } from '@npwd/keyos';
 import { initials } from '@utils/misc';
 import { useQueryParams } from '@common/hooks/useQueryParams';
@@ -18,214 +18,197 @@ import { useTranslation } from "react-i18next";
 import { setClipboard } from "@os/phone/hooks";
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import fetchNui from "@utils/fetchNui";
+import { cn } from '@utils/cn';
 
 export const ContactList: React.FC = () => {
   const filteredContacts = useFilteredContacts();
   const history = useHistory();
 
-  // FIXME: This should be reduced before being passed to the component
   const groupedContacts = filteredContacts.reduce((r, e) => {
     const group = e.display.charAt(0).toUpperCase();
     if (!r[group]) r[group] = { group, contacts: [e] };
     else r[group].contacts.push(e);
-
     return r;
-  }, []);
+  }, {} as Record<string, { group: string; contacts: Contact[] }>);
 
-  const myNumber = useMyPhoneNumber()
-  const {avatar_url} = useTwitterProfileValue()
+  const myNumber = useMyPhoneNumber();
+  const { avatar_url } = useTwitterProfileValue();
 
   return (
-    <div className="relative">
-      <div className="sticky top-0 z-50">
-        <div className="flex items-center space-x-2 bg-neutral-100 px-4 dark:bg-neutral-900">
-          <SearchContacts />
+    <div className="flex flex-col h-full bg-background animate-in fade-in duration-300">
+      <header className="px-4 py-4 space-y-4 bg-background/80 backdrop-blur-md sticky top-0 z-20">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Contatos</h1>
           <NPWDButton
             size="icon"
-            className="rounded-full p-2 text-neutral-900"
             variant="ghost"
+            className="h-10 w-10 text-blue-500 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800"
             onClick={() => history.push('/contacts/-1')}
           >
-            <Plus className="h-6 w-6" />
+            <Plus size={24} />
           </NPWDButton>
         </div>
-      </div>
+        <SearchContacts />
+      </header>
 
-      <div className="mt-4 overflow-y-auto px-4">
-        <nav className="space-y-2 overflow-y-auto" aria-label="Directory">
-          <div key="self" className="relative">
+      <div className="flex-1 overflow-y-auto px-4 pb-20">
+        <nav className="space-y-6" aria-label="Directory">
+          <div key="self" className="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-700/50 overflow-hidden">
             <List>
-                <SelfContact key="self" number={myNumber} avatar={avatar_url} />
+              <SelfContact number={myNumber} avatar={avatar_url} />
             </List>
           </div>
 
-          {Object.keys(groupedContacts)
-            .sort()
-            .map((letter) => (
-              <div key={letter} className="relative">
-                <div className="sticky top-0 z-10 rounded-xl border-b border-t border-gray-200 bg-neutral-50 px-6 py-1 text-sm font-medium text-gray-500 dark:border-none dark:bg-neutral-800">
-                  <h3>{letter}</h3>
+          <div className="space-y-4">
+            {Object.keys(groupedContacts)
+              .sort()
+              .map((letter) => (
+                <div key={letter} className="space-y-2">
+                  <div className="sticky top-[108px] z-10 px-4 py-1.5 bg-background/95 backdrop-blur-sm">
+                    <h3 className="text-xs font-bold text-blue-500 uppercase tracking-widest">{letter}</h3>
+                  </div>
+                  <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-700/50 overflow-hidden divide-y divide-neutral-100 dark:divide-neutral-700/50">
+                    <List>
+                      {groupedContacts[letter].contacts.map((contact: Contact) => (
+                        <ContactItem key={contact.id} {...contact} />
+                      ))}
+                    </List>
+                  </div>
                 </div>
-                <List>
-                  {groupedContacts[letter].contacts.map((contact: Contact) => (
-                    <ContactItem key={contact.id} {...contact} />
-                  ))}
-                </List>
-              </div>
-            ))}
+              ))}
+          </div>
+
+          {filteredContacts.length === 0 && (
+            <div className="py-20 text-center text-neutral-400 italic text-sm">
+              Nenhum contato encontrado
+            </div>
+          )}
         </nav>
       </div>
     </div>
   );
 };
 
-interface ContactItemProps extends Contact {
-  onClick?: () => void;
-}
-
-const SelfContact = ({number, avatar}: {number: string, avatar:string}) => {
+const SelfContact = ({ number, avatar }: { number: string; avatar: string }) => {
   const [t] = useTranslation();
-  const {addAlert} = useSnackbar()
-  const copyNumber = () => {
+  const { addAlert } = useSnackbar();
+
+  const copyNumber = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setClipboard(number);
     addAlert({
       message: t('GENERIC.WRITE_TO_CLIPBOARD_MESSAGE', {
-        content: 'Number',
-      }),
+        content: 'Número',
+      }) as unknown as string,
       type: 'success',
     });
-  }
+  };
 
-  const shareLocal = () => {
-    fetchNui(ContactEvents.LOCAL_SHARE)
-  }
+  const shareLocal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    fetchNui(ContactEvents.LOCAL_SHARE);
+  };
 
   return (
-    <ListItem>
-      <div className="min-w-0 flex-1">
-        <div
-          className="flex items-center justify-between focus:outline-none"
-        >
-          <div className="flex items-center space-x-2">
-            {avatar && avatar.length > 0 ? (
-              <img src={avatar} className="inline-block h-10 w-10 rounded-full" alt={'avatar'} />
-            ) : (
-              <div className="flex h-10 w-10 items-center justify-center rounded-full">
-                <span className="text-gray-600 dark:text-gray-300">Me</span>
-              </div>
-            )}
-            <div>
-              <p className="text-base font-medium text-neutral-900 dark:text-neutral-100">
-                {t('CONTACTS.MY_NUMBER')}
-              </p>
-              <p className="text-sm text-neutral-400">{number}</p>
-            </div>
+    <ListItem className="p-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/30 transition-colors">
+      <div className="flex items-center gap-3">
+        {avatar ? (
+          <img src={avatar} className="h-11 w-11 rounded-full border-2 border-white dark:border-neutral-700 shadow-sm" alt="avatar" />
+        ) : (
+          <div className="h-11 w-11 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center border-2 border-white dark:border-neutral-700">
+            <span className="text-blue-600 dark:text-blue-400 font-bold text-xs uppercase">Eu</span>
           </div>
-          <div className="space-x-3">
-            <Tooltip title={t('GENERIC.WRITE_TO_CLIPBOARD_TOOLTIP', {content: 'Number'}) as string}>
-              <button
-                onClick={copyNumber}
-                className="rounded-full bg-neutral-100 p-3 text-neutral-300 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-700"
-              >
-                <Clipboard size={20} />
-              </button>
-            </Tooltip>
-            <Tooltip title={t('CONTACTS.NEARBY_SHARE')} >
-              <button
-                onClick={shareLocal}
-                className="rounded-full bg-neutral-100 p-3 text-neutral-300 hover:bg-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-700"
-              >
-                <UsersRound size={20} />
-              </button>
-            </Tooltip>
-          </div>
+        )}
+        <div className="flex flex-col">
+          <span className="font-bold text-neutral-900 dark:text-white leading-none mb-1">
+            Meu Cartão
+          </span>
+          <span className="text-xs text-neutral-400 font-medium">{number}</span>
         </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Tooltip title="Copiar número">
+          <button
+            onClick={copyNumber}
+            className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-700 text-neutral-500 hover:text-blue-500 transition-colors"
+          >
+            <Clipboard size={18} />
+          </button>
+        </Tooltip>
+        <Tooltip title="Compartilhar por perto">
+          <button
+            onClick={shareLocal}
+            className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-700 text-neutral-500 hover:text-blue-500 transition-colors"
+          >
+            <UsersRound size={18} />
+          </button>
+        </Tooltip>
       </div>
     </ListItem>
   );
-}
+};
 
-const ContactItem = ({ number, avatar, id, display }: ContactItemProps) => {
+const ContactItem = ({ number, avatar, id, display }: Contact) => {
   const query = useQueryParams<{ referal: string }>();
   const { referal } = query;
-
   const { initializeCall } = useCall();
   const { goToConversation } = useMessages();
   const { findExistingConversation } = useContactActions();
   const myPhoneNumber = useMyPhoneNumber();
   const history = useHistory();
 
-  const startCall = (e) => {
+  const startCall = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    LogDebugEvent({
-      action: 'Emitting `Start Call` to Scripts',
-      level: 2,
-      data: true,
-    });
     initializeCall(number.toString());
   };
 
-  const handleMessage = (e) => {
+  const handleMessage = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-
     const phoneNumber = number.toString();
-    LogDebugEvent({
-      action: 'Routing to Message',
-      level: 1,
-      data: { phoneNumber },
-    });
     const conversation = findExistingConversation(myPhoneNumber, phoneNumber);
-    if (conversation) {
-      return goToConversation(conversation);
-    }
-
+    if (conversation) return goToConversation(conversation);
     history.push(`/messages/new?phoneNumber=${phoneNumber}`);
   };
 
+  const detailUrl = referal
+    ? `${referal}?contact=${encodeURIComponent(JSON.stringify({ number, id, display }))}`
+    : `/contacts/${id}`;
+
   return (
-    <ListItem>
-      <div className="min-w-0 flex-1">
-        <Link
-          to={
-            referal
-              ? `${referal}?contact=${encodeURIComponent(JSON.stringify({ number, id, display }))}`
-              : `/contacts/${id}`
-          }
-          className="flex items-center justify-between focus:outline-none"
-        >
-          <div className="flex items-center space-x-2">
-            {avatar && avatar.length > 0 ? (
-              <img src={avatar} className="inline-block h-10 w-10 rounded-full" alt={'avatar'} />
-            ) : (
-              <div className="flex h-10 w-10 items-center justify-center rounded-full">
-                <span className="text-gray-600 dark:text-gray-300">{initials(display)}</span>
-              </div>
-            )}
-            <div>
-              <p className="text-base font-medium text-neutral-900 dark:text-neutral-100">
-                {display}
-              </p>
-              <p className="text-sm text-neutral-400">{number}</p>
+    <ListItem className="hover:bg-neutral-50 dark:hover:bg-neutral-700/30 transition-colors cursor-pointer active:scale-[0.99]">
+      <Link to={detailUrl} className="p-4 flex items-center justify-between w-full">
+        <div className="flex items-center gap-3">
+          {avatar ? (
+            <img src={avatar} className="h-10 w-10 rounded-full border border-neutral-100 dark:border-neutral-700 shadow-sm" alt="avatar" />
+          ) : (
+            <div className="h-10 w-10 rounded-full bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center border border-neutral-100 dark:border-neutral-700">
+              <span className="text-neutral-500 dark:text-neutral-300 font-bold text-xs uppercase">{initials(display)}</span>
             </div>
+          )}
+          <div className="flex flex-col">
+            <span className="font-bold text-neutral-900 dark:text-white leading-none mb-0.5">{display}</span>
+            <span className="text-xs text-neutral-400 font-medium">{number}</span>
           </div>
-          <div className="space-x-3">
-            <button
-              onClick={startCall}
-              className="rounded-full bg-green-100 p-3 text-green-500 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-neutral-700"
-            >
-              <Phone size={20} />
-            </button>
-            <button
-              onClick={handleMessage}
-              className="rounded-full bg-blue-100 p-3 text-blue-400 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-neutral-700"
-            >
-              <MessageSquare size={20} />
-            </button>
-          </div>
-        </Link>
-      </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={startCall}
+            className="p-2.5 rounded-xl bg-green-500/10 text-green-600 hover:bg-green-500 hover:text-white transition-all shadow-sm"
+          >
+            <Phone size={18} />
+          </button>
+          <button
+            onClick={handleMessage}
+            className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all shadow-sm"
+          >
+            <MessageSquare size={18} />
+          </button>
+        </div>
+      </Link>
     </ListItem>
   );
 };

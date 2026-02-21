@@ -1,81 +1,7 @@
-import React, { useRef, useState } from 'react';
-import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-  FormControl,
-  InputLabel,
-  Input,
-  InputAdornment,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import { UserCircle, Banknote } from 'lucide-react';
+import React, { useState } from 'react';
+import { UserCircle, Banknote, X, Send, UserCheck, Smartphone } from 'lucide-react';
 import fetchNui from '@utils/fetchNui';
-
-const useStyles = makeStyles((theme) => ({
-  overlay: {
-    position: 'fixed',
-    textAlign: 'center',
-    borderRadius: '42px',
-    top: 73,
-    left: 50,
-    width: '400px',
-    height: '827px',
-    maxHeight: '827px',
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    backdropFilter: 'blur(2px)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1300,
-  },
-  modalBox: {
-    backgroundColor: 'rgb(64, 192, 87)',
-    padding: theme.spacing(3),
-    borderRadius: '20px',
-    width: '350px',
-    maxWidth: '400px',
-    height: '398px',
-    boxShadow: 'inset 0px 68px 38px -5px rgba(255,255,255,0.2)',
-    textAlign: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    fontFamily: 'Noto Sans JP, sans-serif',
-  },
-  title: {
-    color: '#fff',
-    fontFamily: 'Noto Sans JP, sans-serif',
-  },
-  modalInput: {
-    backgroundColor: 'transparent',
-    borderRadius: '4px',
-    fontFamily: 'Noto Sans JP, sans-serif',
-  },
-  button: {
-    backgroundColor: theme.palette.primary.main,
-    color: '#fff',
-    '&:hover': {
-      boxShadow: 'inset 0px 68px 28px -5px rgba(255,255,255,0.2)',
-      backgroundColor: '#4f4f4f',
-    },
-  },
-  closeButton: {
-    backgroundColor: '#ff0000',
-    color: '#fff',
-    '&:hover': {
-      boxShadow: 'inset 0px 68px 28px -5px rgba(255,255,255,0.2)',
-      backgroundColor: '#e60000',
-    },
-  },
-  buttonContainer: {
-    display: 'flex',
-    gap: theme.spacing(1),
-    width: '100%',
-  },
-}));
+import { cn } from '@utils/cn';
 
 interface TransactionModalProps {
   open: boolean;
@@ -83,88 +9,113 @@ interface TransactionModalProps {
 }
 
 const TransactionModal: React.FC<TransactionModalProps> = ({ open, onClose }) => {
-  const classes = useStyles();
   const [passaporte, setPassaporte] = useState('');
   const [valor, setValor] = useState('');
+  const [isSending, setIsSending] = useState(false);
 
-  const handleTransfer = () => {
+  const handleTransfer = async () => {
+    if (!passaporte || !valor || isSending) return;
+
     const data = {
       id: passaporte,
       amount: parseFloat(valor),
       method: "id"
     };
 
-    fetchNui('ps-banking:server:transferMoney', data)
-      .then((response) => {
-        if (response.success) {
-          console.log('Transferência realizada:', response.message);
-        } else {
-          console.warn('Erro na transferência:', response.message);
-        }
-      })
-      .catch((error) => {
-        console.error('Erro no envio:', error);
-      });
+    setIsSending(true);
+    try {
+      const response: any = await fetchNui('ps-banking:server:transferMoney', data);
+      if (response?.success) {
+        onClose();
+        setPassaporte('');
+        setValor('');
+      }
+    } catch (error) {
+      console.error('Erro na transferência:', error);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   if (!open) return null;
 
   return (
-    <Box className={classes.overlay}>
-      <Box className={classes.modalBox} onClick={(e) => e.stopPropagation()}>
-        <Typography className={classes.title}>Enviar Dinheiro</Typography>
-        <FormControl variant="standard">
-          <InputLabel htmlFor="input-with-icon-adornment">
-            <Typography fontSize={16} color={'#fff'} fontFamily={'Noto Sans JP, sans-serif'}>Passaporte</Typography>
-          </InputLabel>
-          <Input
-            placeholder="XYZ456"
-            className={classes.modalInput}
-            id="input-with-icon-adornment"
-            startAdornment={
-              <InputAdornment position="start">
-                <UserCircle />
-              </InputAdornment>
-            }
-            value={passaporte}
-            onChange={(e) => setPassaporte(e.target.value)}
-          />
-        </FormControl>
-
-        <FormControl variant="standard">
-          <InputLabel htmlFor="input-with-icon-adornment">
-            <Typography fontSize={16} color={'#fff'} fontFamily={'Noto Sans JP, sans-serif'}>Valor</Typography>
-          </InputLabel>
-          <Input
-            type='number'
-            placeholder="1500"
-            className={classes.modalInput}
-            id="input-with-icon-adornment"
-            startAdornment={
-              <InputAdornment position="start">
-                <Banknote />
-              </InputAdornment>
-            }
-            value={valor}
-            onChange={(e) => setValor(e.target.value)}
-          />
-        </FormControl>
-        <Box className={classes.buttonContainer}>
-          <Button
-            variant="outlined"
-            type="submit"
-            fullWidth
-            onClick={handleTransfer}
-            className={classes.button}
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md animate-in fade-in duration-300 px-6">
+      <div className="w-full max-w-sm bg-white dark:bg-neutral-900 rounded-[36px] shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-8 duration-500 border border-neutral-100 dark:border-neutral-800">
+        <header className="p-6 pb-2 flex items-center justify-between border-b border-neutral-50 dark:border-neutral-800">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-2xl bg-emerald-500/10 text-emerald-500">
+              <Send size={24} strokeWidth={2.5} />
+            </div>
+            <h2 className="text-xl font-black text-neutral-900 dark:text-white uppercase tracking-tighter italic">Transferir</h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all active:scale-90"
           >
-            Confirmar
-          </Button>
-          <Button variant="outlined" fullWidth onClick={onClose} className={classes.closeButton}>
-            Fechar
-          </Button>
-        </Box>
-      </Box>
-    </Box>
+            <X size={24} strokeWidth={3} />
+          </button>
+        </header>
+
+        <div className="p-8 space-y-8">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-400 px-1 italic">Passaporte:</label>
+              <div className="relative group">
+                <UserCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-emerald-500 transition-colors" size={20} />
+                <input
+                  type="text"
+                  placeholder="CPF ou ID do cidadão..."
+                  value={passaporte}
+                  onChange={(e) => setPassaporte(e.target.value)}
+                  className="w-full h-14 pl-12 pr-4 bg-neutral-50 dark:bg-neutral-800 border-none rounded-2xl text-sm font-bold text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:ring-2 focus:ring-emerald-500/50 transition-all shadow-sm"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-400 px-1 italic">Valor da Transferência:</label>
+              <div className="relative group">
+                <Banknote className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-emerald-500 transition-colors" size={20} />
+                <input
+                  type="number"
+                  placeholder="R$ 0,00"
+                  value={valor}
+                  onChange={(e) => setValor(e.target.value)}
+                  className="w-full h-14 pl-12 pr-4 bg-neutral-50 dark:bg-neutral-800 border-none rounded-2xl text-lg font-black italic text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:ring-2 focus:ring-emerald-500/50 transition-all shadow-sm tabular-nums"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <button
+              disabled={!passaporte || !valor || isSending}
+              onClick={handleTransfer}
+              className={cn(
+                "w-full h-16 rounded-2xl font-black uppercase tracking-[0.2em] transition-all active:scale-95 shadow-xl flex items-center justify-center gap-3",
+                !passaporte || !valor || isSending
+                  ? "bg-neutral-200 dark:bg-neutral-800 text-neutral-400 cursor-not-allowed shadow-none"
+                  : "bg-emerald-500 text-white hover:bg-emerald-600 shadow-emerald-500/30"
+              )}
+            >
+              {isSending ? (
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              ) : (
+                <>
+                  <Send size={20} strokeWidth={3} />
+                  Confirmar Envio
+                </>
+              )}
+            </button>
+            <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-neutral-300 dark:text-neutral-600 italic">
+              <Smartphone size={10} />
+              <span>Transferência Instantânea via Pix</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

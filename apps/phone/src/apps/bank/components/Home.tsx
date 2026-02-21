@@ -1,201 +1,105 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, IconButton, Grid } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { Eye, EyeOff, UserCircle } from 'lucide-react';
-import { Route, useHistory } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import logoWhite from '../../imgs/fleeca-bank/fleeca-bank.webp';
-import logoDark from '../../imgs/fleeca-bank/fleeca-bank.webp';
-
-import { DotIcon } from 'lucide-react';
+import { Eye, EyeOff, UserCircle, CreditCard, ArrowUpRight, ArrowDownLeft, Landmark } from 'lucide-react';
+import { AppWrapper } from '@ui/components';
+import { AppContent } from '@ui/components/AppContent';
 import fetchNui from '@utils/fetchNui';
 import BankStatement from './BankStatement';
-import { BankStyles } from '../styles';
-import UserProfile from './BankProfile';
-import BankProfile from './BankProfile';
+import { cn } from '@utils/cn';
 
 const Home: React.FC = () => {
   const [showBalance, setShowBalance] = useState(false);
-  const [balance, setBalance] = useState<number>(21500000);
+  const [balance, setBalance] = useState<number>(0);
 
-  const fc = {
-    /**
-     * Fetch player data from server, and update the state with the balance.
-     * The server will return an object with the player's name and balance.
-     * If the data is valid, it will be logged to the console, and the state will be updated.
-     * If there is an error, it will be logged to the console.
-     * @returns {Promise<void>}
-     */
-    fetchPlayerData: async () => {
-      try {
-        const result = await fetchNui('getBankCredentials');
-
-        if (result && result.balance !== undefined) {
-          setBalance(result.balance);
-        } else {
-          console.error('Erro ao obter dados do player');
-        }
-      } catch (error) {
-        console.error('Erro ao chamar o callback para receber dados do player:', error);
+  const fetchPlayerData = async () => {
+    try {
+      const result = await fetchNui('getBankCredentials');
+      if (result && result.balance !== undefined) {
+        setBalance(result.balance);
       }
-
-      //  finally {
-      //   setLoading(false)
-      // }
-    },
-
-    // TODO OPERAÇÕES DE TRANSAÇÃO
-    // addUserToAccount: async (accountId: string, userId: string) => {
-    //   try {
-    //     const response = await fetchNui<{ success: boolean; message?: string; userName?: string }>(
-    //       'ps-banking:client:addUserToAccount',
-    //       {
-    //         accountId,
-    //         userId,
-    //       },
-    //     );
-
-    //     if (response && response.success) {
-    //       console.log(`Usuário ${response.userName} adicionado com sucesso à conta.`);
-    //     } else {
-    //       console.log(`Erro ao adicionar usuário à conta: ${response?.message}`);
-    //     }
-    //   } catch (error) {
-    //     console.error('Erro ao chamar o callback para adicionar usuário à conta:', error);
-    //   }
-    // },
-
-    // depositToAccount: async (accountId: string, amount: number) => {
-    //   try {
-    //     const response = await fetchNui<{ success: boolean }>(
-    //       'ps-banking:client:depositToAccount',
-    //       {
-    //         accountId,
-    //         amount,
-    //       },
-    //     );
-
-    //     if (response && response.success) {
-    //       console.log('Depósito realizado com sucesso!');
-    //     } else {
-    //       console.log('Erro ao realizar o depósito');
-    //     }
-    //   } catch (error) {
-    //     console.error('Erro ao chamar o callback de depósito:', error);
-    //   }
-    // },
-
-    // handleDeposit: () => {
-    //   const accountId = '123456'; // Exemplo de ID de conta
-    //   const amount = 1000; // Exemplo de valor para depósito
-    //   fc.depositToAccount(accountId, amount); // Chama a função de depósito
-    //   console.log('valor depositado', amount, 'para o id', accountId);
-    // },
-
-    numberFormat: (value: number) =>
-      new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      })
-        .format(value)
-        .replace('R$', '')
-        .trim(),
+    } catch (error) {
+      console.error('Erro ao obter dados do banco:', error);
+    }
   };
 
-  const classes = BankStyles();
-  const history = useHistory();
-  // const [t] = useTranslation(); // TODO ADD LOCALE
-  const theme = useTheme();
+  const numberFormat = (value: number) =>
+    new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
 
   useEffect(() => {
-    fc.fetchPlayerData();
+    fetchPlayerData();
   }, []);
 
   return (
+    <AppWrapper className="bg-emerald-600 dark:bg-emerald-950">
+      <AppContent className="flex flex-col h-full bg-[#f8faf9] dark:bg-black overflow-hidden rounded-t-[40px] mt-2 shadow-2xl">
+        {/* Header Section */}
+        <header className="px-6 pt-10 pb-6 flex flex-col gap-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-2xl bg-emerald-500 text-white shadow-lg shadow-emerald-500/30">
+                <Landmark size={24} strokeWidth={2.5} />
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-xl font-black text-neutral-900 dark:text-white uppercase tracking-tighter italic leading-none">Fleeca</h1>
+                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-500 uppercase tracking-widest mt-1">Sua conta segura</span>
+              </div>
+            </div>
+            <button className="h-10 w-10 flex items-center justify-center rounded-2xl bg-white dark:bg-neutral-800 text-neutral-400 hover:text-emerald-500 shadow-sm transition-all active:scale-90">
+              <UserCircle size={22} />
+            </button>
+          </div>
 
-    <Grid container className={classes.root} sx={{ width: '100%' }}>
-      <Grid container className={classes.navBar} sx={{ width: '100%' }}>
-        <Grid item mt={1.5} ml={1} mr={25} sx={{ width: '100px', height: '35px' }}>
-          <img
-            src={theme.palette.mode == 'dark' ? logoDark : logoWhite}
-            width={100}
-            height={100}
-            alt="Bank Icon"
-          />
-        </Grid>
+          {/* Balance Card */}
+          <div className="relative overflow-hidden p-8 rounded-[32px] bg-emerald-600 border border-emerald-500 shadow-xl shadow-emerald-600/20 text-white group animate-in slide-in-from-bottom-4 duration-700">
+            <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12 group-hover:rotate-0 transition-transform duration-700">
+              <CreditCard size={120} />
+            </div>
 
-        <Grid item mt={1}>
-          <IconButton onClick={() => setShowBalance(!showBalance)}>
-            {showBalance ? <Eye /> : <EyeOff />}
-          </IconButton>
+            <div className="relative z-10 flex flex-col gap-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-100">Saldo Disponível</span>
+                <button
+                  onClick={() => setShowBalance(!showBalance)}
+                  className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                >
+                  {showBalance ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
 
-          <IconButton onClick={() => console.log('clicado userprofile')}>
-            <UserCircle />
-          </IconButton>
-        </Grid>
-        <Grid item fontSize={16} className={classes.balanceTitle}>
-          Saldo Conta Pessoal
-        </Grid>
-        <Grid item ml={3.5}>
-          <Typography fontSize={16} mt={6.2} className={classes.currency}>
-            R$
-          </Typography>
-        </Grid>
+              <div className="flex items-baseline gap-2 mt-2">
+                <span className="text-2xl font-black text-emerald-100 italic">R$</span>
+                <h2 className="text-5xl font-black tracking-tighter tabular-nums truncate">
+                  {showBalance ? numberFormat(balance).replace('R$', '').trim() : '••••••••'}
+                </h2>
+              </div>
+            </div>
 
-        <Grid item mt={2.5}>
-          <Typography fontSize={44} mt={1.5} className={classes.balanceText}>
-            {showBalance
-              ? `${fc.numberFormat(balance)}`
-              : Array(8)
-                .fill(8)
-                .map((_, index) => (
-                  <Box key={index} style={{ marginRight: '-28px', flexDirection: 'row' }}>
-                    <DotIcon size={50} />
-                  </Box>
-                ))}
-          </Typography>
-        </Grid>
-      </Grid>
+            <div className="mt-8 pt-6 border-t border-white/10 flex items-center justify-around gap-4">
+              <div className="flex flex-col items-center gap-1 group/btn">
+                <div className="p-3 rounded-2xl bg-white/10 group-hover/btn:bg-white group-hover/btn:text-emerald-600 transition-all active:scale-90">
+                  <ArrowUpRight size={20} strokeWidth={3} />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest">Enviar</span>
+              </div>
+              <div className="flex flex-col items-center gap-1 group/btn">
+                <div className="p-3 rounded-2xl bg-white/10 group-hover/btn:bg-white group-hover/btn:text-emerald-600 transition-all active:scale-90">
+                  <ArrowDownLeft size={20} strokeWidth={3} />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest">Receber</span>
+              </div>
+            </div>
+          </div>
+        </header>
 
-      <Grid item>
-
-        <BankStatement></BankStatement>
-
-      </Grid>
-    </Grid>
+        {/* Statement Section */}
+        <main className="flex-1 overflow-hidden">
+          <BankStatement />
+        </main>
+      </AppContent>
+    </AppWrapper>
   );
 };
 
 export default Home;
-
-// TODO MOCK FULL
-// InjectDebugData<any>(
-//   [
-//     {
-//       app: 'BANK',
-//       method: BankEvents.SEND_NOTIFICATION,
-//       data: {
-//         appId: 'TWITTER',
-//         profile_id: 423443442,
-//         profile_name: 'Chip',
-//         isMine: false,
-//         isLiked: false,
-//         retweetId: '',
-//         isRetweet: false,
-//         seconds_since_tweet: 1639,
-//         retweetProfileName: '',
-//         retweetAvatarUrl: '',
-//         isReported: false,
-//         retweetIdentifier: '',
-//         avatar_url: '',
-//         id: 116,
-//         message: 'Go is better! Here is why: Go is a statically typed, compiled language in the tradition of C, with memory safety, garbage collection, structural typing, and CSP-style concurrency. The compiler, tools, and source code are all free and open source.',
-//         createdAt: '2021-12-01 00:42:03',
-//         updatedAt: '2021-12-01 00:42:03',
-//         identifier: '',
-//         retweet: null,
-//       },
-//     },
-//   ],
-//   4000,
-// );

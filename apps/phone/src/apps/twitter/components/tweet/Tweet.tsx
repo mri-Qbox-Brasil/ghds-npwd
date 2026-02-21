@@ -1,7 +1,6 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import xss from 'xss';
 import { useTranslation } from 'react-i18next';
-import { ListItemAvatar, Avatar as MuiAvatar } from '@mui/material';
 
 import { FormattedTweet } from '@typings/twitter';
 import { secondsToHumanReadable } from '../../utils/time';
@@ -13,12 +12,7 @@ import { RetweetButton } from '../buttons/RetweetButton';
 import { usePhone } from '@os/phone/hooks/usePhone';
 import Retweet from './Retweet';
 import ShowMore from './ShowMore';
-import {
-  TweetContent,
-  TweetContentPrimary,
-  TweetDate,
-  TweetItemContainer,
-} from './Tweet.styles';
+import { cn } from '@utils/cn';
 
 interface TweetProps {
   tweet: FormattedTweet;
@@ -49,15 +43,9 @@ export const Tweet: React.FC<TweetProps> = ({ tweet, imageOpen, setImageOpen }) 
   if (!ResourceConfig) return null;
   const { enableAvatars, enableImages } = ResourceConfig.twitter;
 
-  // this is a workaround to transfer string new lines and returns that
-  // are stored into the database into html for the UI to render
-
-  // We are replacing with <br /> to eventually render in HTML
   const formattedMessage = message.replace(/\n\r?/g, '<br />');
 
-  // Therefore we need to sanitize this message to protect against XSS
   const sanitizedMessage = xss(formattedMessage, {
-    // Be as strict as possible, whitelisting <br> tag
     whiteList: {
       br: [],
     },
@@ -69,41 +57,62 @@ export const Tweet: React.FC<TweetProps> = ({ tweet, imageOpen, setImageOpen }) 
   const avatarUrl = isRetweet ? retweetAvatarUrl : avatar_url;
 
   return (
-    <li className="flex w-full flex-col flex-nowrap overflow-x-hidden px-2 pt-6 border-b border-neutral-200 dark:border-neutral-800 pb-3">
+    <div className="flex w-full flex-col px-4 py-4 border-b border-neutral-100 dark:border-neutral-800 last:border-0 hover:bg-neutral-50/50 dark:hover:bg-neutral-900/50 transition-colors group">
       {isRetweet && <Retweet profileName={profile_name} />}
-      <TweetItemContainer>
+
+      <div className="flex gap-3">
         {enableAvatars && (
-          <ListItemAvatar>
-            <MuiAvatar>
-              <Avatar avatarUrl={avatarUrl} height="40px" width="40px" />
-            </MuiAvatar>
-          </ListItemAvatar>
+          <Avatar
+            avatarUrl={avatarUrl}
+            height={48}
+            width={48}
+            className="ring-2 ring-white dark:ring-neutral-900 shadow-sm"
+          />
         )}
-        <TweetContent>
-          <TweetContentPrimary>
-            <p className='text-sky-400 text-base font-bold'>{formattedProfileName}</p>
-            <TweetDate variant="body2" color="textSecondary">
-              {secondsToHumanReadable(t, seconds_since_tweet)}
-            </TweetDate>
-          </TweetContentPrimary>
-          <p
-            className="text-sm text-neutral-900 dark:text-white"
+
+        <div className="flex-1 min-w-0 flex flex-col gap-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="font-bold text-neutral-900 dark:text-white truncate hover:underline cursor-pointer">
+                {profileName}
+              </span>
+              <span className="text-neutral-400 dark:text-neutral-500 font-medium truncate text-[13px]">
+                {formattedProfileName}
+              </span>
+              <span className="text-neutral-300 dark:text-neutral-600">·</span>
+              <span className="text-neutral-400 dark:text-neutral-500 text-[13px] shrink-0 font-medium">
+                {secondsToHumanReadable(t, seconds_since_tweet)}
+              </span>
+            </div>
+            <ShowMore isMine={isMine} isReported={isReported} id={id} />
+          </div>
+
+          <div
+            className="text-[15px] leading-relaxed text-neutral-800 dark:text-neutral-200 break-words"
             dangerouslySetInnerHTML={{
               __html: sanitizedMessage,
             }}
           />
-          {enableImages && <ImageDisplay visible images={images} />}
-          <div className='flex flex-nowrap flex-row justify-between w-full mt-4'>
-            <ReplyButton profile_name={profile_name} />
+
+          {enableImages && images && images.length > 0 && (
+            <div className="mt-2 rounded-2xl overflow-hidden border border-neutral-100 dark:border-neutral-800 shadow-sm">
+              <ImageDisplay visible images={images} />
+            </div>
+          )}
+
+          <div className="flex items-center justify-between max-w-sm mt-2 -ml-2 text-neutral-400">
+            <ReplyButton profile_name={profileName} />
+            <div className="flex items-center">
+              {ResourceConfig.twitter.allowRetweet && !isMine && (
+                <RetweetButton tweetId={id} retweetId={retweetId} isRetweet={isRetweet} />
+              )}
+            </div>
             <LikeButton likes={likes} tweetId={id} isLiked={isLiked} />
-            {ResourceConfig.twitter.allowRetweet && !isMine && (
-              <RetweetButton tweetId={id} retweetId={retweetId} isRetweet={isRetweet} />
-            )}
-            <ShowMore isMine={isMine} isReported={isReported} id={id} />
+            <div className="w-10"></div> {/* Spacer para manter o alinhamento centralizado */}
           </div>
-        </TweetContent>
-      </TweetItemContainer>
-    </li>
+        </div>
+      </div>
+    </div>
   );
 };
 

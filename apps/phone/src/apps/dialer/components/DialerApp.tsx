@@ -1,6 +1,5 @@
 import React from 'react';
-import { AppWrapper } from '@ui/components';
-import { AppContent } from '@ui/components/AppContent';
+import { AppWrapper, AppContent } from '@ui/components';
 import { DialerHistory } from './views/DialerHistory';
 import { Switch, Route } from 'react-router-dom';
 import DialPage from './views/DialPage';
@@ -8,13 +7,12 @@ import DialerNavBar from './DialerNavBar';
 import { ContactList } from '../../contacts/components/List/ContactList';
 import { DialerThemeProvider } from '../providers/DialerThemeProvider';
 import { LoadingSpinner } from '@ui/components/LoadingSpinner';
-import InjectDebugData from "@os/debug/InjectDebugData";
 
 export const DialerApp: React.FC = () => {
   return (
     <DialerThemeProvider>
-      <AppWrapper>
-        <AppContent>
+      <AppWrapper className="bg-background">
+        <AppContent className="flex flex-col h-full overflow-hidden">
           <Switch>
             <Route path="/phone/dial">
               <DialPage />
@@ -24,9 +22,11 @@ export const DialerApp: React.FC = () => {
                 <DialerHistory />
               </React.Suspense>
             </Route>
-            <React.Suspense fallback={<LoadingSpinner />}>
-              <Route path="/phone/contacts" component={ContactList} />
-            </React.Suspense>
+            <Route path="/phone/contacts">
+              <React.Suspense fallback={<LoadingSpinner />}>
+                <ContactList />
+              </React.Suspense>
+            </Route>
           </Switch>
         </AppContent>
         <DialerNavBar />
@@ -34,3 +34,5 @@ export const DialerApp: React.FC = () => {
     </DialerThemeProvider>
   );
 };
+
+export default DialerApp;

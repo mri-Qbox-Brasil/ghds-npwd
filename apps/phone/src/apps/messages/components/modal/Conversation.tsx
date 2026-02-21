@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { CircularProgress } from '@mui/material';
 import { Message, MessageConversation, MessageEvents } from '@typings/messages';
 import { MessageBubble } from './MessageBubble';
 import fetchNui from '../../../../utils/fetchNui';
@@ -34,7 +33,7 @@ const Conversation: React.FC<IProps> = ({ activeMessageGroup, messages, isVoiceE
     }).then((resp) => {
       if (resp.status !== 'ok') {
         addAlert({
-          message: t('MESSAGES.FEEDBACK.FETCHED_MESSAGES_FAILED'),
+          message: t('MESSAGES.FEEDBACK.FETCHED_MESSAGES_FAILED') as unknown as string,
           type: 'error',
         });
 
@@ -54,24 +53,23 @@ const Conversation: React.FC<IProps> = ({ activeMessageGroup, messages, isVoiceE
   }, [addAlert, conversationId, setMessages, history, t, page, setPage]);
 
   return (
-    <div className="h-full">
+    <div className="h-full w-full flex flex-col bg-background">
       <div
         id="scrollableDiv"
-        style={{
-          overflow: 'auto',
-          maxHeight: 620,
-          display: 'flex',
-          flexDirection: 'column-reverse',
-          flexGrow: 1,
-        }}
+        className="flex-1 overflow-y-auto px-4 py-2 flex flex-col-reverse"
       >
         <InfiniteScroll
           next={handleNextPage}
           scrollableTarget="scrollableDiv"
           hasMore={hasMore}
           inverse={true}
-          loader={<CircularProgress />}
+          loader={
+            <div className="flex justify-center p-4">
+              <div className="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+            </div>
+          }
           dataLength={messages.length}
+          className="flex flex-col-reverse gap-1.5"
         >
           {messages.map((message) => (
             <MessageBubble key={message.id} message={message} />

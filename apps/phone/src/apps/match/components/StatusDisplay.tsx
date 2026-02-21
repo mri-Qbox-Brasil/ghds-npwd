@@ -1,13 +1,25 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { cn } from '@utils/cn';
 
-function StatusDisplay({ className, visible, text }) {
-  const style = { opacity: visible ? '0.65' : '0.0' };
+interface StatusDisplayProps {
+  className?: string;
+  visible: boolean;
+  text: string;
+}
 
+function StatusDisplay({ className, visible, text }: StatusDisplayProps) {
   return (
-    <Box className={className} style={style}>
-      {text}
-    </Box>
+    <div
+      className={cn(
+        "pointer-events-none transition-all duration-300 transform",
+        visible ? "opacity-100 scale-110" : "opacity-0 scale-90",
+        className
+      )}
+    >
+      <span className="px-4 py-2 border-[6px] rounded-2xl font-black text-4xl uppercase tracking-tighter">
+        {text}
+      </span>
+    </div>
   );
 }
 

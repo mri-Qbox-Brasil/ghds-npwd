@@ -1,9 +1,13 @@
 import { Bird } from 'lucide-react';
 
-export function LifeInvaderTitle() {
+export function TwitterTitle() {
   return (
-    <div className='h-[50px] w-full flex nowrap flex-row justify-center items-center bg-neutral-700 rounded border border-neutral-600'>
-      <Bird size={24} className='text-sky-400'/>
-    </div>
+    <header className="flex h-16 shrink-0 items-center justify-center px-4 bg-background/80 backdrop-blur-md border-b border-neutral-100 dark:border-neutral-800 sticky top-0 z-20">
+      <div className="flex items-center gap-2">
+        <Bird size={28} className="text-sky-500 fill-sky-500/10" />
+      </div>
+    </header>
   );
 }
+
+export default TwitterTitle;

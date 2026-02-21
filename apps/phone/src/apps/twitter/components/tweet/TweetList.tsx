@@ -29,7 +29,7 @@ export function TweetList({ tweets }: { tweets: FormattedTweet[] }) {
     fetchNui<ServerPromiseResp<GetTweet[]>>(TwitterEvents.FETCH_TWEETS, { pageId }).then((resp) => {
       if (resp.status !== 'ok') {
         addAlert({
-          message: resp.errorMsg,
+          message: resp.errorMsg as unknown as string,
           type: 'error',
         });
       } else {
@@ -50,34 +50,29 @@ export function TweetList({ tweets }: { tweets: FormattedTweet[] }) {
   }, [addAlert, setTweetsData]);
 
   const Footer = () => {
-    if (hasNextPage) {
-      return (
-        <div
-          style={{ padding: '2rem', display: 'flex', justifyContent: 'center', color: '#64A5FD' }}
-        >
-          Loading Tweets...
-        </div>
-      );
-    } else {
-      return (
-        <div
-          style={{ padding: '2rem', display: 'flex', justifyContent: 'center', color: '#64A5FD' }}
-        >
-          Nothing More To Load!
-        </div>
-      );
-    }
+    return (
+      <div className="flex justify-center items-center py-8 text-sky-500 font-medium text-sm">
+        {hasNextPage ? (
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
+            <span>Loading Tweets...</span>
+          </div>
+        ) : (
+          <span>Nothing More To Load!</span>
+        )}
+      </div>
+    );
   };
 
   return (
-    <ul className='h-full divide-y divide-blue-200'>
+    <ul className="h-full divide-y divide-neutral-200 dark:divide-neutral-800 bg-background overflow-hidden list-none p-0 m-0">
       <Virtuoso
-        style={{ height: '100%' }}
+        style={{ height: '100%', width: '100%' }}
         data={tweetsData}
         endReached={handleNewPageLoad}
         overscan={6}
         itemContent={(_, tweet) => {
-          return <Tweet key={tweet.id} tweet={tweet} />;
+          return <Tweet key={tweet.id} tweet={tweet} imageOpen={null} setImageOpen={() => { }} />;
         }}
         components={{ Footer }}
       />
