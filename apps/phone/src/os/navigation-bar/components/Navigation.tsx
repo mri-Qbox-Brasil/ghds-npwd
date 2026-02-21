@@ -1,13 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import { Router, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { usePhone } from '@os/phone/hooks/usePhone';
+import { useNavigationBarStyle } from '@os/new-notifications/state';
+import { getAmbientBrightness } from '@utils/getBrightness';
+import { useWallpaper } from '../../../apps/settings/hooks/useWallpaper';
+import { cn } from '@utils/cn';
 
 export const Navigation: React.FC = () => {
+  const containerRef = useRef<HTMLButtonElement>(null);
   const [isVisible, setisVisible] = useState(true)
+  const [isHovered, setIsHovered] = useState(false);
+  const [isBrieflyVisible, setIsBrieflyVisible] = useState(false);
+  const [navBarStyle, setNavigationBarStyle] = useNavigationBarStyle();
+  const wallpaper = useWallpaper();
   const history = useHistory();
   const { isExact } = useRouteMatch('/');
   const { closePhone } = usePhone();
   const location = useLocation();
+
+  // Transient visibility when entering an app
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      setIsBrieflyVisible(true);
+      const timer = setTimeout(() => setIsBrieflyVisible(false), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setIsBrieflyVisible(false);
+      setIsHovered(false);
+    }
+  }, [location.pathname]);
+
+  // Ambient Sensor detection
+  useEffect(() => {
+    const detectBrightness = async () => {
+      if (!containerRef.current) return;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      const style = await getAmbientBrightness(
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2,
+        containerRef.current,
+        wallpaper
+      );
+
+      setNavigationBarStyle(style);
+    };
+
+    // Run detection with a slight delay to ensure content is settled
+    const timeout = setTimeout(detectBrightness, 300);
+    return () => clearTimeout(timeout);
+  }, [location.pathname, wallpaper, setNavigationBarStyle]);
 
   // const handleGoBackInHistory = () => {
   //   history.goBack();
@@ -15,12 +57,16 @@ export const Navigation: React.FC = () => {
 
   const handleGoToMenu = () => {
     if (isExact) return;
+    setIsHovered(false);
+    setIsBrieflyVisible(false);
     history.push('/');
   };
 
   useEffect(() => {
     if (location.pathname == '/') {
       setisVisible(false)
+      setIsHovered(false);
+      setIsBrieflyVisible(false);
     } else {
       setisVisible(true)
     }
@@ -28,15 +74,26 @@ export const Navigation: React.FC = () => {
   }, [location.pathname])
 
   return (
-    <>
+    <div
+      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[200px] h-2 z-[1000] pointer-events-auto flex items-end justify-center pb-2"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {isVisible &&
         <button
-          className="absolute bottom-2 left-1/2 -translate-x-1/2 z-[1000] cursor-pointer appearance-none bg-transparent border-none p-2"
+          ref={containerRef}
+          className={cn(
+            "cursor-pointer appearance-none bg-transparent border-none p-2 transition-all duration-500 ease-in-out",
+            (isHovered || isBrieflyVisible) ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
+          )}
           onClick={handleGoToMenu}
         >
-          <div className="w-[145px] h-[5px] bg-neutral-900 dark:bg-neutral-100 rounded-[0.5rem] shadow-[0_1px_4px_rgba(0,0,0,0.1)] dark:shadow-[0_1px_4px_rgba(0,0,0,0.5)] transition-colors duration-200" />
+          <div className={cn(
+            "w-[145px] h-[5px] rounded-[0.5rem] shadow-[0_1px_4px_rgba(0,0,0,0.1)] transition-colors duration-500",
+            navBarStyle === 'light' ? "bg-white/80" : "bg-black/80"
+          )} />
         </button>
       }
-    </>
+    </div>
   );
 };

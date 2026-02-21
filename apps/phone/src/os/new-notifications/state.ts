@@ -88,9 +88,18 @@ export const statusBarStyle = atom<'light' | 'dark'>({
   default: 'light',
 });
 
+export const navigationBarStyle = atom<'light' | 'dark'>({
+  key: 'npwd:navigationBarStyle',
+  default: 'light',
+});
+
 export const useStatusBarStyle = () => useRecoilState(statusBarStyle);
 export const useStatusBarStyleValue = () => useRecoilValue(statusBarStyle);
 export const useSetStatusBarStyle = () => useSetRecoilState(statusBarStyle);
+
+export const useNavigationBarStyle = () => useRecoilState(navigationBarStyle);
+export const useNavigationBarStyleValue = () => useRecoilValue(navigationBarStyle);
+export const useSetNavigationBarStyle = () => useSetRecoilState(navigationBarStyle);
 
 export const useNavbarUncollapsed = () => useRecoilState(barUncollapsed);
 export const useSetNavbarUncollapsed = () => useSetRecoilState(barUncollapsed);
