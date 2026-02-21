@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { Flex } from '@ui/components/ui/flex';
 import { Typography } from '@ui/components/ui/typography';
@@ -12,11 +12,15 @@ import {
   useNavbarUncollapsed,
   useUnreadNotificationIds,
   useUnreadNotifications,
+  useStatusBarStyle,
 } from '@os/new-notifications/state';
 import { useApp } from '@os/apps/hooks/useApps';
 import { UnreadNotificationBarProps } from '@typings/notifications';
 import { useNotification } from '../useNotification';
 import { cn } from '@utils/css';
+import { getAmbientBrightness } from '@utils/getBrightness';
+import { useLocation } from 'react-router-dom';
+import { useWallpaper } from '../../../apps/settings/hooks/useWallpaper';
 
 
 interface WrapperGridProps {
@@ -27,7 +31,7 @@ const IconUnreadGrid: React.FC<WrapperGridProps> = ({ tgtNoti }) => {
   const app = useApp(tgtNoti?.appId);
   if (!app || !app.NotificationIcon) return null;
   return (
-    <div className="w-[14px] h-[14px] flex items-center justify-center text-foreground opacity-90 mx-0.5">
+    <div className="w-[14px] h-[14px] flex items-center justify-center text-white mx-0.5">
       {/* @ts-ignore */}
       <app.NotificationIcon fontSize="inherit" />
     </div>
@@ -58,12 +62,37 @@ const BatteryIcon: React.FC<{ color: string }> = ({ color }) => (
 );
 
 export const NotificationBar = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const time = usePhoneTime();
+  const { pathname } = useLocation();
+  const wallpaper = useWallpaper();
 
   const [barCollapsed, setBarUncollapsed] = useNavbarUncollapsed();
+  const [statusStyle, setStatusBarStyle] = useStatusBarStyle();
   const unreadNotificationIds = useUnreadNotificationIds();
   const unreadNotifications = useUnreadNotifications();
   const { markAllAsRead } = useNotification();
+
+  // Ambient Sensor: Detect background brightness automatically
+  useEffect(() => {
+    const detectBrightness = async () => {
+      if (!containerRef.current) return;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      const style = await getAmbientBrightness(
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2,
+        containerRef.current,
+        wallpaper
+      );
+
+      setStatusBarStyle(style);
+    };
+
+    // Run detection with a slight delay to ensure app is rendered
+    const timeout = setTimeout(detectBrightness, 200);
+    return () => clearTimeout(timeout);
+  }, [pathname, wallpaper, setStatusBarStyle]);
 
   const handleClearNotis = async () => {
     setBarUncollapsed(false);
@@ -76,14 +105,19 @@ export const NotificationBar = () => {
     }
   }, [unreadNotificationIds, setBarUncollapsed]);
 
+
   return (
     <>
       <div
-        className="absolute top-0 left-0 w-full text-foreground z-[100] px-10 pt-6 pb-2 flex items-center justify-between shrink-0 hover:cursor-pointer bg-transparent pointer-events-auto"
+        ref={containerRef}
+        className={cn(
+          "absolute top-0 left-0 w-full z-[100] px-10 pt-6 pb-2 flex items-center justify-between shrink-0 hover:cursor-pointer bg-transparent pointer-events-auto transition-colors duration-300",
+          statusStyle === 'light' ? "text-white" : "text-black"
+        )}
         onClick={() => setBarUncollapsed((curr) => !curr)}
       >
         {time ? (
-          <div className="font-sans text-[15px] font-bold tracking-tight text-foreground leading-none">
+          <div className="font-sans text-[14px] font-medium tracking-tight leading-none">
             {time}
           </div>
         ) : <div className="w-10" />}
@@ -97,7 +131,7 @@ export const NotificationBar = () => {
               ))}
         </div>
 
-        <div className="flex items-center gap-1.5 text-foreground">
+        <div className="flex items-center gap-1.5 overflow-visible">
           <SignalIcon color="currentColor" />
           <BatteryIcon color="currentColor" />
         </div>

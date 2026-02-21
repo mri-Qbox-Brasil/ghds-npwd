@@ -54,26 +54,26 @@ export const notificationsForApp = selectorFamily<NPWDNotification[], string>({
   key: 'npwd:notificationsForApp',
   get:
     (appId: string) =>
-    ({ get }) => {
-      const allNotisIds = get(allNotificationIds);
+      ({ get }) => {
+        const allNotisIds = get(allNotificationIds);
 
-      return allNotisIds
-        .map((id: string) => get(notifications(id)))
-        .filter((n: NPWDNotification) => n.appId === appId);
-    },
+        return allNotisIds
+          .map((id: string) => get(notifications(id)))
+          .filter((n: NPWDNotification) => n.appId === appId);
+      },
 });
 
 export const unreadNotificationsForApp = selectorFamily<NPWDNotification[], string>({
   key: 'npwd:unreadNotificationsForApp',
   get:
     (appId: string) =>
-    ({ get }) => {
-      const allNotisIds = get(allNotificationIds);
+      ({ get }) => {
+        const allNotisIds = get(allNotificationIds);
 
-      return allNotisIds
-        .map((id: string) => get(notifications(id)))
-        .filter((n: NPWDNotification) => !n.isRead && n.appId === appId);
-    },
+        return allNotisIds
+          .map((id: string) => get(notifications(id)))
+          .filter((n: NPWDNotification) => !n.isRead && n.appId === appId);
+      },
 });
 
 /* Returns all notification IDs for the specified app ID */
@@ -82,6 +82,15 @@ export const useNotificationsForApp = (appId: string) => useRecoilValue(notifica
 /* Returns all unread notification IDs for the specified app ID */
 export const useUnreadNotificationsForApp = (appId: string) =>
   useRecoilValue(unreadNotificationsForApp(appId));
+
+export const statusBarStyle = atom<'light' | 'dark'>({
+  key: 'npwd:statusBarStyle',
+  default: 'light',
+});
+
+export const useStatusBarStyle = () => useRecoilState(statusBarStyle);
+export const useStatusBarStyleValue = () => useRecoilValue(statusBarStyle);
+export const useSetStatusBarStyle = () => useSetRecoilState(statusBarStyle);
 
 export const useNavbarUncollapsed = () => useRecoilState(barUncollapsed);
 export const useSetNavbarUncollapsed = () => useSetRecoilState(barUncollapsed);
