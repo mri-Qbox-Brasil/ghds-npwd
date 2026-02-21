@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { AppIcon } from '@ui/components';
-import React from 'react';
 
 interface DockProps {
     apps: any[];
