@@ -57,7 +57,7 @@ export const AppIcon: React.FC<AppIconProps> = ({
         )}
       </div>
       {!isDockItem && (
-        <span className="mt-1 text-[12px] text-white font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[80px] text-center [text-shadow:1px_1px_1px_rgba(0,0,0,0.3)]">
+        <span className="mt-1.5 text-[11px] text-white/90 font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-[70px] text-center [text-shadow:0_1px_2px_rgba(0,0,0,0.4)]">
           {t(nameLocale) as unknown as string}
         </span>
       )}

@@ -31,10 +31,10 @@ export const Navigation: React.FC = () => {
     <>
       {isVisible &&
         <button
-          className="fixed top-[882px] left-1/2 -translate-x-1/2 z-[1000] cursor-pointer appearance-none bg-transparent border-none p-0"
+          className="absolute bottom-2 left-1/2 -translate-x-1/2 z-[1000] cursor-pointer appearance-none bg-transparent border-none p-2"
           onClick={handleGoToMenu}
         >
-          <div className="w-[145px] h-[6px] bg-[#363636] rounded-[0.5rem] shadow-[0_2px_8px_rgba(0,0,0,0.2)] transition-colors duration-200 hover:bg-[#0a0a0a]" />
+          <div className="w-[145px] h-[5px] bg-neutral-900 dark:bg-neutral-100 rounded-[0.5rem] shadow-[0_1px_4px_rgba(0,0,0,0.1)] dark:shadow-[0_1px_4px_rgba(0,0,0,0.5)] transition-colors duration-200" />
         </button>
       }
     </>

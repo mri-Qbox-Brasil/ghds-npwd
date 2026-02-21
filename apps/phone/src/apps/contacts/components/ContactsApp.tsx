@@ -9,7 +9,7 @@ import { LoadingSpinner } from '@ui/components/LoadingSpinner';
 export const ContactsApp: React.FC = () => {
   return (
     <ContactsThemeProvider>
-      <AppWrapper id="contact-app" className="bg-background">
+      <AppWrapper id="contact-app" className="bg-white/40 dark:bg-black/40 backdrop-blur-md">
         <AppContent className="flex flex-col h-full overflow-hidden">
           <React.Suspense fallback={<LoadingSpinner />}>
             <Route path="/contacts/" exact component={ContactPage} />

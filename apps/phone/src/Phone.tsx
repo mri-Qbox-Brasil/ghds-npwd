@@ -124,6 +124,11 @@ InjectDebugData<any>([
     method: PhoneEvents.SET_VISIBILITY,
     data: true,
   },
+  {
+    app: 'PHONE',
+    method: PhoneEvents.SET_TIME,
+    data: '22:42',
+  },
 ]);
 
 export default Phone;

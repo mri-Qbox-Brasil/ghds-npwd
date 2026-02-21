@@ -36,12 +36,18 @@ const PhoneWrapper: React.FC<PhoneWrapperProps> = ({ children }) => {
           />
           <div
             id="phone"
-            className="PhoneScreen bg-[#F6F6F67] dark:bg-black"
+            className="PhoneScreen bg-transparent dark:bg-black overflow-hidden"
             style={{
-              backgroundImage: pathname === '/' && wallpaper,
+              backgroundImage: wallpaper,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
             }}
           >
-            {children}
+            {/* iOS 26 Glass Overlay for Apps */}
+            {pathname !== '/' && <div className="absolute inset-0 bg-white/10 dark:bg-black/20 backdrop-blur-[2px] z-0" />}
+            <div className="relative z-10 w-full h-full flex flex-col">
+              {children}
+            </div>
           </div>
         </div>
       </div>

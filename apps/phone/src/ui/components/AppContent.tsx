@@ -3,18 +3,25 @@ import { AppContentTypes } from '../interface/InterfaceUI';
 import { LoadingSpinner } from '@ui/components/LoadingSpinner';
 import { cn } from '@utils/cn';
 
-export const AppContent: React.FC<AppContentTypes & React.HTMLAttributes<HTMLDivElement>> = ({
-  children,
-  paperStyle,
-  backdrop,
-  disableSuspenseHandler,
-  onClickBackdrop,
-  ...props
-}) => {
+export const AppContent = React.forwardRef<HTMLDivElement, AppContentTypes & React.HTMLAttributes<HTMLDivElement>>((
+  {
+    children,
+    paperStyle,
+    backdrop,
+    disableSuspenseHandler,
+    onClickBackdrop,
+    className,
+    style,
+    ...props
+  },
+  ref
+) => {
   return (
     <div
-      className="flex flex-col flex-1 bg-[#F6F6F67] dark:bg-black relative"
-      style={backdrop ? { overflow: 'hidden' } : { overflow: 'auto' }}
+      ref={ref}
+      {...props}
+      className={cn("flex flex-col flex-1 bg-[#F2F2F7] dark:bg-black relative", className)}
+      style={{ overflow: backdrop ? 'hidden' : 'auto', ...style }}
     >
       {backdrop && (
         <div
@@ -22,7 +29,7 @@ export const AppContent: React.FC<AppContentTypes & React.HTMLAttributes<HTMLDiv
           onClick={onClickBackdrop}
         />
       )}
-      <div className={cn('flex-auto w-full grow', props.className)} style={paperStyle}>
+      <div className={cn('flex-auto w-full grow')} style={paperStyle}>
         {!disableSuspenseHandler ? (
           <React.Suspense fallback={<LoadingSpinner />}>{children}</React.Suspense>
         ) : (
@@ -31,4 +38,6 @@ export const AppContent: React.FC<AppContentTypes & React.HTMLAttributes<HTMLDiv
       </div>
     </div>
   );
-};
+});
+
+AppContent.displayName = 'AppContent';

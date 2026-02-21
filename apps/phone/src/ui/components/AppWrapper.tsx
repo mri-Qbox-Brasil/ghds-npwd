@@ -12,11 +12,8 @@ export const AppWrapper: React.FC<AppWrapperTypes & React.HTMLAttributes<HTMLDiv
   return (
     <div
       {...props}
-      className={cn("flex flex-col relative w-full h-full min-h-[720px]", className)}
+      className={cn("flex flex-col relative w-full h-full", className)}
       style={{
-        padding: 0,
-        paddingTop: 15,
-        margin: 0,
         ...style,
       }}
     >

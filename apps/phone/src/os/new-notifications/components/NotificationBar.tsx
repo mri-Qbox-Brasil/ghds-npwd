@@ -78,14 +78,14 @@ export const NotificationBar = () => {
   return (
     <>
       <div
-        className="w-full text-foreground z-[99] p-[25px] relative flex items-center justify-between shrink-0 hover:cursor-pointer bg-transparent"
+        className="absolute top-0 left-0 w-full text-foreground z-[100] px-10 pt-6 pb-2 flex items-center justify-between shrink-0 hover:cursor-pointer bg-transparent pointer-events-auto"
         onClick={() => setBarUncollapsed((curr) => !curr)}
       >
-        {time && (
-          <div className="font-sans text-[15px] font-semibold tracking-tight text-foreground leading-none">
+        {time ? (
+          <div className="font-sans text-[15px] font-bold tracking-tight text-foreground leading-none">
             {time}
           </div>
-        )}
+        ) : <div className="w-10" />}
 
         <div className="flex items-center gap-1">
           {unreadNotifications &&
@@ -106,7 +106,7 @@ export const NotificationBar = () => {
         <Slide direction="down" in={barCollapsed} mountOnEnter unmountOnExit>
           <div style={{ position: 'absolute', top: 10, left: 0, width: '100%', height: '100%' }}>
             <div
-              className="absolute left-[6%] top-[60px] w-[88%] z-[98] rounded-[20px] overflow-hidden backdrop-blur-sm bg-background/50 border border-border"
+              className="absolute left-[6%] top-[60px] w-[88%] z-[98] rounded-[20px] overflow-hidden backdrop-blur-sm bg-background/70 border border-border"
             >
               <div className="flex items-center justify-between px-4 pt-3.5 pb-1.5">
                 <Typography variant="body2" className="text-[13px] font-bold tracking-tight uppercase text-muted-foreground">

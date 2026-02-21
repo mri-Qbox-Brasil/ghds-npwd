@@ -8,6 +8,16 @@ interface SettingItemProps {
   value?: string | object | number | null;
   onClick?: any;
   Icon: LucideIcon;
+  iconBg?: string;
+}
+
+interface SettingItemProps {
+  options?: any;
+  label: string;
+  value?: string | object | number | null;
+  onClick?: any;
+  Icon: LucideIcon;
+  iconBg?: string;
 }
 
 export const SettingItem: React.FC<SettingItemProps> = ({
@@ -16,22 +26,25 @@ export const SettingItem: React.FC<SettingItemProps> = ({
   value,
   onClick,
   Icon,
+  iconBg = "bg-blue-500",
 }) => (
   <button
     onClick={() => onClick?.(options, label)}
-    className="w-full flex items-center justify-between p-4 bg-white dark:bg-neutral-800/40 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-all border-b border-neutral-100 dark:border-neutral-800 last:border-none group"
+    className="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-b border-neutral-100 dark:border-white/5 last:border-none group shadow-none"
   >
-    <div className="flex items-center gap-4">
-      <div className="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-400 group-hover:text-blue-500 transition-colors">
-        <Icon size={20} />
+    <div className="flex items-center gap-3">
+      <div className={cn("w-[29px] h-[29px] rounded-[7px] flex items-center justify-center text-white shrink-0", iconBg)}>
+        <Icon size={18} strokeWidth={2.5} />
       </div>
-      <div className="flex flex-col items-start translate-y-[1px]">
-        <span className="font-bold text-sm text-neutral-900 dark:text-white">{label}</span>
-        {value && <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-widest">{value.toString()}</span>}
+      <div className="flex flex-col items-start">
+        <span className="text-[17px] font-normal text-neutral-900 dark:text-white tracking-tight">{label}</span>
       </div>
     </div>
-    <div className="text-neutral-300 dark:text-neutral-600 group-hover:text-blue-500 transition-colors">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+    <div className="flex items-center gap-2">
+      {value && <span className="text-[17px] font-normal text-neutral-400 dark:text-neutral-500">{value.toString()}</span>}
+      <div className="text-neutral-300 dark:text-neutral-600">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+      </div>
     </div>
   </button>
 );
@@ -44,6 +57,7 @@ interface SoundItemProps {
   Icon: LucideIcon;
   tooltip: string;
   onPreviewClicked: any;
+  iconBg?: string;
 }
 
 export const SoundItem: React.FC<SoundItemProps> = ({
@@ -53,30 +67,36 @@ export const SoundItem: React.FC<SoundItemProps> = ({
   onClick,
   Icon,
   onPreviewClicked,
+  iconBg = "bg-orange-500",
 }) => (
-  <div className="w-full flex items-center justify-between p-4 bg-white dark:bg-neutral-800/40 border-b border-neutral-100 dark:border-neutral-800 last:border-none group">
+  <div className="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-white/5 last:border-none group">
     <button
       onClick={() => onClick?.(options, label)}
-      className="flex-1 flex items-center gap-4 text-left"
+      className="flex-1 flex items-center gap-3 text-left"
     >
-      <div className="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-400 group-hover:text-blue-500 transition-colors">
-        <Icon size={20} />
+      <div className={cn("w-[29px] h-[29px] rounded-[7px] flex items-center justify-center text-white shrink-0", iconBg)}>
+        <Icon size={18} strokeWidth={2.5} />
       </div>
-      <div className="flex flex-col items-start translate-y-[1px]">
-        <span className="font-bold text-sm text-neutral-900 dark:text-white">{label}</span>
-        {value && <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-widest">{value.toString()}</span>}
+      <div className="flex flex-col items-start translate-y-[0px]">
+        <span className="text-[17px] font-normal text-neutral-900 dark:text-white tracking-tight">{label}</span>
       </div>
     </button>
 
-    <button
-      className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all active:scale-90 shadow-sm"
-      onClick={(e) => {
-        e.stopPropagation();
-        onPreviewClicked?.(options, label);
-      }}
-    >
-      <PlayCircle size={20} />
-    </button>
+    <div className="flex items-center gap-2">
+      {value && <span className="text-[17px] font-normal text-neutral-400 dark:text-neutral-500">{value.toString()}</span>}
+      <button
+        className="p-1.5 rounded-full text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          onPreviewClicked?.(options, label);
+        }}
+      >
+        <PlayCircle size={22} strokeWidth={2} />
+      </button>
+      <div className="text-neutral-300 dark:text-neutral-600">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+      </div>
+    </div>
   </div>
 );
 
@@ -85,6 +105,7 @@ interface SettingSliderProps {
   icon: JSX.Element;
   value: number;
   onCommit: (value: number | number[]) => void;
+  iconBg?: string;
 }
 
 export const SettingItemSlider: React.FC<SettingSliderProps> = ({
@@ -92,25 +113,26 @@ export const SettingItemSlider: React.FC<SettingSliderProps> = ({
   label,
   value,
   onCommit,
+  iconBg = "bg-orange-500",
 }) => (
-  <div className="w-full flex flex-col p-4 bg-white dark:bg-neutral-800/40 border-b border-neutral-100 dark:border-neutral-800 last:border-none gap-4">
-    <div className="flex items-center gap-4">
-      <div className="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-400">
-        {icon}
+  <div className="w-full flex flex-col pl-4 pr-4 py-3 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-white/5 last:border-none gap-3">
+    <div className="flex items-center justify-between w-full">
+      <div className="flex items-center gap-3">
+        <div className={cn("w-[29px] h-[29px] rounded-[7px] flex items-center justify-center text-white shrink-0", iconBg)}>
+          {React.cloneElement(icon as React.ReactElement, { size: 18, strokeWidth: 2.5 })}
+        </div>
+        <span className="text-[17px] font-normal text-neutral-900 dark:text-white tracking-tight">{label}</span>
       </div>
-      <div className="flex flex-col items-start translate-y-[1px]">
-        <span className="font-bold text-sm text-neutral-900 dark:text-white">{label}</span>
-        <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest">{value}%</span>
-      </div>
+      <span className="text-[17px] font-normal text-neutral-400 dark:text-neutral-500">{value}%</span>
     </div>
-    <div className="px-2">
+    <div className="px-1">
       <input
         type="range"
         min="0"
         max="100"
         value={value}
         onChange={(e) => onCommit(parseInt(e.target.value, 10))}
-        className="w-full h-1.5 bg-neutral-100 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+        className="w-full h-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-full appearance-none cursor-pointer accent-blue-500"
       />
     </div>
   </div>
@@ -122,6 +144,7 @@ interface SettingSwitchProps {
   onClick: any;
   icon: JSX.Element;
   secondary: string;
+  iconBg?: string;
 }
 
 export const SettingSwitch: React.FC<SettingSwitchProps> = ({
@@ -130,28 +153,29 @@ export const SettingSwitch: React.FC<SettingSwitchProps> = ({
   onClick,
   icon,
   secondary,
+  iconBg = "bg-neutral-400",
 }) => (
-  <div className="w-full flex items-center justify-between p-4 bg-white dark:bg-neutral-800/40 border-b border-neutral-100 dark:border-neutral-800 last:border-none group">
-    <div className="flex items-center gap-4 flex-1">
-      <div className="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-400 group-hover:text-blue-500 transition-colors">
-        {icon}
+  <div className="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-white/5 last:border-none group">
+    <div className="flex items-center gap-3 flex-1 min-w-0">
+      <div className={cn("w-[29px] h-[29px] rounded-[7px] flex items-center justify-center text-white shrink-0", iconBg)}>
+        {React.cloneElement(icon as React.ReactElement, { size: 18, strokeWidth: 2.5 })}
       </div>
-      <div className="flex flex-col items-start translate-y-[1px] min-w-0 pr-2">
-        <span className="font-bold text-sm text-neutral-900 dark:text-white truncate w-full">{label}</span>
-        <p className="text-[11px] font-medium text-neutral-400 dark:text-neutral-500 line-clamp-1">{secondary}</p>
+      <div className="flex flex-col items-start min-w-0 pr-2">
+        <span className="text-[17px] font-normal text-neutral-900 dark:text-white tracking-tight truncate w-full">{label}</span>
+        {secondary && <p className="text-[12px] font-normal text-neutral-400 dark:text-neutral-500 leading-tight">{secondary}</p>}
       </div>
     </div>
 
     <button
       onClick={() => onClick(value)}
       className={cn(
-        "relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
-        value ? "bg-blue-500" : "bg-neutral-200 dark:bg-neutral-700"
+        "relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline-none",
+        value ? "bg-[#34C759]" : "bg-neutral-200 dark:bg-neutral-700"
       )}
     >
       <span className={cn(
-        "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform",
-        value ? "translate-x-5" : "translate-x-1"
+        "pointer-events-none block h-5.5 w-5.5 rounded-full bg-white shadow-md ring-0 transition-transform",
+        value ? "translate-x-5.5" : "translate-x-1"
       )} />
     </button>
   </div>
@@ -164,6 +188,7 @@ interface SettingItemIconActionProps {
   labelSecondary: string;
   handleAction: () => void;
   actionLabel: string;
+  iconBg?: string;
 }
 
 export const SettingItemIconAction: React.FC<SettingItemIconActionProps> = ({
@@ -172,23 +197,29 @@ export const SettingItemIconAction: React.FC<SettingItemIconActionProps> = ({
   handleAction,
   actionIcon,
   labelSecondary,
+  iconBg = "bg-blue-500",
 }) => (
-  <div className="w-full flex items-center justify-between p-4 bg-white dark:bg-neutral-800/40 border-b border-neutral-100 dark:border-neutral-800 last:border-none group">
-    <div className="flex items-center gap-4 flex-1">
-      <div className="p-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-400 group-hover:text-blue-500 transition-colors">
-        <Icon size={20} />
+  <div className="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-white/5 last:border-none group">
+    <div className="flex items-center gap-3 flex-1">
+      <div className={cn("w-[29px] h-[29px] rounded-[7px] flex items-center justify-center text-white shrink-0", iconBg)}>
+        <Icon size={18} strokeWidth={2.5} />
       </div>
-      <div className="flex flex-col items-start translate-y-[1px]">
-        <span className="font-bold text-sm text-neutral-900 dark:text-white">{label}</span>
-        <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-widest">{labelSecondary}</span>
+      <div className="flex flex-col items-start">
+        <span className="text-[17px] font-normal text-neutral-900 dark:text-white tracking-tight">{label}</span>
       </div>
     </div>
 
-    <button
-      className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-700 text-neutral-500 hover:text-blue-500 transition-all active:scale-90"
-      onClick={handleAction}
-    >
-      {actionIcon}
-    </button>
+    <div className="flex items-center gap-2">
+      {labelSecondary && <span className="text-[17px] font-normal text-neutral-400 dark:text-neutral-500">{labelSecondary}</span>}
+      <button
+        className="p-1.5 rounded-full text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors"
+        onClick={handleAction}
+      >
+        {React.cloneElement(actionIcon as React.ReactElement, { size: 18, strokeWidth: 2 })}
+      </button>
+      <div className="text-neutral-300 dark:text-neutral-600">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+      </div>
+    </div>
   </div>
 );

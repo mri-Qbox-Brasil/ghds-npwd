@@ -18,7 +18,7 @@ export const GridMenu: React.FC<GridMenuProps> = ({ items, Component = AppIcon }
         items.map((item) => (
           <Fragment key={item.id}>
             {!item.isDisabled && (
-              <div key={item.id} className="flex flex-col items-center py-2">
+              <div key={item.id} className="flex flex-col items-center py-5">
                 <Flex justify="center" className="w-full">
                   <Link to={item.path}>
                     <Component {...item} />

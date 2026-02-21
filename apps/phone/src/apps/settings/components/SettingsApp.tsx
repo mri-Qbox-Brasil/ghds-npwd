@@ -1,5 +1,6 @@
-import React from 'react';
-import { AppWrapper } from '@ui/components';
+import React, { Suspense, useMemo, useRef } from 'react';
+import { AppWrapper } from '@ui/components/AppWrapper';
+import { DynamicHeader } from '@ui/components/DynamicHeader';
 import { AppContent } from '@ui/components/AppContent';
 import { useContextMenu, MapSettingItem, SettingOption } from '@ui/hooks/useContextMenu';
 import { usePhoneConfig } from '../../../config/hooks/usePhoneConfig';
@@ -130,7 +131,6 @@ export const SettingsApp: React.FC = () => {
     key: 'CUSTOM_WALLPAPER',
     label: t('SETTINGS.OPTIONS.CUSTOM_WALLPAPER.DIALOG_TITLE') as string || 'Papel de Parede Personalizado',
   };
-
   const handleCopyPhoneNumber = () => {
     setClipboard(myNumber);
     addAlert({
@@ -142,29 +142,22 @@ export const SettingsApp: React.FC = () => {
   };
 
   const [openMenu, closeMenu, ContextMenu, isMenuOpen] = useContextMenu();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
-    <AppWrapper className="bg-[#f0f2f5] dark:bg-black">
+    <AppWrapper className="bg-[#F2F2F7] dark:bg-black p-0 m-0">
       <WallpaperModal />
       {customWallpaperState && <div className="absolute inset-0 z-50 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300" />}
 
       <AppContent
+        ref={scrollRef}
         backdrop={isMenuOpen}
         onClickBackdrop={closeMenu}
-        className="flex flex-col grow pb-20 scrollbar-hide"
+        className="flex flex-col grow pb-24 scrollbar-hide h-full relative"
       >
-        {/* Modern iOS-style Header */}
-        <header className="px-8 pt-12 pb-6 animate-in slide-in-from-top-4 duration-700">
-          <div className="flex items-center gap-4 mb-2">
-            <div className="p-3 bg-blue-500 rounded-2xl text-white shadow-lg shadow-blue-500/30">
-              <Settings2 size={28} strokeWidth={2.5} />
-            </div>
-            <h1 className="text-4xl font-black text-neutral-900 dark:text-white tracking-tighter uppercase italic">Ajustes</h1>
-          </div>
-          <p className="text-[11px] font-bold text-neutral-400 uppercase tracking-[0.3em] ml-1">Personalize sua experiência</p>
-        </header>
+        <DynamicHeader title="Ajustes" scrollRef={scrollRef} />
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1 mt-2 px-0">
           <SettingsCategory title={t('SETTINGS.CATEGORY.PHONE')}>
             <SettingItemIconAction
               label={t('SETTINGS.PHONE_NUMBER')}
@@ -173,6 +166,7 @@ export const SettingsApp: React.FC = () => {
               Icon={Phone}
               actionIcon={<Copy size={18} />}
               handleAction={handleCopyPhoneNumber}
+              iconBg="bg-blue-500"
             />
             <SoundItem
               label={t('SETTINGS.OPTIONS.RINGTONE')}
@@ -182,6 +176,7 @@ export const SettingsApp: React.FC = () => {
               Icon={FileMusic}
               tooltip={t('SETTINGS.PREVIEW_SOUND')}
               onPreviewClicked={() => fetchNui(SettingEvents.PREVIEW_RINGTONE)}
+              iconBg="bg-orange-500"
             />
             <SoundItem
               label={t('SETTINGS.OPTIONS.NOTIFICATION')}
@@ -191,6 +186,7 @@ export const SettingsApp: React.FC = () => {
               Icon={FileMusic}
               tooltip={t('SETTINGS.PREVIEW_SOUND')}
               onPreviewClicked={() => fetchNui(SettingEvents.PREVIEW_ALERT)}
+              iconBg="bg-emerald-500"
             />
             <SettingSwitch
               label={t('SETTINGS.OPTIONS.STREAMER_MODE.TITLE')}
@@ -198,6 +194,7 @@ export const SettingsApp: React.FC = () => {
               icon={<EyeOff size={20} />}
               value={settings.streamerMode}
               onClick={(curr) => handleSettingChange('streamerMode', !curr)}
+              iconBg="bg-slate-400"
             />
             <SettingSwitch
               label={t('SETTINGS.OPTIONS.ANONYMOUS_MODE.TITLE')}
@@ -205,12 +202,14 @@ export const SettingsApp: React.FC = () => {
               icon={<ShieldOff size={20} />}
               value={settings.anonymousMode}
               onClick={(curr) => handleSettingChange('anonymousMode', !curr)}
+              iconBg="bg-slate-500"
             />
             <SettingItemSlider
               label={t('SETTINGS.OPTIONS.CALL_VOLUME')}
               icon={<Volume2 size={20} />}
               value={settings.callVolume}
               onCommit={(val) => handleSettingChange('callVolume', val)}
+              iconBg="bg-orange-500"
             />
           </SettingsCategory>
 
@@ -221,6 +220,7 @@ export const SettingsApp: React.FC = () => {
               options={iconSets}
               onClick={openMenu}
               Icon={ListFilter}
+              iconBg="bg-blue-600"
             />
             <SettingItem
               label={t('SETTINGS.OPTIONS.LANGUAGE')}
@@ -228,6 +228,7 @@ export const SettingsApp: React.FC = () => {
               options={languages}
               onClick={openMenu}
               Icon={BookA}
+              iconBg="bg-cyan-500"
             />
             <SettingItem
               label={t('SETTINGS.OPTIONS.THEME')}
@@ -235,6 +236,7 @@ export const SettingsApp: React.FC = () => {
               options={themes}
               onClick={openMenu}
               Icon={Palette}
+              iconBg="bg-purple-600"
             />
             <SettingItem
               label={t('SETTINGS.OPTIONS.WALLPAPER')}
@@ -242,6 +244,7 @@ export const SettingsApp: React.FC = () => {
               options={[...wallpapers, customWallpaper]}
               onClick={openMenu}
               Icon={Wallpaper}
+              iconBg="bg-pink-500"
             />
             <SettingItem
               label={t('SETTINGS.OPTIONS.FRAME')}
@@ -249,6 +252,7 @@ export const SettingsApp: React.FC = () => {
               options={frames}
               onClick={openMenu}
               Icon={Smartphone}
+              iconBg="bg-neutral-800"
             />
             <SettingItem
               label={t('SETTINGS.OPTIONS.ZOOM')}
@@ -256,6 +260,7 @@ export const SettingsApp: React.FC = () => {
               options={zoomOptions}
               onClick={openMenu}
               Icon={ZoomIn}
+              iconBg="bg-indigo-500"
             />
           </SettingsCategory>
 
@@ -266,6 +271,7 @@ export const SettingsApp: React.FC = () => {
               options={twitterNotificationFilters}
               onClick={openMenu}
               Icon={ListFilter}
+              iconBg="bg-sky-500"
             />
             <SettingItem
               label={t('SETTINGS.OPTIONS.NOTIFICATION')}
@@ -273,12 +279,14 @@ export const SettingsApp: React.FC = () => {
               options={twitterNotifications}
               onClick={openMenu}
               Icon={FileMusic}
+              iconBg="bg-sky-600"
             />
             <SettingItemSlider
               label={t('SETTINGS.OPTIONS.NOTIFICATION_VOLUME')}
               value={settings.TWITTER_notiSoundVol}
               onCommit={(val) => handleSettingChange('TWITTER_notiSoundVol', val)}
               icon={<Volume2 size={20} />}
+              iconBg="bg-sky-400"
             />
           </SettingsCategory>
 
@@ -289,6 +297,7 @@ export const SettingsApp: React.FC = () => {
               value={settings.MARKETPLACE_notifyNewListing}
               icon={<ListFilter size={20} />}
               onClick={(curr) => handleSettingChange('MARKETPLACE_notifyNewListing', !curr)}
+              iconBg="bg-emerald-600"
             />
           </SettingsCategory>
 
@@ -299,6 +308,7 @@ export const SettingsApp: React.FC = () => {
               Icon={Eraser}
               onClick={openMenu}
               options={resetSettingsOpts}
+              iconBg="bg-red-500"
             />
           </SettingsCategory>
         </div>

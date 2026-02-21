@@ -17,8 +17,8 @@ export const HomeApp: React.FC = () => {
 
   return (
     <AppWrapper>
-      <Box component="div" mt={3} px={1.6}>
-        {apps && <GridMenu xs={3} items={[...gridApps, ...externalApps]} />}
+      <Box component="div" mt={6} px={3}>
+        {apps && <GridMenu items={[...gridApps, ...externalApps]} />}
       </Box>
 
       {dockApps.length > 0 && <Dock apps={dockApps} />}

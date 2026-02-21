@@ -16,7 +16,7 @@ export const MessagesApp = () => {
         <MessagesThemeProvider>
             <AppWrapper id="messages-app">
                 <WordFilterProvider>
-                    <AppContent className="relative flex flex-col h-full overflow-hidden bg-background">
+                    <AppContent className="relative flex flex-col h-full overflow-hidden bg-white/40 dark:bg-black/40 backdrop-blur-md">
                         <React.Suspense fallback={<LoadingSpinner />}>
                             <Switch>
                                 <Route path="/messages/conversations/:groupId">
