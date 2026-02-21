@@ -16,7 +16,7 @@ export const HomeApp: React.FC = () => {
 
   return (
     <AppWrapper>
-      <div className="mt-8 px-4">
+      <div className="pt-[80px] px-[16px]">
         {apps && <GridMenu items={[...gridApps, ...externalApps]} />}
       </div>
 

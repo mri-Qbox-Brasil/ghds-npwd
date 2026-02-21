@@ -40,12 +40,12 @@ export const AppIcon: React.FC<AppIconProps> = ({
         )}
 
         {Icon ? (
-          <div className="w-[58px] h-[58px] flex items-center justify-center text-[2.125rem]">
+          <div className="w-[64px] h-[64px] flex items-center justify-center text-[2.125rem]">
             <Icon fontSize="inherit" className="w-full h-full" />
           </div>
         ) : (
           <div
-            className="transition-all duration-200 transform group-hover:scale-105 group-hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] flex justify-center items-center rounded-[14px] overflow-hidden w-[58px] h-[58px] text-[2.125rem]"
+            className="transition-all duration-200 transform group-hover:scale-105 group-hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] flex justify-center items-center rounded-[14px] overflow-hidden w-[64px] h-[64px] text-[2.125rem]"
             style={{
               backgroundColor: backgroundColor,
               color: color,
