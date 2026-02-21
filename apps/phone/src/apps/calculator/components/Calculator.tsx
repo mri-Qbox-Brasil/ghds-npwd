@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useCalculator } from '../hooks/useCalculator';
 import { setClipboard } from '@os/phone/hooks/useClipboard';
-import { Copy } from 'lucide-react';
+import { History, Delete } from 'lucide-react';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import { useTranslation } from 'react-i18next';
 import { CalculatorButton } from './CalculatorButton';
@@ -35,6 +35,9 @@ export const Calculator: React.FC = () => {
     seven,
     eight,
     nine,
+    percentage,
+    toggleSign,
+    backspace,
   } = useCalculator();
 
   const { addAlert } = useSnackbar();
@@ -60,48 +63,56 @@ export const Calculator: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-background">
+    <div className="flex flex-col h-full bg-black text-white select-none">
       {/* Result Display */}
-      <div className="relative flex-grow flex flex-col justify-end p-8 min-h-[14rem] animate-in fade-in duration-700">
+      <div className="relative flex-grow flex flex-col justify-end px-6 pb-2 min-h-[16rem]">
         <button
           onClick={handleCopyClipboard}
-          className="absolute top-6 left-6 p-3 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-400 hover:text-primary transition-all active:scale-90 shadow-sm"
+          className="absolute top-4 right-4 p-2 rounded-full bg-white/5 text-white/20 hover:text-white transition-colors"
         >
-          <Copy size={18} />
+          <History size={20} />
         </button>
+
         <div className={cn(
-          "text-right font-black tracking-tighter tabular-nums break-all transition-all duration-300",
+          "text-right font-light tracking-tight tabular-nums break-all transition-all duration-300 pr-2 pb-2 leading-none",
           getFontSize(resultStr.length)
         )}>
-          {resultStr}
+          {resultStr.replace('.', ',')}
         </div>
       </div>
 
-      {/* Numpad */}
-      <div className="p-4 pb-8 bg-neutral-50/50 dark:bg-neutral-950/50 border-t border-neutral-100 dark:border-neutral-900 rounded-t-[40px] shadow-2xl">
-        <div className="grid grid-cols-4 gap-3">
-          <CalculatorButton buttonOpts={clear} isAction className="bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white" />
-          <CalculatorButton buttonOpts={clearAll} isAction className="bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white" />
-          <CalculatorButton buttonOpts={divider} isAction />
-          <CalculatorButton buttonOpts={multiplier} isAction />
+      {/* Numpad - 5 Rows x 4 Cols */}
+      <div className="px-5 pb-10 pt-4 bg-black">
+        <div className="grid grid-cols-4 gap-[12px]">
+          {/* Row 1 */}
+          <CalculatorButton buttonOpts={backspace} variant="number" icon={<Delete size={28} strokeWidth={1.5} />} />
+          <CalculatorButton buttonOpts={resultStr === '0' ? clearAll : clear} variant="function" />
+          <CalculatorButton buttonOpts={percentage} variant="function" />
+          <CalculatorButton buttonOpts={divider} variant="operator" />
 
-          <CalculatorButton buttonOpts={seven} />
-          <CalculatorButton buttonOpts={eight} />
-          <CalculatorButton buttonOpts={nine} />
-          <CalculatorButton buttonOpts={substractor} isAction />
+          {/* Row 2 */}
+          <CalculatorButton buttonOpts={seven} variant="number" />
+          <CalculatorButton buttonOpts={eight} variant="number" />
+          <CalculatorButton buttonOpts={nine} variant="number" />
+          <CalculatorButton buttonOpts={multiplier} variant="operator" />
 
-          <CalculatorButton buttonOpts={four} />
-          <CalculatorButton buttonOpts={five} />
-          <CalculatorButton buttonOpts={six} />
-          <CalculatorButton buttonOpts={adder} isAction />
+          {/* Row 3 */}
+          <CalculatorButton buttonOpts={four} variant="number" />
+          <CalculatorButton buttonOpts={five} variant="number" />
+          <CalculatorButton buttonOpts={six} variant="number" />
+          <CalculatorButton buttonOpts={substractor} variant="operator" />
 
-          <CalculatorButton buttonOpts={one} />
-          <CalculatorButton buttonOpts={two} />
-          <CalculatorButton buttonOpts={three} />
-          <CalculatorButton buttonOpts={equals} isAction className="bg-primary hover:bg-primary/90" />
+          {/* Row 4 */}
+          <CalculatorButton buttonOpts={one} variant="number" />
+          <CalculatorButton buttonOpts={two} variant="number" />
+          <CalculatorButton buttonOpts={three} variant="number" />
+          <CalculatorButton buttonOpts={adder} variant="operator" />
 
-          <CalculatorButton buttonOpts={dot} />
-          <CalculatorButton buttonOpts={zero} gridSpan={3} />
+          {/* Row 5 */}
+          <CalculatorButton buttonOpts={toggleSign} variant="number" />
+          <CalculatorButton buttonOpts={zero} variant="number" />
+          <CalculatorButton buttonOpts={dot} variant="number" />
+          <CalculatorButton buttonOpts={equals} variant="operator" />
         </div>
       </div>
     </div>

@@ -60,13 +60,13 @@ const Reducer = (state, action) => {
       }
       return state;
 
-    case 'c':
-      if (state.num2.length === 2 && state.num2.includes('0.')) {
-        return { ...state, num2: '' };
-      }
-      if (state.num2.length > 1) {
+    case 'backspace':
+      if (state.num2.length > 0) {
         return { ...state, num2: state.num2.slice(0, -1) };
       }
+      return state;
+
+    case 'c':
       return { ...state, num2: '' };
 
     case 'ac':
@@ -77,6 +77,30 @@ const Reducer = (state, action) => {
         num2: '',
         num3: '',
       };
+
+    case 'percent':
+      if (state.num2) {
+        return { ...state, num2: String(Number(state.num2) / 100) };
+      }
+      if (state.value) {
+        return { ...state, value: state.value / 100 };
+      }
+      if (state.num1) {
+        return { ...state, num1: state.num1 / 100 };
+      }
+      return state;
+
+    case 'toggleSign':
+      if (state.num2) {
+        return { ...state, num2: String(Number(state.num2) * -1) };
+      }
+      if (state.value) {
+        return { ...state, value: state.value * -1 };
+      }
+      if (state.num1) {
+        return { ...state, num1: state.num1 * -1 };
+      }
+      return state;
 
     default:
       return state;
@@ -115,6 +139,7 @@ export const useCalculator = () => {
 
   const number = (n) => buttonProps(n, '1');
   const operator = (sym) => buttonProps(sym, '2');
+  const backspace = buttonProps('backspace', 'backspace');
   const clear = buttonProps('C', 'c');
   const clearAll = buttonProps('AC', 'ac');
   const equals = buttonProps('=', '3');
@@ -133,7 +158,10 @@ export const useCalculator = () => {
   const seven = number(7);
   const eight = number(8);
   const nine = number(9);
-  const result = (): number => (!state.num2 ? state.value : state.num2);
+  const percentage = buttonProps('%', 'percent');
+  const toggleSign = buttonProps('+/-', 'toggleSign');
+
+  const result = (): number => (!state.num2 ? state.value : Number(state.num2));
 
   return {
     result,
@@ -155,5 +183,8 @@ export const useCalculator = () => {
     seven,
     eight,
     nine,
+    percentage,
+    toggleSign,
+    backspace,
   };
 };

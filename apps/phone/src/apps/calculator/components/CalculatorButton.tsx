@@ -6,30 +6,42 @@ interface ButtonOptions {
   label: string;
 }
 
+type ButtonVariant = 'number' | 'operator' | 'function';
+
 interface CalculatorButtonProps extends HTMLAttributes<HTMLButtonElement> {
   gridSpan?: number;
   buttonOpts: ButtonOptions;
-  isAction?: boolean;
+  variant?: ButtonVariant;
+  icon?: React.ReactNode;
 }
 
 export const CalculatorButton: React.FC<CalculatorButtonProps> = ({
   className,
   buttonOpts,
-  gridSpan = 1,
-  isAction = false,
-}) => (
-  <button
-    key={buttonOpts.label}
-    onClick={buttonOpts.onClick}
-    className={cn(
-      "h-16 flex items-center justify-center rounded-2xl text-lg font-bold transition-all active:scale-95 shadow-sm",
-      isAction
-        ? "bg-primary text-primary-foreground hover:bg-primary/90"
-        : "bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 hover:bg-neutral-200 dark:hover:bg-neutral-800",
-      gridSpan === 3 ? "col-span-3" : "col-span-1",
-      className
-    )}
-  >
-    {buttonOpts.label}
-  </button>
-);
+  variant = 'number',
+  icon,
+}) => {
+  const variantStyles = {
+    number: "bg-[#2b2b2b] text-white active:bg-[#636363]",
+    operator: "bg-[#ff9500] text-white active:bg-[#fcc777]",
+    function: "bg-[#3d3d3d] text-white active:bg-[#737373]", // Gray in image is darker
+  };
+
+  // Override for mid-gray function buttons like AC, %
+  const isMidGray = buttonOpts.label === 'AC' || buttonOpts.label === 'C' || buttonOpts.label === '%';
+
+  return (
+    <button
+      key={buttonOpts.label}
+      onClick={buttonOpts.onClick}
+      className={cn(
+        "flex items-center justify-center rounded-full transition-all duration-100",
+        "w-full aspect-square text-[2.2rem] font-light",
+        isMidGray ? "bg-[#5c5c5c] text-white active:bg-[#a5a5a5]" : variantStyles[variant],
+        className
+      )}
+    >
+      {icon ? icon : buttonOpts.label}
+    </button>
+  );
+};

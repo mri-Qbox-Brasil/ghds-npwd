@@ -6,11 +6,9 @@ import { Calculator } from './Calculator';
 import { useApp } from '@os/apps/hooks/useApps';
 
 export const CalculatorApp: React.FC = () => {
-  const calculator = useApp('CALCULATOR');
   return (
-    <AppWrapper>
-      <AppTitle app={calculator} />
-      <AppContent>
+    <AppWrapper className="bg-black">
+      <AppContent className="p-0 h-full bg-black">
         <Calculator />
       </AppContent>
     </AppWrapper>
