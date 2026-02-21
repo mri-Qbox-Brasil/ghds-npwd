@@ -149,13 +149,15 @@ export const SettingsApp: React.FC = () => {
       <WallpaperModal />
       {customWallpaperState && <div className="absolute inset-0 z-50 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300" />}
 
+      <DynamicHeader title="Ajustes" scrollRef={scrollRef} variant="pinned" />
+
       <AppContent
         ref={scrollRef}
         backdrop={isMenuOpen}
         onClickBackdrop={closeMenu}
         className="flex flex-col grow pb-24 scrollbar-hide h-full relative"
       >
-        <DynamicHeader title="Ajustes" scrollRef={scrollRef} />
+        <DynamicHeader title="Ajustes" scrollRef={scrollRef} variant="largeTitle" />
 
         <div className="flex flex-col gap-1 mt-2 px-0">
           <SettingsCategory title={t('SETTINGS.CATEGORY.PHONE')}>

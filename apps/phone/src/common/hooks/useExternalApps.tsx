@@ -89,6 +89,8 @@ const useExternalAppsAction = () => {
 
   const getConfigs = useCallback(
     async (externalApps: string[], existingApps: IApp[]) => {
+      if (!externalApps) return [];
+
       const appAlreadyLoaded = (appName: string) => {
         return existingApps.find((app) => app.id === appName);
       };

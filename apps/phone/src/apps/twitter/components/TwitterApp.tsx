@@ -22,14 +22,14 @@ import { TwitterEvents } from '@typings/twitter';
 
 const TwitterApp = () => {
   const setModalVisible = useSetRecoilState(twitterState.showCreateTweetModal);
-  const [activePage, setActivePage] = useState(0);
+
   const { profile } = useProfile();
   const location = useLocation();
-
+  const activePage = location.pathname.includes('/profile') ? 2 : location.pathname.includes('/search') ? 1 : 0;
   const promptProfileName = !profile || !profile.profile_name || !profile.profile_name.trim();
 
   const openModal = () => setModalVisible(true);
-  const handlePageChange = (_: any, page: number) => setActivePage(page);
+
   const showTweetButton =
     !promptProfileName && activePage === 0 && location.pathname === '/twitter';
 
@@ -52,7 +52,7 @@ const TwitterApp = () => {
       </AppContent>
       {showTweetButton && <TweetButton openModal={openModal} />}
       {!promptProfileName && (
-        <BottomNavigation activePage={activePage} handleChange={handlePageChange} />
+        <BottomNavigation activePage={activePage} />
       )}
     </AppWrapper>
   );

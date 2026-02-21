@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Home, Search, User, Bell } from 'lucide-react';
 import { cn } from '@utils/cn';
 
-export function TwitterBottomNavigation({ activePage }) {
+export function TwitterBottomNavigation({ activePage }: { activePage: number }) {
   const navItems = [
     { id: 0, path: '/twitter', icon: Home, label: 'Início', exact: true },
     { id: 1, path: '/twitter/search', icon: Search, label: 'Explorar', exact: false },

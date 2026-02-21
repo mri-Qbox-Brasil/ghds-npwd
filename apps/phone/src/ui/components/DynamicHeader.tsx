@@ -7,12 +7,14 @@ interface DynamicHeaderProps {
     title: string;
     scrollRef?: React.RefObject<HTMLDivElement>;
     showBackButton?: boolean;
+    variant?: 'pinned' | 'largeTitle' | 'both';
 }
 
 export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
     title,
     scrollRef,
-    showBackButton = false
+    showBackButton = false,
+    variant = 'both'
 }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const history = useHistory();
@@ -26,62 +28,71 @@ export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
 
         const scrollContainer = scrollRef?.current;
         if (scrollContainer) {
-            scrollContainer.addEventListener('scroll', handleScroll);
+            scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
             return () => scrollContainer.removeEventListener('scroll', handleScroll);
         }
     }, [scrollRef]);
 
-    return (
-        <>
-            {/* Pinned Inline Header + Status Bar Protector */}
+    const PinnedHeader = (
+        <div
+            className={cn(
+                variant === 'pinned' ? "absolute inset-x-0 top-0" : "sticky top-0",
+                "z-50 w-full pt-16 pb-3 px-4 flex items-center justify-center transition-colors duration-200 border-b",
+                isScrolled
+                    ? "bg-[#F2F2F7] dark:bg-[#000000] border-neutral-300 dark:border-white/10"
+                    : "bg-transparent border-transparent"
+            )}
+        >
+            {/* Left Side (Back Button or Empty Space) */}
+            <div className="absolute left-6 z-10 flex items-center">
+                {showBackButton && (
+                    <button
+                        onClick={() => history.goBack()}
+                        className="flex items-center gap-1 -ml-2 text-blue-500 hover:text-blue-600 transition-colors cursor-pointer appearance-none bg-transparent border-none"
+                    >
+                        <ChevronLeft size={24} strokeWidth={2.5} />
+                        <span className="text-[17px] font-normal tracking-tight">Voltar</span>
+                    </button>
+                )}
+            </div>
+
+            {/* Center Title (Perfect hardware-centered alignment) */}
             <div
                 className={cn(
-                    "sticky top-0 z-50 w-full pt-14 pb-2 px-4 flex items-center justify-between transition-all duration-300",
-                    isScrolled
-                        ? "bg-[#F2F2F7]/85 dark:bg-black/85 backdrop-blur-md border-b border-neutral-300 dark:border-white/10"
-                        : "bg-transparent border-transparent"
+                    "pointer-events-none transition-opacity duration-200 flex items-center justify-center",
+                    isScrolled ? "opacity-100" : "opacity-0"
                 )}
             >
-                {/* Left Side (Back Button or Empty Space) */}
-                <div className="flex-1 min-w-[60px]">
-                    {showBackButton && (
-                        <button
-                            onClick={() => history.goBack()}
-                            className="flex items-center gap-1 -ml-2 text-blue-500 hover:text-blue-600 transition-colors"
-                        >
-                            <ChevronLeft size={24} strokeWidth={2.5} />
-                            <span className="text-[17px] font-normal tracking-tight">Voltar</span>
-                        </button>
-                    )}
-                </div>
-
-                {/* Center Title (Inline) */}
-                <div
-                    className={cn(
-                        "flex-[2] text-center transition-opacity duration-300",
-                        isScrolled ? "opacity-100" : "opacity-0"
-                    )}
-                >
-                    <span className="text-[16px] font-semibold text-neutral-900 dark:text-white tracking-tight truncate block">
-                        {title}
-                    </span>
-                </div>
-
-                {/* Right Side (Future Actions or Empty Space) */}
-                <div className="flex-1 min-w-[60px]" />
-            </div>
-
-            {/* Large Title Area (Scrolls Naturally) */}
-            <div className="px-4 pt-1 pb-2">
-                <h1
-                    className={cn(
-                        "text-[34px] font-bold text-neutral-900 dark:text-white tracking-tight transition-opacity duration-200",
-                        isScrolled ? "opacity-0" : "opacity-100"
-                    )}
+                <span
+                    className="text-[17px] font-semibold text-neutral-900 dark:text-white tracking-tight truncate px-12 block m-0 p-0 leading-none"
+                    style={{ transform: 'translateZ(0)', WebkitFontSmoothing: 'antialiased' }}
                 >
                     {title}
-                </h1>
+                </span>
             </div>
+        </div>
+    );
+
+    const LargeTitle = (
+        <div className={cn("px-4 pb-2", variant === 'largeTitle' ? "pt-24" : "pt-1")}>
+            <h1
+                className={cn(
+                    "text-[34px] font-bold text-neutral-900 dark:text-white tracking-tight transition-opacity duration-200",
+                    isScrolled ? "opacity-0" : "opacity-100"
+                )}
+            >
+                {title}
+            </h1>
+        </div>
+    );
+
+    if (variant === 'pinned') return PinnedHeader;
+    if (variant === 'largeTitle') return LargeTitle;
+
+    return (
+        <>
+            {PinnedHeader}
+            {LargeTitle}
         </>
     );
 };

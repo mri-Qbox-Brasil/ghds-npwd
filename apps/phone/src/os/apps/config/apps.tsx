@@ -5,6 +5,7 @@ import { CalculatorApp } from '@apps/calculator/components/CalculatorApp';
 import { SettingsApp } from '@apps/settings/components/SettingsApp';
 import { MessagesApp } from '@apps/messages/components/MessagesApp';
 import { ExampleAppWrapper } from '@apps/example/components/ExampleAppWrapper';
+import { MarketplaceApp } from '@apps/marketplace/components/MarketplaceApp';
 import { NotesApp } from '@apps/notes/NotesApp';
 import CameraApp from '@apps/camera/components/CameraApp';
 import { AppRoute } from '../components/AppRoute';
