@@ -13,15 +13,17 @@ const ButtonItem: React.FC<ButtonItemProps> = ({ letters, label, onClick }) => {
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center rounded-full h-[72px] w-[72px] transition-all",
-        "bg-neutral-100/80 dark:bg-neutral-800/80 hover:bg-neutral-200 dark:hover:bg-neutral-700",
-        "active:bg-neutral-300 dark:active:bg-neutral-600 active:scale-95",
-        "text-neutral-900 dark:text-white shadow-sm"
+        "flex flex-col items-center justify-center rounded-full h-[78px] w-[78px] transition-all duration-200",
+        "bg-[#E5E5EA] dark:bg-[#1C1C1E] hover:bg-[#D1D1D6] dark:hover:bg-[#2C2C2E] active:bg-[#BDBDBD] dark:active:bg-[#3A3A3C] active:scale-95",
+        "text-black dark:text-white select-none"
       )}
     >
-      <span className="text-3xl font-medium leading-none">{label}</span>
+      <span className={cn(
+        "font-normal leading-none",
+        label === '*' || label === '#' ? "text-4xl mt-1" : "text-3xl"
+      )}>{label}</span>
       {letters && (
-        <span className="text-[9px] font-bold uppercase tracking-[2px] mt-0.5 opacity-50">
+        <span className="text-[10px] font-medium tracking-widest mt-0.5 opacity-40">
           {letters}
         </span>
       )}
@@ -48,13 +50,13 @@ export const DialGrid = () => {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-x-6 gap-y-4 justify-items-center w-full max-w-[280px] mx-auto">
+    <div className="grid grid-cols-3 gap-x-6 gap-y-4 justify-items-center w-full max-w-[300px] mx-auto pb-6">
       {dialButtons.map((btn) => (
         <ButtonItem
           key={btn.label}
           label={btn.label}
           letters={btn.letters}
-          onClick={() => btn.label === '#' ? clear() : add(String(btn.label))}
+          onClick={() => add(String(btn.label))}
         />
       ))}
     </div>

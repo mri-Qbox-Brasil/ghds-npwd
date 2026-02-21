@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DialGrid from '../DialPadGrid';
-import { DialerInput } from '../DialerInput';
+import { DialerDisplay, DialerControls } from '../DialerInput';
 import { DialInputCtx } from '../../context/InputContext';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 
@@ -10,7 +10,7 @@ const DialPage: React.FC = () => {
   const [inputVal, setInputVal] = useState(queryNumber || '');
 
   return (
-    <div className="flex flex-col h-full bg-background pt-8 pb-4 animate-in fade-in duration-300">
+    <div className="flex flex-col h-full animate-in fade-in duration-300">
       <DialInputCtx.Provider
         value={{
           inputVal,
@@ -20,12 +20,14 @@ const DialPage: React.FC = () => {
           set: (val: string) => setInputVal(val),
         }}
       >
-        <div className="flex-1 flex flex-col justify-between max-w-sm mx-auto w-full px-6">
+        <div className="flex-1 flex flex-col justify-between max-w-sm mx-auto w-full px-6 overflow-hidden">
           <div className="flex flex-col items-center">
-            <DialerInput />
+            <DialerDisplay />
           </div>
-          <div className="pb-12">
+
+          <div className="flex-1 flex flex-col justify-center py-2">
             <DialGrid />
+            <DialerControls />
           </div>
         </div>
       </DialInputCtx.Provider>
