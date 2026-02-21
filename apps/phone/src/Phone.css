@@ -23,7 +23,9 @@
 
 .PhoneScreen {
   position: absolute;
-  overflow: inherit;
+  overflow: hidden;
+  mask-image: radial-gradient(white, black);
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
   background-color: #F6F6F6;
   bottom: 100px;
   left: 50px;
