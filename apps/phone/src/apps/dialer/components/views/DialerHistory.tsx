@@ -44,7 +44,7 @@ export const DialerHistory: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden animate-in fade-in duration-500">
-      <div className="px-6 pb-4">
+      <div className="px-6 pt-[80px] pb-4">
         <h1 className="text-[34px] font-bold text-foreground tracking-tight">Recentes</h1>
       </div>
 
@@ -52,7 +52,7 @@ export const DialerHistory: React.FC = () => {
         <div className="flex flex-col">
           {calls.map((call: CallHistoryItem) => {
             const isOutgoing = call.transmitter === myNumber;
-            const isMissed = !isOutgoing && !call.isAnonymous; // Simplified logic for missed calls
+            const isMissed = !isOutgoing && !call.is_accepted && !call.isAnonymous;
             const displayNum = isOutgoing ? call.receiver : (call.isAnonymous ? 'Privado' : call.transmitter);
             const displayName = isOutgoing ? getDisplay(call.receiver) : (call.isAnonymous ? t('DIALER.ANONYMOUS') : getDisplay(call.transmitter));
 
@@ -62,6 +62,12 @@ export const DialerHistory: React.FC = () => {
               : callTime.isSame(dayjs().subtract(1, 'day'), 'day')
                 ? 'Ontem'
                 : callTime.format('DD/MM/YYYY');
+
+            const statusText = isOutgoing
+              ? 'Chamada efetuada'
+              : isMissed
+                ? 'Chamada perdida'
+                : 'Chamada recebida';
 
             return (
               <div
@@ -77,7 +83,7 @@ export const DialerHistory: React.FC = () => {
                       {displayName}
                     </span>
                     <span className="text-[14px] text-neutral-500 font-normal">
-                      {isOutgoing ? 'Chamada efetuada' : 'Chamada recebida'}
+                      {statusText}
                     </span>
                   </div>
                 </div>

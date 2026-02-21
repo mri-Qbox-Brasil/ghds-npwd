@@ -14,6 +14,7 @@ import { initials } from '@utils/misc';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 import { Tooltip } from '@ui/components/Tooltip';
 import { useTwitterProfileValue } from "@apps/twitter/hooks/state";
+import { IMG_DEFAULT_AVATAR } from "@apps/twitter/utils/constants";
 import { useTranslation } from "react-i18next";
 import { setClipboard } from "@os/phone/hooks";
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
@@ -23,6 +24,12 @@ import { cn } from '@utils/cn';
 export const ContactList: React.FC = () => {
   const filteredContacts = useFilteredContacts();
   const history = useHistory();
+  const [t] = useTranslation();
+  const profile = useTwitterProfileValue();
+  const myNumber = useMyPhoneNumber();
+
+  const avatar_url = profile?.avatar_url;
+  const myName = profile?.profile_name || t('CONTACTS.MY_NUMBER', 'Meu número');
 
   const groupedContacts = filteredContacts.reduce((r, e) => {
     const group = e.display.charAt(0).toUpperCase();
@@ -31,48 +38,42 @@ export const ContactList: React.FC = () => {
     return r;
   }, {} as Record<string, { group: string; contacts: Contact[] }>);
 
-  const myNumber = useMyPhoneNumber();
-  const { avatar_url } = useTwitterProfileValue();
 
   return (
     <div className="flex flex-col h-full bg-background animate-in fade-in duration-300">
-      <header className="px-4 py-4 space-y-4 bg-background/80 backdrop-blur-md sticky top-0 z-20">
+      <header className="px-6 pb-2 space-y-4 bg-background sticky top-0 z-30 pt-[80px]">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Contatos</h1>
-          <NPWDButton
-            size="icon"
-            variant="ghost"
-            className="h-10 w-10 text-blue-500 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          <h1 className="text-[34px] font-bold text-foreground tracking-tight">Contatos</h1>
+          <button
+            className="text-[#007AFF] hover:opacity-70 transition-opacity"
             onClick={() => history.push('/contacts/-1')}
           >
-            <Plus size={24} />
-          </NPWDButton>
+            <Plus size={28} strokeWidth={2} />
+          </button>
         </div>
-        <SearchContacts />
+        <div className="-mx-4">
+          <SearchContacts />
+        </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-20">
-        <nav className="space-y-6" aria-label="Directory">
-          <div key="self" className="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-700/50 overflow-hidden">
-            <List>
-              <SelfContact number={myNumber} avatar={avatar_url} />
-            </List>
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <div className="flex flex-col">
+          <div key="self" className="px-6 border-b border-neutral-100 dark:border-neutral-800/50">
+            <SelfContact number={myNumber} avatar={avatar_url} name={myName} />
           </div>
 
-          <div className="space-y-4">
+          <div className="flex flex-col">
             {Object.keys(groupedContacts)
               .sort()
               .map((letter) => (
-                <div key={letter} className="space-y-2">
-                  <div className="sticky top-[108px] z-10 px-4 py-1.5 bg-background/95 backdrop-blur-sm">
-                    <h3 className="text-xs font-bold text-blue-500 uppercase tracking-widest">{letter}</h3>
+                <div key={letter} className="flex flex-col">
+                  <div className="sticky top-0 z-20 px-6 py-1 bg-neutral-100/80 dark:bg-neutral-900/80 backdrop-blur-md">
+                    <h3 className="text-[14px] font-bold text-neutral-500 dark:text-neutral-400 uppercase">{letter}</h3>
                   </div>
-                  <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-neutral-100 dark:border-neutral-700/50 overflow-hidden divide-y divide-neutral-100 dark:divide-neutral-700/50">
-                    <List>
-                      {groupedContacts[letter].contacts.map((contact: Contact) => (
-                        <ContactItem key={contact.id} {...contact} />
-                      ))}
-                    </List>
+                  <div className="flex flex-col divide-y divide-neutral-100 dark:divide-neutral-800/50 px-6">
+                    {groupedContacts[letter].contacts.map((contact: Contact) => (
+                      <ContactItem key={contact.id} {...contact} />
+                    ))}
                   </div>
                 </div>
               ))}
@@ -80,18 +81,22 @@ export const ContactList: React.FC = () => {
 
           {filteredContacts.length === 0 && (
             <div className="py-20 text-center text-neutral-400 italic text-sm">
-              Nenhum contato encontrado
+              {t('CONTACTS.NONE_FOUND', 'Nenhum contato encontrado') as string}
             </div>
           )}
-        </nav>
+        </div>
       </div>
     </div>
   );
 };
 
-const SelfContact = ({ number, avatar }: { number: string; avatar: string }) => {
+const SelfContact = ({ number, avatar, name }: { number: string; avatar: string; name: string }) => {
   const [t] = useTranslation();
   const { addAlert } = useSnackbar();
+  const [imgError, setImgError] = React.useState(false);
+
+  // Check if avatar is a valid-looking URL or string
+  const hasAvatar = avatar && avatar.length > 5 && !imgError;
 
   const copyNumber = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -110,42 +115,30 @@ const SelfContact = ({ number, avatar }: { number: string; avatar: string }) => 
   };
 
   return (
-    <ListItem className="p-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-neutral-700/30 transition-colors">
-      <div className="flex items-center gap-3">
-        {avatar ? (
-          <img src={avatar} className="h-11 w-11 rounded-full border-2 border-white dark:border-neutral-700 shadow-sm" alt="avatar" />
+    <div className="py-3 flex items-center justify-between group active:opacity-60 transition-opacity cursor-pointer">
+      <div className="flex items-center gap-4">
+        {hasAvatar ? (
+          <img
+            src={avatar}
+            className="h-[58px] w-[58px] rounded-full object-cover"
+            alt="avatar"
+            onError={() => setImgError(true)}
+          />
         ) : (
-          <div className="h-11 w-11 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center border-2 border-white dark:border-neutral-700">
-            <span className="text-blue-600 dark:text-blue-400 font-bold text-xs uppercase">Eu</span>
+          <div className="h-[58px] w-[58px] rounded-full bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center">
+            <span className="text-neutral-500 dark:text-neutral-400 text-lg font-bold uppercase">
+              {initials(name)}
+            </span>
           </div>
         )}
         <div className="flex flex-col">
-          <span className="font-bold text-neutral-900 dark:text-white leading-none mb-1">
-            Meu Cartão
+          <span className="text-[19px] font-semibold text-foreground leading-tight">
+            {name}
           </span>
-          <span className="text-xs text-neutral-400 font-medium">{number}</span>
+          <span className="text-[13px] text-neutral-500 font-normal">{number}</span>
         </div>
       </div>
-
-      <div className="flex items-center gap-2">
-        <Tooltip title="Copiar número">
-          <button
-            onClick={copyNumber}
-            className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-700 text-neutral-500 hover:text-blue-500 transition-colors"
-          >
-            <Clipboard size={18} />
-          </button>
-        </Tooltip>
-        <Tooltip title="Compartilhar por perto">
-          <button
-            onClick={shareLocal}
-            className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-700 text-neutral-500 hover:text-blue-500 transition-colors"
-          >
-            <UsersRound size={18} />
-          </button>
-        </Tooltip>
-      </div>
-    </ListItem>
+    </div>
   );
 };
 
@@ -177,38 +170,28 @@ const ContactItem = ({ number, avatar, id, display }: Contact) => {
     ? `${referal}?contact=${encodeURIComponent(JSON.stringify({ number, id, display }))}`
     : `/contacts/${id}`;
 
-  return (
-    <ListItem className="hover:bg-neutral-50 dark:hover:bg-neutral-700/30 transition-colors cursor-pointer active:scale-[0.99]">
-      <Link to={detailUrl} className="p-4 flex items-center justify-between w-full">
-        <div className="flex items-center gap-3">
-          {avatar ? (
-            <img src={avatar} className="h-10 w-10 rounded-full border border-neutral-100 dark:border-neutral-700 shadow-sm" alt="avatar" />
-          ) : (
-            <div className="h-10 w-10 rounded-full bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center border border-neutral-100 dark:border-neutral-700">
-              <span className="text-neutral-500 dark:text-neutral-300 font-bold text-xs uppercase">{initials(display)}</span>
-            </div>
-          )}
-          <div className="flex flex-col">
-            <span className="font-bold text-neutral-900 dark:text-white leading-none mb-0.5">{display}</span>
-            <span className="text-xs text-neutral-400 font-medium">{number}</span>
-          </div>
-        </div>
+  const [imgError, setImgError] = React.useState(false);
+  const hasAvatar = avatar && avatar.length > 5 && !imgError;
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={startCall}
-            className="p-2.5 rounded-xl bg-green-500/10 text-green-600 hover:bg-green-500 hover:text-white transition-all shadow-sm"
-          >
-            <Phone size={18} />
-          </button>
-          <button
-            onClick={handleMessage}
-            className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all shadow-sm"
-          >
-            <MessageSquare size={18} />
-          </button>
-        </div>
-      </Link>
-    </ListItem>
+  return (
+    <Link to={detailUrl} className="py-2 flex items-center gap-3 w-full active:opacity-50 transition-opacity">
+      <div className="shrink-0">
+        {hasAvatar ? (
+          <img
+            src={avatar}
+            className="h-9 w-9 rounded-full object-cover"
+            alt={display}
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="h-9 w-9 rounded-full bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center">
+            <span className="text-neutral-500 dark:text-neutral-400 text-xs font-bold uppercase transition-colors">
+              {initials(display)}
+            </span>
+          </div>
+        )}
+      </div>
+      <span className="text-[17px] text-foreground font-medium truncate">{display}</span>
+    </Link>
   );
 };

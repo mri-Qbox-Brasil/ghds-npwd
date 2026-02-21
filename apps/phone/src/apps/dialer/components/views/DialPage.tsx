@@ -10,7 +10,7 @@ const DialPage: React.FC = () => {
   const [inputVal, setInputVal] = useState(queryNumber || '');
 
   return (
-    <div className="flex flex-col h-full animate-in fade-in duration-300">
+    <div className="flex flex-col h-full animate-in fade-in duration-300 pt-[80px]">
       <DialInputCtx.Provider
         value={{
           inputVal,

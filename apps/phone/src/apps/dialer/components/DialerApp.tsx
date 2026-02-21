@@ -11,7 +11,7 @@ import { Star } from 'lucide-react';
 export const DialerApp: React.FC = () => {
   return (
     <AppWrapper className="bg-[#FFFFFF] dark:bg-black text-foreground transition-colors duration-300">
-      <AppContent className="flex flex-col h-full overflow-hidden pt-[80px] bg-[#FFFFFF] dark:bg-black">
+      <AppContent className="flex flex-col h-full overflow-hidden bg-[#FFFFFF] dark:bg-black">
         <Switch>
           <Route path="/phone/dial">
             <DialPage />

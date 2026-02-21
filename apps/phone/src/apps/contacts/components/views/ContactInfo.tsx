@@ -139,13 +139,13 @@ const ContactsInfoPage: React.FC = () => {
         openContact={number}
       />
 
-      <header className="flex h-16 shrink-0 items-center px-4 bg-background/80 backdrop-blur-md sticky top-0 z-10 border-b border-transparent">
+      <header className="flex h-32 shrink-0 items-center px-4 bg-background/80 backdrop-blur-md sticky top-0 z-10 border-b border-transparent pt-[80px]">
         <button
           onClick={() => history.goBack()}
           className="flex items-center text-blue-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 p-2 rounded-xl transition-colors font-medium"
         >
           <ArrowLeft size={24} className="mr-1" />
-          <span>{t('GENERIC_BACK')}</span>
+          <span>{t('GENERIC_BACK') as string}</span>
         </button>
       </header>
 
@@ -216,7 +216,7 @@ const ContactsInfoPage: React.FC = () => {
 
             <div className="bg-neutral-50 dark:bg-neutral-800/50 rounded-2xl border border-neutral-100 dark:border-neutral-700/50 overflow-hidden divide-y divide-neutral-100 dark:divide-neutral-700/50">
               <div className="p-4 space-y-1">
-                <label className="text-xs text-neutral-500 dark:text-neutral-400">{t('CONTACTS.FORM_NAME')}</label>
+                <label className="text-xs text-neutral-500 dark:text-neutral-400">{t('CONTACTS.FORM_NAME', 'Nome') as string}</label>
                 <NPWDInput
                   value={name}
                   onChange={handleDisplayChange}
@@ -225,7 +225,7 @@ const ContactsInfoPage: React.FC = () => {
                 />
               </div>
               <div className="p-4 space-y-1">
-                <label className="text-xs text-neutral-500 dark:text-neutral-400">{t('CONTACTS.FORM_NUMBER')}</label>
+                <label className="text-xs text-neutral-500 dark:text-neutral-400">{t('CONTACTS.FORM_NUMBER', 'Número') as string}</label>
                 <NPWDInput
                   value={number}
                   onChange={handleNumberChange}
@@ -234,7 +234,7 @@ const ContactsInfoPage: React.FC = () => {
                 />
               </div>
               <div className="p-4 space-y-1">
-                <label className="text-xs text-neutral-500 dark:text-neutral-400">{t('CONTACTS.FORM_AVATAR')}</label>
+                <label className="text-xs text-neutral-500 dark:text-neutral-400">{t('CONTACTS.FORM_AVATAR', 'Foto') as string}</label>
                 <NPWDInput
                   value={avatar}
                   onChange={handleAvatarChange}
@@ -253,7 +253,7 @@ const ContactsInfoPage: React.FC = () => {
           className="w-full h-12 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-2xl shadow-lg shadow-blue-500/30 transition-all active:scale-95"
           size="lg"
         >
-          {isNew ? t('GENERIC.ADD') : t('GENERIC.UPDATE')}
+          {isNew ? t('GENERIC.ADD', 'Adicionar') as string : t('GENERIC.UPDATE', 'Salvar') as string}
         </NPWDButton>
       </footer>
     </div>

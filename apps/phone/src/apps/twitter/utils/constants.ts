@@ -9,7 +9,7 @@ export const SETTINGS_ALL_TWEETS = 'all';
 
 export const MockTwitterProfile = {
   id: 1,
-  profile_name: 'npwd admin',
+  profile_name: 'My Name',
   identifier: '421431414441124124',
   avatar_url: 'https://i.fivemanage.com/images/3ClWwmpwkFhL.png',
   bio: 'Please no ERP',
