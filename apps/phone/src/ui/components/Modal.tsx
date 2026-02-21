@@ -1,7 +1,7 @@
 import React from 'react';
 import * as DialogRadix from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
-import { cn } from '@utils/css';
+import { cn } from '@utils/cn';
 
 interface ModalProps {
   children: React.ReactNode;

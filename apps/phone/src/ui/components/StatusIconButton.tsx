@@ -1,49 +1,44 @@
-import { alpha, IconButton, IconButtonProps } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
+import { cn } from '@utils/cn';
 
 type StatusButtonStyleColor = 'success' | 'error' | 'warning' | 'info';
 
-interface IStatusButtonStyleProps {
-  color: StatusButtonStyleColor;
+interface StatusIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  color?: StatusButtonStyleColor;
+  size?: 'small' | 'medium' | 'large';
 }
 
-const useStyles = makeStyles(
-  (theme) => ({
-    root: {
-      color: ({ color }: IStatusButtonStyleProps) => theme.palette[color].contrastText,
-      backgroundColor: ({ color }: IStatusButtonStyleProps) => theme.palette[color].main,
-      '&:hover': {
-        backgroundColor: ({ color }: IStatusButtonStyleProps) => theme.palette[color].light,
-      },
-    },
-    outlined: {
-      border: ({ color }: IStatusButtonStyleProps) =>
-        `1px solid ${alpha(theme.palette[color].main, 0.5)}`,
-      '&:hover': {
-        border: ({ color }: IStatusButtonStyleProps) => `1px solid ${theme.palette[color].main}`,
-      },
-      '&$disabled': {
-        border: `1px solid ${theme.palette.action.disabled}`,
-      },
-    },
-    contained: {
-      color: ({ color }: IStatusButtonStyleProps) => theme.palette[color].contrastText,
-      backgroundColor: ({ color }: IStatusButtonStyleProps) => theme.palette[color].main,
-      '&:hover': {
-        backgroundColor: ({ color }: IStatusButtonStyleProps) => theme.palette[color].dark,
-      },
-    },
-  }),
-  { name: 'MuiIconButton' },
-);
+const colorVariants: Record<StatusButtonStyleColor, string> = {
+  success: 'bg-green-600 text-white hover:bg-green-700',
+  error: 'bg-red-600 text-white hover:bg-red-700',
+  warning: 'bg-yellow-500 text-white hover:bg-yellow-600',
+  info: 'bg-blue-600 text-white hover:bg-blue-700',
+};
 
-export const StatusIconButton = ({
+const sizeVariants = {
+  small: 'p-1',
+  medium: 'p-2',
+  large: 'p-3',
+};
+
+export const StatusIconButton: React.FC<StatusIconButtonProps> = ({
   color = 'info',
-  size,
+  size = 'medium',
   className,
+  children,
   ...props
-}: Omit<IconButtonProps, 'color'> & { color: StatusButtonStyleColor }) => {
-  const classes = useStyles({ color });
-  return <IconButton className={`${classes.root} ${className}`} size={size} {...props} />;
+}) => {
+  return (
+    <button
+      className={cn(
+        'inline-flex items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+        colorVariants[color],
+        sizeVariants[size],
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
 };

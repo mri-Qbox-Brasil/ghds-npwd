@@ -1,30 +1,30 @@
 import React, { Fragment } from 'react';
 import { AppIcon } from './AppIcon';
-import { Box, Grid, GridSize } from '@mui/material';
+import { Grid } from './ui/grid';
+import { Flex } from './ui/flex';
 import { Link } from 'react-router-dom';
 import { IApp } from '@os/apps/config/apps';
 
 interface GridMenuProps {
   items: IApp[];
   Component?: React.ElementType;
-  xs?: GridSize;
 }
 
-export const GridMenu: React.FC<GridMenuProps> = ({ items, Component = AppIcon, xs }) => {
+export const GridMenu: React.FC<GridMenuProps> = ({ items, Component = AppIcon }) => {
   return (
-    <Grid container alignItems="center" direction="row">
+    <Grid cols={4} className="w-full">
       {items &&
         items.length &&
         items.map((item) => (
           <Fragment key={item.id}>
             {!item.isDisabled && (
-              <Grid item xs={xs} key={item.id}>
-                <Box textAlign="center">
+              <div key={item.id} className="flex flex-col items-center py-2">
+                <Flex justify="center" className="w-full">
                   <Link to={item.path}>
                     <Component {...item} />
                   </Link>
-                </Box>
-              </Grid>
+                </Flex>
+              </div>
             )}
           </Fragment>
         ))}

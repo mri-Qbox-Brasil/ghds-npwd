@@ -1,30 +1,8 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
-import { Button, DialogContent, DialogContentText, DialogTitle, Paper } from '@mui/material';
-import DialogActions from '@mui/material/DialogActions';
-
-const useStyles = makeStyles({
-  root: {
-    paddingLeft: '10px',
-    zIndex: 10,
-    width: '90%',
-    display: 'flex',
-    flexFlow: 'column nowrap',
-    position: 'absolute',
-    top: '80px',
-  },
-  displayBlock: {
-    /*Sets modal to center*/
-    display: 'flex',
-    flexFlow: 'column nowrap',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-  },
-  displayNone: {
-    display: 'none',
-  },
-});
+import { Button } from './ui/button';
+import { Typography } from './ui/typography';
+import { Flex } from './ui/flex';
+import { cn } from '@utils/cn';
 
 interface DialogFormProps {
   children: React.ReactNode;
@@ -43,27 +21,29 @@ const DialogForm: React.FC<DialogFormProps> = ({
   title,
   content,
 }) => {
-  const classes = useStyles();
-
-  const showHideClassName = open ? classes.displayBlock : classes.displayNone;
+  if (!open) return null;
 
   return (
-    <div className={showHideClassName}>
-      <Paper className={classes.root}>
-        <DialogTitle id="form-dialog-title">{title}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{content}</DialogContentText>
+    <div className="relative flex flex-col items-center justify-center">
+      <div className="absolute top-[80px] z-10 flex w-[90%] flex-col rounded-xl bg-background p-4 shadow-xl border border-border">
+        <Typography variant="h6" className="px-2 mb-2">
+          {title}
+        </Typography>
+        <div className="px-2 mb-4">
+          <Typography variant="body2" color="muted" className="mb-4">
+            {content}
+          </Typography>
           {children}
-        </DialogContent>
-        <DialogActions>
-          <Button color="primary" onClick={handleClose}>
+        </div>
+        <Flex justify="end" className="gap-2 p-2">
+          <Button variant="ghost" onClick={handleClose}>
             Cancel
           </Button>
-          <Button color="primary" onClick={onSubmit}>
+          <Button onClick={onSubmit}>
             Confirm
           </Button>
-        </DialogActions>
-      </Paper>
+        </Flex>
+      </div>
     </div>
   );
 };

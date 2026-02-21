@@ -1,12 +1,7 @@
 import React from 'react';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material';
+import { Button } from './ui/button';
+import { Typography } from './ui/typography';
+import { Flex } from './ui/flex';
 import { useTranslation } from 'react-i18next';
 import { captureException } from '@sentry/react';
 
@@ -25,23 +20,29 @@ const ErrorDialogComp: React.FC<ErrorDialogCompProps> = ({ isOpen, errorMsg }) =
 
   const handleReloadClick = () => window.location.reload();
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={isOpen}>
-      <DialogTitle>{t('MISC.TOP_LEVEL_ERR_TITLE')}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          {t('MISC.TOP_LEVEL_ERR_MSG')}
-          <br />
-          <br />
-          <code style={{ color: 'red' }}>{errorMsg}</code>
-        </DialogContentText>
-        <DialogActions>
-          <Button color="primary" onClick={handleReloadClick}>
-            {t('MISC.TOP_LEVEL_ERR_ACTION')}
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-md rounded-xl bg-background p-6 shadow-2xl border border-border">
+        <Typography variant="h6" className="mb-2">
+          {t('MISC.TOP_LEVEL_ERR_TITLE') as unknown as string}
+        </Typography>
+        <div className="mb-6 space-y-4">
+          <Typography variant="body1" color="muted">
+            {t('MISC.TOP_LEVEL_ERR_MSG') as unknown as string}
+          </Typography>
+          <code className="block w-full overflow-auto rounded bg-red-950/20 p-3 text-red-500 text-sm border border-red-500/20">
+            {errorMsg}
+          </code>
+        </div>
+        <Flex justify="end">
+          <Button onClick={handleReloadClick}>
+            {t('MISC.TOP_LEVEL_ERR_ACTION') as unknown as string}
           </Button>
-        </DialogActions>
-      </DialogContent>
-    </Dialog>
+        </Flex>
+      </div>
+    </div>
   );
 };
 

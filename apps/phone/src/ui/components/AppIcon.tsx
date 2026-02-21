@@ -1,71 +1,6 @@
 import React from 'react';
-import { darken, Theme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
-import { green } from '@mui/material/colors';
-import { Badge } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-
-const useStyles = makeStyles<Theme, { color: string; backgroundColor: string }>((theme) => ({
-  root: {
-    padding: 0,
-    background: 'transparent',
-    marginBottom: theme.spacing(3),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    textAlign: 'center',
-    width: '90px', // Define a largura máxima para o ícone e o texto
-  },
-  avatar: {
-    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-    boxShadow: 'rgba(0, 0, 0, 0.00) 0px 1px 3px 0px, rgba(27, 31, 35, 0.00) 0px 0px 0px 2px',
-    '&:hover': {
-      transform: 'scale(1.05)',
-      boxShadow: 'rgba(0, 0, 0, 0.2) 0px 4px 12px',
-      background: ({ backgroundColor }) => {
-        return `linear-gradient(45deg, ${darken(backgroundColor, 0.35)} 10%, ${backgroundColor} 90%)`;
-      },
-    },
-    background: ({ backgroundColor }) => {
-      return `linear-gradient(45deg, ${darken(backgroundColor, 0.2)} 20%, ${backgroundColor} 90%)`;
-    },
-    color: ({ color }) => color,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 14,
-    overflow: 'hidden',
-    width: theme.spacing(7.2),
-    height: theme.spacing(7.2),
-    fontSize: theme.typography.h4.fontSize,
-    '& img': {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-    },
-    '& svg': {
-      width: '100%',
-      height: '100%',
-    },
-  },
-  icon: {
-    fontSize: theme.typography.h4.fontSize,
-    width: theme.spacing(7.2),
-    height: theme.spacing(7.2),
-  },
-  name: {
-    marginTop: theme.spacing(0.5),
-    fontSize: '12px',
-    color: 'white',
-    weight: 'bold',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    maxWidth: '80px',
-    textAlign: 'center',
-    textShadow: '1px 1px 1px rgba(0, 0, 0, 0.3)',
-  },
-}));
+import { cn } from '@utils/cn';
 
 export interface AppIconProps {
   id: string;
@@ -74,7 +9,7 @@ export interface AppIconProps {
   icon: React.ReactNode;
   backgroundColor: string;
   color: string;
-  notification: any; // Fallback to any or the correct typing as Notification wasn't correctly imported
+  notification: any;
   isDockItem?: boolean;
 }
 
@@ -82,34 +17,50 @@ export const AppIcon: React.FC<AppIconProps> = ({
   id,
   nameLocale,
   Icon,
-  backgroundColor,
-  color,
+  backgroundColor = '#f0fdf4',
+  color = '#4ade80',
   icon,
   notification,
   isDockItem,
 }) => {
   const [t] = useTranslation();
-  const classes = useStyles({
-    backgroundColor: backgroundColor || green[50],
-    color: color || green[400],
-  });
 
   return (
-    <button className={classes.root} style={isDockItem ? { marginBottom: 0 } : {}}>
-      <Badge
-        color="error"
-        badgeContent={notification?.badge}
-        invisible={!notification || notification.badge < 2}
-      >
-        {Icon ? (
-          <Icon className={classes.icon} fontSize="large" />
-        ) : (
-          <div className={classes.avatar}>
-            {icon ? <>{icon}</> : <>{t(nameLocale)}</>}
+    <button
+      className={cn(
+        'group p-0 bg-transparent flex flex-col items-center text-center w-[90px]',
+        !isDockItem && 'mb-6'
+      )}
+    >
+      <div className="relative">
+        {notification?.badge >= 2 && (
+          <div className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 bg-red-600 text-white text-[11px] font-bold rounded-full flex items-center justify-center z-10 border-2 border-background shadow-sm">
+            {notification.badge}
           </div>
         )}
-      </Badge>
-      {!isDockItem && <span className={classes.name}>{String(t(nameLocale))}</span>}
+
+        {Icon ? (
+          <div className="w-[58px] h-[58px] flex items-center justify-center text-[2.125rem]">
+            <Icon fontSize="inherit" className="w-full h-full" />
+          </div>
+        ) : (
+          <div
+            className="transition-all duration-200 transform group-hover:scale-105 group-hover:shadow-[0_4px_12px_rgba(0,0,0,0.2)] flex justify-center items-center rounded-[14px] overflow-hidden w-[58px] h-[58px] text-[2.125rem]"
+            style={{
+              backgroundColor: backgroundColor,
+              color: color,
+              backgroundImage: `linear-gradient(45deg, rgba(0,0,0,0.2) 20%, transparent 90%)`
+            }}
+          >
+            {icon ? <div className="w-full h-full overflow-hidden flex items-center justify-center">{icon}</div> : <>{t(nameLocale) as unknown as string}</>}
+          </div>
+        )}
+      </div>
+      {!isDockItem && (
+        <span className="mt-1 text-[12px] text-white font-bold whitespace-nowrap overflow-hidden text-ellipsis max-w-[80px] text-center [text-shadow:1px_1px_1px_rgba(0,0,0,0.3)]">
+          {t(nameLocale) as unknown as string}
+        </span>
+      )}
     </button>
   );
 };

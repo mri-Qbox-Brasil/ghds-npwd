@@ -1,5 +1,5 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import { cn } from '@utils/cn';
 
 interface PictureResponsiveProps {
   src: string;
@@ -7,24 +7,19 @@ interface PictureResponsiveProps {
   popper?: boolean;
 }
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    objectFit: 'contain',
-  },
-  rootPopper: {
-    width: '100%',
-    maxWidth: '80vh',
-    height: 'auto',
-    objectFit: 'contain',
-  },
-});
-
 export const PictureResponsive: React.FC<PictureResponsiveProps> = ({
   src,
   alt,
   popper = false,
 }) => {
-  const styles = useStyles();
-  return <img className={popper ? styles.rootPopper : styles.root} src={src} alt={alt} />;
+  return (
+    <img
+      className={cn(
+        "w-full object-contain",
+        popper ? "max-w-[80vh] h-auto" : ""
+      )}
+      src={src}
+      alt={alt}
+    />
+  );
 };

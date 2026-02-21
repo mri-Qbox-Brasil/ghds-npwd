@@ -1,60 +1,46 @@
 import React from 'react';
-import Paper from '@mui/material/Paper';
-import Snackbar from '@mui/material/Snackbar';
-import Fade from '@mui/material/Fade';
-import { ThemeProvider, StyledEngineProvider } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { usePhone } from '@os/phone/hooks/usePhone';
+import { cn } from '@utils/cn';
 
-import { usePhoneTheme } from '@os/phone/hooks/usePhoneTheme';
-
-const useStyles = makeStyles({
-  paper: {
-    width: '350px',
-    height: '100px',
-    opacity: '0.93',
+const positionClasses = {
+  vertical: {
+    top: 'top-10',
+    bottom: 'bottom-10',
+    center: 'top-1/2 -translate-y-1/2',
   },
-  snackBar: {
-    zIndex: -5, // we want this to appear behind other active NUI events...probably
+  horizontal: {
+    left: 'left-5',
+    right: 'right-5',
+    center: 'left-1/2 -translate-x-1/2',
   },
-});
+};
 
 interface NotificationProps {
   open: boolean;
   handleClose: () => void;
+  children?: React.ReactNode;
 }
 
+
 export const Notification: React.FC<NotificationProps> = ({ children, handleClose, open }) => {
-  const classes = useStyles();
   const { ResourceConfig } = usePhone();
 
-  const currentTheme = usePhoneTheme();
-
-  if (!ResourceConfig) return null;
+  if (!ResourceConfig || !open) return null;
 
   const { horizontal, vertical } = ResourceConfig.notificationPosition;
 
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={currentTheme}>
-        <Snackbar
-          className={classes.snackBar}
-          anchorOrigin={{ horizontal, vertical }}
-          ClickAwayListenerProps={{
-            onClickAway: () =>
-              setTimeout(() => {
-                handleClose();
-              }, 5000),
-          }}
-          onClose={handleClose}
-          open={open}
-          TransitionComponent={Fade}
-          autoHideDuration={6000}
-        >
-          <Paper className={classes.paper}>{children}</Paper>
-        </Snackbar>
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <div
+      className={cn(
+        'absolute z-[-5] w-[350px] min-h-[100px] opacity-95 transition-all duration-500 rounded-xl overflow-hidden shadow-lg border border-border animate-in fade-in zoom-in-95',
+        positionClasses.vertical[vertical] || 'top-10',
+        positionClasses.horizontal[horizontal] || 'left-1/2 -translate-x-1/2'
+      )}
+    >
+      <div className="w-full h-full bg-background/90 backdrop-blur-sm">
+        {children}
+      </div>
+    </div>
   );
 };
 

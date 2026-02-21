@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@mui/material';
+import { Button } from './ui/button';
 import { PictureThumbnail } from './PictureThumbnail';
 import { PictureResponsive } from './PictureResponsive';
 import Modal from './Modal';
@@ -14,7 +14,7 @@ export const Picture: React.FC<PictureProps> = ({ src, alt, size }) => {
   const [visible, setVisible] = useState<boolean>(false);
   return (
     <>
-      <Button onClick={() => setVisible(true)}>
+      <Button variant="ghost" className="p-0 h-auto" onClick={() => setVisible(true)}>
         <PictureThumbnail size={size} src={src} alt={alt} />
       </Button>
       <Modal visible={visible} handleClose={() => setVisible(false)}>

@@ -1,24 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Theme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { useSettings } from '../../apps/settings/hooks/useSettings';
 import { useTranslation } from 'react-i18next';
-
-const useStyles = makeStyles<Theme, { covered: boolean }>((theme) => ({
-  cover: {
-    cursor: 'pointer',
-    backgroundColor: theme.palette.background.default,
-    color: theme.palette.getContrastText(theme.palette.background.default),
-    visibility: ({ covered }) => (covered ? 'visible' : 'hidden'),
-  },
-}));
+import { cn } from '@utils/cn';
 
 export const PictureReveal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [settings] = useSettings();
   const [covered, setCovered] = useState<boolean>(false);
   const [ready, setReady] = useState<boolean>(false);
   const [t] = useTranslation();
-  const classes = useStyles({ covered });
 
   useEffect(() => {
     if (settings.streamerMode === true) {
@@ -30,24 +19,19 @@ export const PictureReveal: React.FC<{ children: React.ReactNode }> = ({ childre
   const onClickCover = () => setCovered(false);
 
   return (
-    <Box width="100%" position="relative">
-      <Box
+    <div className="w-full relative flex flex-col justify-center items-center">
+      <div
         onClick={onClickCover}
-        className={classes.cover}
-        width="100%"
-        height="100%"
-        position="absolute"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        top={0}
-        left={0}
+        className={cn(
+          "cursor-pointer bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 inset-0 absolute flex items-center justify-center z-10 p-4 text-center text-sm font-medium transition-opacity duration-300",
+          covered ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+        )}
       >
-        {t('GENERIC_CLICK_TO_REVEAL')}
-      </Box>
-      <Box width="100%" height="100%" visibility={ready ? 'visible' : 'hidden'}>
+        {t('GENERIC_CLICK_TO_REVEAL') as unknown as string}
+      </div>
+      <div className={cn("w-full h-full min-h-[50px]", ready ? "visible" : "invisible")}>
         {children}
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };

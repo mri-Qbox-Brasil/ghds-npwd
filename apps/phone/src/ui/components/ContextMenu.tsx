@@ -1,10 +1,9 @@
 import React from 'react';
-import { Slide } from '@mui/material';
 import { ListItem, List } from '@npwd/keyos';
 import { X } from 'lucide-react';
 
 export interface IContextMenuOption {
-  onClick(e, option): void;
+  onClick(e: React.MouseEvent, option: IContextMenuOption): void;
   label: string;
   description?: string;
   selected?: boolean;
@@ -25,29 +24,24 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   options,
   settingLabel,
 }) => {
-  const _options = options;
+  if (!open) return null;
 
   return (
-    <Slide
-      direction="up"
-      in={open}
-      style={{ position: 'absolute', bottom: 0 }}
-      mountOnEnter
-      unmountOnExit
-    >
-      <div className="z-[9999] max-h-[70%] max-h-full min-h-[10%] w-full overflow-hidden rounded-t-2xl border-t border-neutral-800 bg-neutral-100 p-2 text-white dark:bg-neutral-900">
+    <div className="absolute bottom-0 left-0 right-0 z-[9999] animate-in slide-in-from-bottom duration-300">
+      <div className="max-h-[70%] min-h-[10%] w-full overflow-hidden rounded-t-2xl border-t border-neutral-800 bg-neutral-100 p-2 text-white dark:bg-neutral-900">
         <div className="flex items-center justify-between px-2">
           <p className="text-base font-medium text-neutral-900 dark:text-neutral-50">
             {settingLabel}
           </p>
-          <button onClick={onClose} className="text-neutral-900 dark:text-neutral-50">
+          <button onClick={onClose} className="text-neutral-900 dark:text-neutral-50 p-1 hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors">
             <X size={24} />
           </button>
         </div>
         <div className="overflow-auto max-h-[500px] pb-4">
           <List>
-            {_options.map((option) => (
+            {options.map((option, idx) => (
               <ListItem
+                key={option.key || idx}
                 startElement={option.icon}
                 primaryText={option.label}
                 secondaryText={option.description}
@@ -58,22 +52,10 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
                   onClose();
                 }}
               />
-              /*  <ListItem
-              selected={option.selected}
-              key={option.key || option.label}
-              button
-              onClick={(e) => {
-                option.onClick(e, option);
-                onClose();
-              }}
-            >
-              {option.icon && <ListItemIcon>{option.icon}</ListItemIcon>}
-              <ListItemText primary={option.label} secondary={option.description} />
-            </ListItem> */
             ))}
           </List>
         </div>
       </div>
-    </Slide>
+    </div>
   );
 };
