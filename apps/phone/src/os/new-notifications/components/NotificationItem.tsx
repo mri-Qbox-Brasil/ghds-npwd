@@ -9,10 +9,9 @@ import { Typography } from '@ui/components/ui/typography';
 
 interface NotificationItemProps {
   id: string;
-  key: string | number;
 }
 
-export const NotificationItem: React.FC<NotificationItemProps> = ({ id, key }) => {
+export const NotificationItem: React.FC<NotificationItemProps> = ({ id }) => {
   const { appId, content, path } = useRecoilValue(notifications(id));
   const { markAsRead } = useNotification();
   const { icon } = useApp(appId);
@@ -30,9 +29,9 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ id, key }) =
       button
       onClick={handleOnClose}
       className="relative bg-background opacity-95 mb-2.5 rounded-[20px] shadow-lg hover:opacity-100 hover:shadow-xl dark:bg-[#333]"
-      key={key}
     >
-      {icon && <div className="min-w-[35px] max-w-[5px] mr-2.5 flex justify-center">{icon as unknown as React.ReactNode}</div>}
+      {/* @ts-ignore */}
+      {icon && <div className="min-w-[35px] max-w-[5px] mr-2.5 flex justify-center">{icon as any}</div>}
       <Typography variant="body1">{content}</Typography>
     </ListItem>
   );

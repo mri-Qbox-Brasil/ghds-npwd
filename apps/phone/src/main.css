@@ -74,7 +74,7 @@
   }
 
   body {
-    @apply bg-transparent text-foreground antialiased selection:bg-primary/30 selection:text-primary;
+    @apply bg-transparent text-foreground antialiased selection:bg-primary/30 selection:text-primary overflow-hidden;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     letter-spacing: -0.015em;
   }

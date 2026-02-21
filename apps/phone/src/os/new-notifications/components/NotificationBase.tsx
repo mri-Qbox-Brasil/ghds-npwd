@@ -1,10 +1,10 @@
-import {IApp} from '@os/apps/config/apps';
-import {SnackbarContent, CustomContentProps} from 'notistack';
-import React, {forwardRef} from 'react';
-import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
-import {useNotification} from '../useNotification';
-import {cn} from "@npwd/keyos";
+import { IApp } from '@os/apps/config/apps';
+import { SnackbarContent, CustomContentProps } from 'notistack';
+import React, { forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import { useNotification } from '../useNotification';
+import { cn } from "@npwd/keyos";
 
 interface NotificationBaseProps extends CustomContentProps {
     app: IApp;
@@ -16,8 +16,8 @@ interface NotificationBaseProps extends CustomContentProps {
 export type NotificationBaseComponent = React.FC<NotificationBaseProps>;
 
 const NotificationBase = forwardRef<HTMLDivElement, NotificationBaseProps>((props, ref) => {
-    const {markAsRead} = useNotification();
-    const {app, message, secondaryTitle, path, onClick} = props;
+    const { markAsRead } = useNotification();
+    const { app, message, secondaryTitle, path, onClick, ...other } = props;
     const [t] = useTranslation();
     const history = useHistory();
 
@@ -42,23 +42,24 @@ const NotificationBase = forwardRef<HTMLDivElement, NotificationBaseProps>((prop
 
     return (
         <SnackbarContent
+            {...(other as any)}
             onClick={handleNotisClick}
             ref={ref}
             style={{
-                minWidth: '370px',
-                borderRadius: '20px',
+                minWidth: '340px',
+                maxWidth: '360px',
             }}
-            className="bg-neutral-50 dark:bg-neutral-900 py-3.5 px-4 flex shadow-md  border-neutral-200 dark:border-neutral-800 opacity-95"
+            className="flex-col bg-white/85 dark:bg-neutral-900/85 backdrop-blur-md py-3.5 px-4 flex shadow-xl border border-neutral-200/50 dark:border-white/10 rounded-[20px] pointer-events-auto"
         >
             <div className="flex items-center text-neutral-900 dark:text-neutral-50 w-full mb-2">
                 <div
                     className={cn("p-2 flex items-center justify-center rounded-full")}
-                    style={{backgroundColor: app.backgroundColor}}
+                    style={{ backgroundColor: app.backgroundColor }}
                 >
-                    {app.NotificationIcon && <app.NotificationIcon fontSize="inherit"/>}
+                    {app.NotificationIcon && <app.NotificationIcon fontSize="inherit" />}
                 </div>
                 <div className="text-neutral-900 dark:text-neutral-50 font-semibold pl-1 grow text-sm">
-                    {t(app.nameLocale)}
+                    {t(app.nameLocale) as string}
                 </div>
                 <div>
                     <p className="text-neutral-900 dark:text-neutral-50 text-sm">{secondaryTitle}</p>

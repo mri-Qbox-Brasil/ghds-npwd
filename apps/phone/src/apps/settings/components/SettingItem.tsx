@@ -155,7 +155,7 @@ export const SettingSwitch: React.FC<SettingSwitchProps> = ({
   secondary,
   iconBg = "bg-neutral-400",
 }) => (
-  <div className="w-full flex items-center justify-between pl-4 pr-3 py-2.5 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-white/5 last:border-none group">
+  <div className="w-full flex items-center justify-between pl-4 pr-4 py-2 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-white/5 last:border-none group">
     <div className="flex items-center gap-3 flex-1 min-w-0">
       <div className={cn("w-[29px] h-[29px] rounded-[7px] flex items-center justify-center text-white shrink-0", iconBg)}>
         {React.cloneElement(icon as React.ReactElement, { size: 18, strokeWidth: 2.5 })}
@@ -169,14 +169,17 @@ export const SettingSwitch: React.FC<SettingSwitchProps> = ({
     <button
       onClick={() => onClick(value)}
       className={cn(
-        "relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline-none",
-        value ? "bg-[#34C759]" : "bg-neutral-200 dark:bg-neutral-700"
+        "relative inline-flex h-[31px] w-[51px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+        value ? "bg-[#34C759]" : "bg-[#E9E9EA] dark:bg-[#39393D]"
       )}
     >
-      <span className={cn(
-        "pointer-events-none block h-5.5 w-5.5 rounded-full bg-white shadow-md ring-0 transition-transform",
-        value ? "translate-x-5.5" : "translate-x-1"
-      )} />
+      <span
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none inline-block h-[27px] w-[27px] transform rounded-full bg-white shadow-[0_3px_8px_rgba(0,0,0,0.15),0_3px_1px_rgba(0,0,0,0.06)] transition duration-200 ease-in-out",
+          value ? "translate-x-[20px]" : "translate-x-0"
+        )}
+      />
     </button>
   </div>
 );
