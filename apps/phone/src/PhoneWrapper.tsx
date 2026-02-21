@@ -46,7 +46,7 @@ const PhoneWrapper: React.FC<PhoneWrapperProps> = ({ children }) => {
           }}
         >
           {/* iOS 26 Glass Overlay for Apps */}
-          {pathname !== '/' && <div className="absolute inset-0 bg-white/10 dark:bg-black/20 backdrop-blur-[2px] z-0" />}
+          {pathname !== '/' && <div className="absolute inset-0 bg-white/10 dark:bg-black/20 z-0" />}
           <div className="relative z-10 w-full h-full flex flex-col">
             {children}
           </div>

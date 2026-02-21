@@ -24,11 +24,13 @@ interface WrapperGridProps {
 }
 
 const IconUnreadGrid: React.FC<WrapperGridProps> = ({ tgtNoti }) => {
-  const tgtNotiId = (tgtNoti as any)?.notiId || (tgtNoti as any)?.id;
   const app = useApp(tgtNoti?.appId);
-  if (!app || !tgtNotiId) return null;
+  if (!app || !app.NotificationIcon) return null;
   return (
-    <NotificationItem key={tgtNotiId} {...tgtNoti} id={tgtNotiId} />
+    <div className="w-[14px] h-[14px] flex items-center justify-center text-foreground opacity-90 mx-0.5">
+      {/* @ts-ignore */}
+      <app.NotificationIcon fontSize="inherit" />
+    </div>
   );
 };
 
