@@ -14,7 +14,6 @@ import './twitter.css';
 import 'emoji-mart/css/emoji-mart.css';
 import { useProfile } from '../hooks/useProfile';
 import ProfilePrompt from './profile/ProfilePrompt';
-import { TwitterThemeProvider } from '../providers/TwitterThemeProvider';
 import { useSetRecoilState } from 'recoil';
 import { twitterState } from '../hooks/state';
 import { WordFilterProvider } from '@os/wordfilter/providers/WordFilterProvider';
@@ -35,29 +34,27 @@ const TwitterApp = () => {
     !promptProfileName && activePage === 0 && location.pathname === '/twitter';
 
   return (
-    <TwitterThemeProvider>
-      <AppWrapper id="twitter-app">
-        <WordFilterProvider>
-          <AddTweetModal />
-        </WordFilterProvider>
-        <TwitterTitle />
-        <AppContent className="flex flex-col">
-          {promptProfileName ? (
-            <ProfilePrompt />
-          ) : (
-            <>
-              <Route path="/twitter" exact component={TweetListContainer} />
-              <Route path="/twitter/search" component={TwitterSearch} />
-              <Route path="/twitter/profile" component={TwitterProfile} />
-            </>
-          )}
-        </AppContent>
-        {showTweetButton && <TweetButton openModal={openModal} />}
-        {!promptProfileName && (
-          <BottomNavigation activePage={activePage} handleChange={handlePageChange} />
+    <AppWrapper id="twitter-app">
+      <WordFilterProvider>
+        <AddTweetModal />
+      </WordFilterProvider>
+      <TwitterTitle />
+      <AppContent className="flex flex-col">
+        {promptProfileName ? (
+          <ProfilePrompt />
+        ) : (
+          <>
+            <Route path="/twitter" exact component={TweetListContainer} />
+            <Route path="/twitter/search" component={TwitterSearch} />
+            <Route path="/twitter/profile" component={TwitterProfile} />
+          </>
         )}
-      </AppWrapper>
-    </TwitterThemeProvider>
+      </AppContent>
+      {showTweetButton && <TweetButton openModal={openModal} />}
+      {!promptProfileName && (
+        <BottomNavigation activePage={activePage} handleChange={handlePageChange} />
+      )}
+    </AppWrapper>
   );
 };
 export default memo(TwitterApp);

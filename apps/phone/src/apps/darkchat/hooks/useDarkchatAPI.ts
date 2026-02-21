@@ -18,7 +18,6 @@ import { useSetDarkchatMessagesState } from '../state/state';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
 import { useTranslation } from 'react-i18next';
 import { buildRespObj } from '@utils/misc';
-import { DarkChatThemeProvider } from '../providers/DarkChatThemeProvider';
 
 interface DarkchatAPIProps {
   addChannel: (channelDto: JoinChannelDTO) => void;

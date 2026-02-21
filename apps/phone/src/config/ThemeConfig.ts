@@ -1,7 +1,5 @@
-import { ThemeOptions } from '@mui/material';
-
 // Configure all of the phone's default themes here.
-export const PhoneThemes: Record<string, ThemeOptions> = {
+export const PhoneThemes: Record<string, any> = {
   'taso-dark': {
     components: {
       MuiDivider: {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { AppWrapper } from '@ui/components';
-import { Box, styled } from '@mui/material';
 import { GridMenu } from '@ui/components/GridMenu';
 import { useApps } from '@os/apps/hooks/useApps';
 import { useExternalApps } from '@common/hooks/useExternalApps';
@@ -17,9 +16,9 @@ export const HomeApp: React.FC = () => {
 
   return (
     <AppWrapper>
-      <Box component="div" mt={6} px={3}>
+      <div className="mt-8 px-4">
         {apps && <GridMenu items={[...gridApps, ...externalApps]} />}
-      </Box>
+      </div>
 
       {dockApps.length > 0 && <Dock apps={dockApps} />}
     </AppWrapper>

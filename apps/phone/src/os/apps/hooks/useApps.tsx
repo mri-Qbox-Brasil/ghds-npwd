@@ -2,14 +2,12 @@ import React, { useCallback, useMemo } from 'react';
 import { useNotifications } from '@os/notifications/hooks/useNotifications';
 import { createLazyAppIcon } from '../utils/createLazyAppIcon';
 import { APPS, IApp } from '../config/apps';
-import { useTheme } from '@mui/material';
 import { useSettingsValue } from '../../../apps/settings/hooks/useSettings';
 import { IconSetObject } from '@typings/settings';
 import { usePhone } from '@os/phone/hooks';
 
 export const useApps = () => {
   const { icons } = useNotifications();
-  const theme = useTheme();
   const curIconSet = useSettingsValue().iconSet.value as IconSetObject;
   const { ResourceConfig } = usePhone();
 
@@ -36,7 +34,7 @@ export const useApps = () => {
           NotificationIcon,
           Icon,
           notificationIcon: (
-            <NotificationIcon htmlColor={theme.palette.text.primary} fontSize="small" />
+            <NotificationIcon htmlColor="currentColor" fontSize="small" />
           ),
           icon: <Icon />,
           isDisabled: !!ResourceConfig?.disabledApps.find((a) => a === app.id),
@@ -51,7 +49,7 @@ export const useApps = () => {
         isDisabled: !!ResourceConfig?.disabledApps.find((a) => a === app.id),
       };
     });
-  }, [icons, curIconSet, theme, ResourceConfig]);
+  }, [icons, curIconSet, ResourceConfig]);
 
   const allApps = useMemo(() => [...apps], [apps]);
   const getApp = useCallback(

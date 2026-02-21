@@ -1,42 +1,6 @@
-import styled from '@emotion/styled';
 import { RefreshCw } from 'lucide-react';
-import { Box, Button, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { TFunction } from 'react-i18next';
-
-const Container = styled.div<{ background: string; color: string }>`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  max-height: 100%;
-
-  background: ${({ background }) => background ?? '#222'};
-  color: ${({ color }) => color ?? '#fff'};
-  background-size: 400% 400%;
-  animation: gradient 8s ease infinite;
-
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
-  code {
-    color: #f32d2d;
-    padding: 1.5rem;
-    font-size: 0.8rem;
-    background: #00000085;
-    margin-top: auto;
-  }
-`;
 
 interface ExternalAppBoundaryProps {
   children: React.ReactNode;
@@ -58,25 +22,32 @@ export class ExternalAppBoundary extends React.Component<ExternalAppBoundaryProp
   render() {
     if (this.state.hasError) {
       return (
-        <Container background={this.props.background} color={this.props.color}>
-          <Stack alignItems="center" spacing={2} marginTop="15%" textAlign="center">
-            <Box p={4}>
-              <Typography variant="h5">{this.props.t('MISC.APP_CRASHED_TITLE')}</Typography>
-              <Typography variant="caption">{this.props.t('MISC.APP_CRASHED_MSG')}</Typography>
-            </Box>
+        <div
+          className="flex-1 flex flex-col items-center justify-center max-h-full"
+          style={{
+            background: this.props.background ?? '#222',
+            color: this.props.color ?? '#fff'
+          }}
+        >
+          <div className="flex flex-col items-center gap-4 mt-[15%] text-center">
+            <div className="p-4">
+              <h5 className="text-xl font-medium m-0 pb-1">{String(this.props.t('MISC.APP_CRASHED_TITLE'))}</h5>
+              <span className="text-xs opacity-80">{String(this.props.t('MISC.APP_CRASHED_MSG'))}</span>
+            </div>
 
-            <Button
-              color="inherit"
-              fullWidth
+            <button
+              className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-colors bg-white/10 rounded-md hover:bg-white/20 active:bg-white/30 cursor-pointer border-none text-inherit"
               onClick={() => this.setState({ hasError: false })}
-              startIcon={<RefreshCw />}
             >
-              {this.props.t('MISC.APP_CRASHED_ACTION')}
-            </Button>
-          </Stack>
+              <RefreshCw size={18} />
+              {String(this.props.t('MISC.APP_CRASHED_ACTION'))}
+            </button>
+          </div>
 
-          <code>{this.state.errorMsg}</code>
-        </Container>
+          <code className="text-[#f32d2d] p-6 text-[0.8rem] bg-black/50 mt-auto w-full break-words box-border">
+            {this.state.errorMsg}
+          </code>
+        </div>
       );
     }
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Slide } from '@mui/material';
+
 import { Signal, Battery, ChevronUp } from 'lucide-react';
 import { Flex } from '@ui/components/ui/flex';
 import { Typography } from '@ui/components/ui/typography';
@@ -71,41 +71,42 @@ export const NotificationBar = () => {
           </div>
         </Flex>
       </Flex>
-      <Slide direction="down" in={barUncollapsed} mountOnEnter unmountOnExit>
-        <div className="bg-background w-full absolute top-[30px] z-[98] shadow-md border-b border-border/50">
-          <div className="py-2">
-            <List>
-              <Divider />
-              {notifications.map((notification, idx) => (
-                <NotificationItem
-                  key={idx}
-                  {...notification}
-                  onClose={(e) => {
-                    e.stopPropagation();
-                    notification.onClose?.(notification as any);
+      <div
+        className={`bg-background w-full absolute top-[30px] z-[98] shadow-md border-b border-border/50 transition-all duration-400 ease-out ${barUncollapsed ? "translate-y-0 opacity-100 pointer-events-auto" : "-translate-y-[150%] opacity-0 pointer-events-none"
+          }`}
+      >
+        <div className="py-2">
+          <List>
+            <Divider />
+            {notifications.map((notification, idx) => (
+              <NotificationItem
+                key={idx}
+                {...notification}
+                onClose={(e) => {
+                  e.stopPropagation();
+                  notification.onClose?.(notification as any);
+                  removeNotification(idx);
+                }}
+                onClickClose={() => {
+                  setBarUncollapsed(false);
+                  if (!notification.cantClose) {
                     removeNotification(idx);
-                  }}
-                  onClickClose={() => {
-                    setBarUncollapsed(false);
-                    if (!notification.cantClose) {
-                      removeNotification(idx);
-                    }
-                  }}
-                />
-              ))}
-            </List>
-          </div>
-          <Flex direction="col">
-            {!notifications.length && <NoNotificationText />}
-            <button
-              className="mx-auto appearance-none bg-transparent border-none p-1 rounded-full hover:bg-muted/50 transition-colors text-muted-foreground cursor-pointer"
-              onClick={() => setBarUncollapsed(false)}
-            >
-              <ChevronUp />
-            </button>
-          </Flex>
+                  }
+                }}
+              />
+            ))}
+          </List>
         </div>
-      </Slide>
+        <Flex direction="col">
+          {!notifications.length && <NoNotificationText />}
+          <button
+            className="mx-auto appearance-none bg-transparent border-none p-1 rounded-full hover:bg-muted/50 transition-colors text-muted-foreground cursor-pointer"
+            onClick={() => setBarUncollapsed(false)}
+          >
+            <ChevronUp />
+          </button>
+        </Flex>
+      </div>
     </>
   );
 };

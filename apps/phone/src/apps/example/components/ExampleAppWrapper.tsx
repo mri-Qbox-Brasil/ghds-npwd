@@ -2,7 +2,6 @@ import React from 'react';
 import { AppWrapper } from '@ui/components';
 import { AppContent } from '@ui/components/AppContent';
 import { useApp } from '@os/apps/hooks/useApps';
-import { ExampleThemeProvider } from '../providers/ExampleThemeProvider';
 import { AppTitle } from '@ui/components/AppTitle';
 import { ExampleApp } from './ExampleApp';
 
@@ -14,13 +13,11 @@ import { ExampleApp } from './ExampleApp';
 export const ExampleAppWrapper: React.FC = () => {
   const example = useApp('EXAMPLE');
   return (
-    <ExampleThemeProvider>
-      <AppWrapper>
-        <AppTitle app={example} />
-        <AppContent>
-          <ExampleApp />
-        </AppContent>
-      </AppWrapper>
-    </ExampleThemeProvider>
+    <AppWrapper>
+      <AppTitle app={example} />
+      <AppContent>
+        <ExampleApp />
+      </AppContent>
+    </AppWrapper>
   );
 };

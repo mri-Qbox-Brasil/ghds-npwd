@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 
-import { Slide } from '@mui/material';
 import { Flex } from '@ui/components/ui/flex';
 import { Typography } from '@ui/components/ui/typography';
 import { List } from '@ui/components/List';
@@ -96,52 +95,55 @@ export const NotificationBar = () => {
               ))}
         </div>
 
-        <div className="flex items-center gap-1.5 fill-foreground stroke-foreground text-foreground">
+        <div className="flex items-center gap-1.5 text-foreground">
           <SignalIcon color="currentColor" />
           <BatteryIcon color="currentColor" />
         </div>
       </div>
 
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflow: 'hidden', zIndex: 97, pointerEvents: barCollapsed ? 'auto' : 'none' }}>
-        <Slide direction="down" in={barCollapsed} mountOnEnter unmountOnExit>
-          <div style={{ position: 'absolute', top: 10, left: 0, width: '100%', height: '100%' }}>
-            <div
-              className="absolute left-[6%] top-[60px] w-[88%] z-[98] rounded-[20px] overflow-hidden backdrop-blur-sm bg-background/70 border border-border"
-            >
-              <div className="flex items-center justify-between px-4 pt-3.5 pb-1.5">
-                <Typography variant="body2" className="text-[13px] font-bold tracking-tight uppercase text-muted-foreground">
-                  Notificações
-                </Typography>
-                {unreadNotificationIds?.length > 0 && (
-                  <button className="font-sans text-[13px] font-medium text-primary uppercase appearance-none p-0 min-w-auto bg-transparent border-none cursor-pointer" onClick={handleClearNotis}>
-                    Limpar tudo
-                  </button>
-                )}
-              </div>
-
-              <div className="pb-2 px-2">
-                <List>
-                  {unreadNotificationIds &&
-                    unreadNotificationIds
-                      .filter((val, idx, self) => idx === self.findIndex((t: string) => t === val))
-                      .map((notification, idx) => (
-                        <UnreadNotificationListItem key={idx} tgtNotiId={notification} />
-                      ))}
-                </List>
-                {!unreadNotificationIds.length && <NoNotificationText />}
-              </div>
-
-              <Flex justify="center" className="pb-1">
-                <button
-                  className="mx-auto text-muted-foreground hover:text-foreground cursor-pointer appearance-none bg-transparent border-none p-1 rounded-full hover:bg-muted/50 transition-colors"
-                  onClick={() => setBarUncollapsed(false)}
-                >
-                  <ChevronUp />
+        <div
+          className={cn(
+            "absolute top-2.5 left-0 w-full h-full transition-all duration-400 cubic-bezier(0.16, 1, 0.3, 1)",
+            barCollapsed ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+          )}
+        >
+          <div
+            className="absolute left-[6%] top-[60px] w-[88%] z-[98] rounded-[20px] overflow-hidden backdrop-blur-md bg-background/70 border border-border/50 shadow-2xl"
+          >
+            <div className="flex items-center justify-between px-4 pt-4 pb-2">
+              <Typography variant="body2" className="text-[13px] font-bold tracking-tight uppercase text-muted-foreground">
+                Notificações
+              </Typography>
+              {unreadNotificationIds?.length > 0 && (
+                <button className="font-sans text-[13px] font-bold text-blue-500 uppercase appearance-none p-0 min-w-auto bg-transparent border-none cursor-pointer hover:text-blue-400 active:scale-95 transition-all" onClick={handleClearNotis}>
+                  Limpar tudo
                 </button>
-              </Flex>
+              )}
             </div>
+
+            <div className="pb-2 px-2">
+              <List>
+                {unreadNotificationIds &&
+                  unreadNotificationIds
+                    .filter((val, idx, self) => idx === self.findIndex((t: string) => t === val))
+                    .map((notification, idx) => (
+                      <UnreadNotificationListItem key={idx} tgtNotiId={notification} />
+                    ))}
+              </List>
+              {!unreadNotificationIds.length && <NoNotificationText />}
+            </div>
+
+            <Flex justify="center" className="pb-2">
+              <button
+                className="mx-auto text-muted-foreground hover:text-foreground cursor-pointer appearance-none bg-transparent border-none p-1.5 rounded-full hover:bg-black/10 dark:hover:bg-white/10 active:scale-90 transition-all"
+                onClick={() => setBarUncollapsed(false)}
+              >
+                <ChevronUp size={20} strokeWidth={2.5} />
+              </button>
+            </Flex>
           </div>
-        </Slide>
+        </div>
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import { Avatar } from '@mui/material';
+
 import { SnackbarContent, CustomContentProps } from 'notistack';
 import React, { forwardRef, useMemo } from 'react';
 import { useCurrentCallValue } from '@os/call/hooks/state';
@@ -74,7 +74,11 @@ export const CallNotificationBase = forwardRef<HTMLDivElement, CallNotificationB
             >
                 <div className="flex items-center text-neutral-900 dark:text-neutral-50 space-x-2">
                     <div className="flex justify-center items-center">
-                        <Avatar src={getDisplayAvatar()} alt="Transmitter" />
+                        <img
+                            src={getDisplayAvatar() || 'media/contacts/default.png'}
+                            alt="Transmitter"
+                            className="w-10 h-10 rounded-full object-cover"
+                        />
                     </div>
                     <div>
                         {call?.isTransmitter ? (
