@@ -111,7 +111,7 @@ export const NotificationBar = () => {
       <div
         ref={containerRef}
         className={cn(
-          "absolute top-0 left-0 w-full z-[100] px-10 pt-6 pb-2 flex items-center justify-between shrink-0 hover:cursor-pointer bg-transparent pointer-events-auto transition-colors duration-300",
+          "absolute top-0 left-0 w-full z-[999] px-10 pt-6 pb-2 flex items-center justify-between shrink-0 hover:cursor-pointer bg-transparent pointer-events-auto transition-colors duration-300",
           statusStyle === 'light' ? "text-white" : "text-black"
         )}
         onClick={() => setBarUncollapsed((curr) => !curr)}

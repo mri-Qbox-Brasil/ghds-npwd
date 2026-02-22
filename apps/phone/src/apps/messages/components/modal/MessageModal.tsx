@@ -200,7 +200,7 @@ export const MessageModal = () => {
   );
 
   return (
-    <div className="inset-0 z-[100] flex h-full w-full flex-col bg-background animate-in slide-in-from-right duration-300">
+    <div className="inset-0 z-[100] flex h-full w-full flex-col animate-in slide-in-from-right duration-300">
       <AppWrapper className="p-0 m-0 bg-white dark:bg-[#000000]">
         <DynamicHeader
           title=""
@@ -208,9 +208,10 @@ export const MessageModal = () => {
           leftContent={leftActions}
           rightContent={rightActions}
           centerContent={centerActions}
+          forceBackdrop={true}
         />
 
-        <main className="relative flex-1 overflow-hidden pt-[130px]">
+        <main className="relative flex-1 overflow-hidden">
           {isLoaded && ResourceConfig ? (
             <Conversation
               isVoiceEnabled={ResourceConfig.voiceMessage.enabled}

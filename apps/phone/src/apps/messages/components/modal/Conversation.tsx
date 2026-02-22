@@ -53,10 +53,10 @@ const Conversation: React.FC<IProps> = ({ activeMessageGroup, messages, isVoiceE
   }, [addAlert, conversationId, setMessages, history, t, page, setPage]);
 
   return (
-    <div className="h-full w-full flex flex-col bg-background">
+    <div className="h-full w-full flex flex-col">
       <div
         id="scrollableDiv"
-        className="flex-1 overflow-y-auto px-4 py-2 flex flex-col-reverse"
+        className="flex-1 overflow-y-auto px-4 py-2 pt-[120px] flex flex-col-reverse scrollbar-hide"
       >
         <InfiniteScroll
           next={handleNextPage}

@@ -11,6 +11,7 @@ interface DynamicHeaderProps {
     rightContent?: React.ReactNode;
     leftContent?: React.ReactNode;
     centerContent?: React.ReactNode;
+    forceBackdrop?: boolean;
 }
 
 export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
@@ -20,7 +21,8 @@ export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
     variant = 'both',
     rightContent,
     leftContent,
-    centerContent
+    centerContent,
+    forceBackdrop = false
 }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const history = useHistory();
@@ -43,9 +45,9 @@ export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
         <div
             className={cn(
                 variant === 'pinned' ? "absolute inset-x-0 top-0" : "sticky top-0",
-                "z-10 w-full pt-[60px] pb-4 px-4 grid grid-cols-3 items-center transition-colors duration-200 border-b",
-                isScrolled
-                    ? "bg-[#F2F2F7]/80 dark:bg-[#000000]/80 backdrop-blur-md border-neutral-300 dark:border-white/10"
+                "z-50 w-full pt-[60px] pb-4 px-4 grid grid-cols-3 items-center transition-colors duration-200 border-b",
+                isScrolled || forceBackdrop
+                    ? "bg-white/70 dark:bg-[#000000]/70 backdrop-blur-xl border-neutral-300 dark:border-white/10"
                     : "bg-transparent border-transparent"
             )}
         >
