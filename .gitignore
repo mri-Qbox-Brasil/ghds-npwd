@@ -36,3 +36,5 @@ uploads
 pnpm-lock.yaml
 /apps/phone/node_modules.old
 pnpm-lock.yaml
+
+*.zip

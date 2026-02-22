@@ -1,5 +1,5 @@
 import React from 'react';
-import calc from '../../../../../../src/apps/imgs/calc.png'
+import calc from '../../../../../../src/apps/imgs/calculator.svg'
 
 const CalculatorIcon: React.FC = () => <img src={calc} alt="" />;
 

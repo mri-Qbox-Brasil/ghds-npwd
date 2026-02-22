@@ -49,7 +49,9 @@ const ContactsInfoPage: React.FC = () => {
   const { goToConversation } = useMessages();
 
   const contact = getContact(parseInt(id));
+  const isNew = !contact;
 
+  const [isEditing, setIsEditing] = useState(isNew);
   const [name, setName] = useState(contact?.display ?? '');
   const [number, setNumber] = useState(contact?.number ?? '');
   const [avatar, setAvatar] = useState(
@@ -113,6 +115,7 @@ const ContactsInfoPage: React.FC = () => {
   const handleContactUpdate = () => {
     if (!contact?.id) return;
     updateContact({ id: contact.id, number, avatar, display: name });
+    setIsEditing(false);
   };
 
   const openpayModal = () => {
@@ -129,133 +132,160 @@ const ContactsInfoPage: React.FC = () => {
 
   if (!ResourceConfig) return null;
 
-  const isNew = !contact;
-
   return (
-    <div className="flex flex-col h-full bg-background animate-in fade-in duration-300">
+    <div className="flex flex-col h-full bg-[#F2F2F7] dark:bg-black animate-in fade-in duration-300">
       <SendMoneyModal
         open={contactPayModal}
         closeModal={() => setContactPayModal(false)}
         openContact={number}
       />
 
-      <header className="flex h-32 shrink-0 items-center px-4 bg-background/80 backdrop-blur-md sticky top-0 z-10 border-b border-transparent pt-[80px]">
+      <header className="flex h-24 shrink-0 items-end justify-between px-2 pb-3 bg-[#F2F2F7]/80 dark:bg-black/80 backdrop-blur-md sticky top-0 z-10 border-b border-transparent pt-[44px]">
         <button
-          onClick={() => history.goBack()}
-          className="flex items-center text-blue-500 hover:bg-neutral-100 dark:hover:bg-neutral-800 p-2 rounded-xl transition-colors font-medium"
+          onClick={() => {
+            if (isEditing && !isNew) {
+              setIsEditing(false);
+              setName(contact?.display ?? '');
+              setNumber(contact?.number ?? '');
+              setAvatar(contact?.avatar ?? 'https://i.fivemanage.com/images/3ClWwmpwkFhL.png');
+            } else {
+              history.goBack();
+            }
+          }}
+          className="flex items-center text-[#007AFF] hover:opacity-70 transition-opacity font-normal text-[17px] pl-1"
         >
-          <ArrowLeft size={24} className="mr-1" />
-          <span>{t('GENERIC_BACK') as string}</span>
+          {!isEditing || isNew ? (
+            <>
+              <ArrowLeft size={26} strokeWidth={1.5} className="-ml-1 mr-0.5" />
+              <span>{t('GENERIC.BACK', 'Buscar') as string}</span>
+            </>
+          ) : (
+            <span className="pl-2">Cancelar</span>
+          )}
+        </button>
+        <button
+          onClick={() => {
+            if (isEditing) {
+              if (isNew) handleContactAdd();
+              else handleContactUpdate();
+            } else {
+              setIsEditing(true);
+            }
+          }}
+          className="text-[#007AFF] font-semibold text-[17px] pr-2 hover:opacity-70 transition-opacity"
+        >
+          {isEditing ? (isNew ? 'Adicionar' : 'Salvar') : 'Editar'}
         </button>
       </header>
 
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-8 pb-32">
-        <div className="flex flex-col items-center gap-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6 pb-20 custom-scrollbar">
+        <div className="flex flex-col items-center gap-2 pt-2">
           <div className="relative group">
             {avatar ? (
               <img
                 src={avatar}
-                className="h-28 w-28 rounded-full object-cover border-4 border-white dark:border-neutral-800 shadow-xl"
+                className="h-[104px] w-[104px] rounded-full object-cover"
                 alt={'avatar'}
               />
             ) : (
-              <div className="h-28 w-28 rounded-full bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center border-4 border-white dark:border-neutral-800 shadow-xl">
-                <span className="text-4xl font-bold text-neutral-500 dark:text-neutral-400 uppercase">
+              <div className="h-[104px] w-[104px] rounded-full bg-[#8E8E93] flex items-center justify-center">
+                <span className="text-[40px] text-white uppercase font-normal tracking-wide">
                   {initials(name || "?")}
                 </span>
               </div>
             )}
-            {!isNew && (
-              <div className="absolute -bottom-1 -right-1 h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center text-white border-2 border-white dark:border-neutral-800 shadow-lg">
-                <HelpingHand size={16} />
-              </div>
-            )}
           </div>
 
-          <h2 className="text-xl font-bold text-neutral-900 dark:text-white text-center px-4 break-all">
+          <h2 className="text-[28px] mt-1 leading-tight font-normal text-foreground text-center px-4 break-words">
             {name || "Novo Contato"}
           </h2>
         </div>
 
-        {!isNew && (
-          <div className="flex items-center justify-center gap-6">
-            <ContactAction
-              onClick={startCall}
-              icon={<Phone size={22} />}
-              className="bg-green-500 text-white shadow-green-500/20"
-              label="Ligar"
-            />
+        {!isNew && !isEditing && (
+          <div className="flex items-center justify-center gap-2 w-full px-1">
             <ContactAction
               onClick={handleMessage}
-              icon={<MessageCircle size={22} />}
-              className="bg-blue-500 text-white shadow-blue-500/20"
-              label="Mensagem"
+              icon={<MessageCircle size={20} fill="currentColor" />}
+              label="mensagem"
+            />
+            <ContactAction
+              onClick={startCall}
+              icon={<Phone size={20} fill="currentColor" />}
+              label="ligar"
             />
             {ResourceConfig?.general?.useResourceIntegration && ResourceConfig?.contacts?.frameworkPay && (
               <ContactAction
                 onClick={openpayModal}
-                icon={<HelpingHand size={22} />}
-                className="bg-amber-500 text-white shadow-amber-500/20"
-                label="Pagar"
+                icon={<HelpingHand size={20} />}
+                label="pagar"
               />
             )}
-            <ContactAction
-              onClick={handleContactDelete}
-              icon={<Trash2 size={22} />}
-              className="bg-red-500 text-white shadow-red-500/20"
-              label="Excluir"
-            />
           </div>
         )}
 
-        <div className="space-y-6">
-          <div className="space-y-4">
-            <h3 className="text-[11px] font-bold uppercase tracking-widest text-neutral-400 px-1">
-              Informações
-            </h3>
-
-            <div className="bg-neutral-50 dark:bg-neutral-800/50 rounded-2xl border border-neutral-100 dark:border-neutral-700/50 overflow-hidden divide-y divide-neutral-100 dark:divide-neutral-700/50">
-              <div className="p-4 space-y-1">
-                <label className="text-xs text-neutral-500 dark:text-neutral-400">{t('CONTACTS.FORM_NAME', 'Nome') as string}</label>
+        <div className="space-y-4 pt-2">
+          {isEditing && (
+            <div className="bg-[#FFFFFF] dark:bg-[#1C1C1E] rounded-[10px] overflow-hidden">
+              <div className="flex flex-col px-4 py-2 border-transparent">
+                <span className="text-[12px] text-foreground font-normal mb-0.5">Nome</span>
                 <NPWDInput
                   value={name}
                   onChange={handleDisplayChange}
-                  className="h-10 bg-transparent border-none p-0 focus:ring-0 text-base"
-                  placeholder="Nome completo"
-                />
-              </div>
-              <div className="p-4 space-y-1">
-                <label className="text-xs text-neutral-500 dark:text-neutral-400">{t('CONTACTS.FORM_NUMBER', 'Número') as string}</label>
-                <NPWDInput
-                  value={number}
-                  onChange={handleNumberChange}
-                  className="h-10 bg-transparent border-none p-0 focus:ring-0 text-base"
-                  placeholder="Número de telefone"
-                />
-              </div>
-              <div className="p-4 space-y-1">
-                <label className="text-xs text-neutral-500 dark:text-neutral-400">{t('CONTACTS.FORM_AVATAR', 'Foto') as string}</label>
-                <NPWDInput
-                  value={avatar}
-                  onChange={handleAvatarChange}
-                  className="h-10 bg-transparent border-none p-0 focus:ring-0 text-base italic text-sm text-blue-500"
-                  placeholder="URL da imagem"
+                  className="w-full bg-transparent border-none p-0 focus:ring-0 text-[17px] text-foreground font-normal"
+                  placeholder="Nome..."
                 />
               </div>
             </div>
+          )}
+
+          <div className="bg-[#FFFFFF] dark:bg-[#1C1C1E] rounded-[10px] overflow-hidden">
+            <div className="flex flex-col px-4 py-2 border-transparent">
+              <span className="text-[12px] text-foreground font-normal mb-0.5">celular</span>
+              {isEditing ? (
+                <NPWDInput
+                  value={number}
+                  onChange={handleNumberChange}
+                  className="w-full bg-transparent border-none p-0 focus:ring-0 text-[17px] text-[#007AFF]"
+                  placeholder="Número celular"
+                />
+              ) : (
+                <span className="w-full bg-transparent border-none p-0 focus:ring-0 text-[17px] text-[#007AFF] pt-0.5 pb-1 select-text">
+                  {number || "Sem Número"}
+                </span>
+              )}
+            </div>
           </div>
+
+          <div className="bg-[#FFFFFF] dark:bg-[#1C1C1E] rounded-[10px] overflow-hidden">
+            <div className="flex flex-col px-4 py-2 border-transparent">
+              <span className="text-[12px] text-foreground font-normal mb-0.5">URL do avatar</span>
+              {isEditing ? (
+                <NPWDInput
+                  value={avatar}
+                  onChange={handleAvatarChange}
+                  className="w-full bg-transparent border-none p-0 focus:ring-0 text-[17px] text-[#007AFF] truncate"
+                  placeholder="https://"
+                />
+              ) : (
+                <span className="w-full bg-transparent border-none p-0 focus:ring-0 text-[17px] text-[#007AFF] pt-0.5 pb-1 truncate select-text">
+                  {avatar || "Nenhuma Imagem"}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {!isNew && isEditing && (
+            <div className="bg-[#FFFFFF] dark:bg-[#1C1C1E] rounded-[10px] overflow-hidden mt-6">
+              <button
+                onClick={handleContactDelete}
+                className="w-full text-left px-4 py-3 text-[17px] text-[#FF3B30] bg-transparent active:bg-neutral-200/50 dark:active:bg-neutral-800 transition-colors"
+              >
+                Apagar Contato
+              </button>
+            </div>
+          )}
         </div>
       </div>
-
-      <footer className="p-6 bg-background/80 backdrop-blur-md border-t border-neutral-100 dark:border-neutral-800 fixed bottom-0 w-full z-10 lg:w-[350px]">
-        <NPWDButton
-          onClick={isNew ? handleContactAdd : handleContactUpdate}
-          className="w-full h-12 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-2xl shadow-lg shadow-blue-500/30 transition-all active:scale-95"
-          size="lg"
-        >
-          {isNew ? t('GENERIC.ADD', 'Adicionar') as string : t('GENERIC.UPDATE', 'Salvar') as string}
-        </NPWDButton>
-      </footer>
     </div>
   );
 };
@@ -269,18 +299,20 @@ interface ContactActionProps {
 
 export const ContactAction: React.FC<ContactActionProps> = ({ icon, onClick, className, label }) => {
   return (
-    <div className="flex flex-col items-center gap-1.5">
-      <button
-        onClick={onClick}
-        className={cn(
-          'flex h-12 w-12 items-center justify-center rounded-2xl transition-all active:scale-90 shadow-md',
-          className,
-        )}
-      >
+    <button
+      onClick={onClick}
+      className={cn(
+        'flex flex-1 h-[56px] flex-col items-center justify-center gap-1 rounded-[10px] bg-[#FFFFFF] dark:bg-[#1C1C1E] transition-all active:opacity-60 shadow-sm',
+        className,
+      )}
+    >
+      <div className="text-[#007AFF]">
         {icon}
-      </button>
-      <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-tighter">{label}</span>
-    </div>
+      </div>
+      <span className="text-[10px] font-medium tracking-wide text-[#007AFF] capitalize">
+        {label === 'excluir' ? 'Excluir' : label}
+      </span>
+    </button>
   );
 };
 

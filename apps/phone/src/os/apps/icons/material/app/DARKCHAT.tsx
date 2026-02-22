@@ -1,5 +1,5 @@
 import React from 'react';
-import img from '../../../../../../src/apps/imgs/garlic.jpg';
+import img from '../../../../../../src/apps/imgs/darkchat.svg';
 
 const DarkchatIcon = () => <img src={img} alt="" />;
 

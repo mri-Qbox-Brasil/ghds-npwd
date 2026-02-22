@@ -1,120 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="66.145836mm"
-   height="66.145836mm"
-   viewBox="0 0 66.145836 66.145836"
-   version="1.1"
-   id="svg8"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="iMessage logo.svg">
-  <title
-     id="title907">iMessage  logo</title>
-  <defs
-     id="defs2">
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient899">
-      <stop
-         style="stop-color:#0cbd2a;stop-opacity:1"
-         offset="0"
-         id="stop895" />
-      <stop
-         style="stop-color:#5bf675;stop-opacity:1"
-         offset="1"
-         id="stop897" />
-    </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient899"
-       id="linearGradient901"
-       x1="-25.272568"
-       y1="207.52057"
-       x2="-25.272568"
-       y2="152.9982"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.98209275,0,0,0.98209275,-1.0651782,3.7961838)" />
-  </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="142.01984"
-     inkscape:cy="61.975439"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     inkscape:snap-object-midpoints="false"
-     showguides="true"
-     inkscape:guide-bbox="true"
-     inkscape:snap-intersection-paths="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="1358"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title>iMessage  logo</dc:title>
-        <dc:date>02/04/2018</dc:date>
-        <dc:creator>
-          <cc:Agent>
-            <dc:title>Apple, Inc.</dc:title>
-          </cc:Agent>
-        </dc:creator>
-        <dc:publisher>
-          <cc:Agent>
-            <dc:title>CMetalCore</dc:title>
-          </cc:Agent>
-        </dc:publisher>
-        <dc:source>https://upload.wikimedia.org/wikipedia/commons/8/85/IMessage_icon.png</dc:source>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     inkscape:label="Capa 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(59.483067,-145.8456)">
-    <g
-       id="g963">
-      <rect
-         ry="14.567832"
-         rx="14.567832"
-         y="145.8456"
-         x="-59.483067"
-         height="66.145836"
-         width="66.145836"
-         id="rect826"
-         style="opacity:1;fill:url(#linearGradient901);fill-opacity:1;stroke:none;stroke-width:1.33634758;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path922"
-         d="m -26.410149,157.29606 a 24.278298,20.222157 0 0 0 -24.278105,20.22202 24.278298,20.222157 0 0 0 11.79463,17.31574 27.365264,20.222157 0 0 1 -4.245218,5.94228 23.85735,20.222157 0 0 0 9.86038,-3.87367 24.278298,20.222157 0 0 0 6.868313,0.83768 24.278298,20.222157 0 0 0 24.2781059,-20.22203 24.278298,20.222157 0 0 0 -24.2781059,-20.22202 z"
-         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.56409621;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
-    </g>
-  </g>
+<svg width="600" height="600" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="600" height="600" transform="matrix(-1 0 0 1 60.0005 0)" fill="#ffffff"/>
+<rect width="600" height="600" transform="matrix(-1 0 0 1 60.0005 0)" fill="url(#paint0_linear_80_1384)"/>
+<g clip-path="url(#clip0_80_1384)">
+<path d="M23.7006 35.25C30.1637 35.25 35.4006 30.9406 35.4006 25.625C35.4006 20.3094 30.1637 16 23.7006 16C17.2375 16 12.0006 20.3094 12.0006 25.625C12.0006 27.2068 12.4649 28.6995 13.287 30.0181C13.7995 30.8402 14.0383 31.8769 13.4294 32.6305C13.1594 32.9695 12.8837 33.232 12.6812 33.4125C12.58 33.5 12.4956 33.5711 12.4394 33.6148C12.4177 33.6317 12.3993 33.6454 12.3869 33.6532C12.3808 33.657 12.3749 33.6611 12.3697 33.6661C12.3674 33.6684 12.3649 33.6705 12.3623 33.6724C12.0557 33.8971 11.9224 34.289 12.0456 34.643C12.1694 34.9984 12.5125 35.25 12.9006 35.25C14.1269 35.25 15.3644 34.9438 16.3937 34.5664C17.3082 34.2282 18.3222 34.2139 19.2454 34.5271C20.6189 34.9931 22.1218 35.25 23.7006 35.25ZM37.1978 25.6223C37.1996 25.624 37.2006 25.6264 37.2006 25.629C37.1999 27.5435 36.6573 29.3108 35.7108 30.8532C32.3173 36.3828 28.424 43.2866 34.8799 43.9297C35.3457 43.9761 35.8198 44 36.3006 44C37.8795 44 39.3824 43.7431 40.7559 43.2771C41.6798 42.9636 42.6924 42.978 43.6075 43.3164C44.6369 43.6938 45.8744 44 47.1006 44C47.4887 44 47.8375 43.7539 47.9556 43.393C48.0721 43.0369 47.9478 42.649 47.6421 42.4233C47.6337 42.4171 47.6256 42.4104 47.6181 42.4031C47.6069 42.3922 47.5844 42.3813 47.5562 42.3594C47.5 42.3156 47.4156 42.25 47.3144 42.157C47.1119 41.9766 46.8362 41.7141 46.5662 41.375C45.9579 40.6222 46.1974 39.5849 46.7098 38.7638C47.5312 37.4477 47.995 35.9547 47.995 34.3695C47.995 29.4687 43.5414 25.4195 37.7801 24.8223C37.4541 24.7885 37.1856 25.0639 37.1926 25.3917C37.1942 25.4663 37.195 25.5409 37.195 25.6156C37.195 25.6181 37.196 25.6205 37.1978 25.6223Z" fill="#ffffff"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_80_1384" x1="54" y1="-12.5" x2="38.2365" y2="81.6591" gradientUnits="userSpaceOnUse">
+<stop stop-color="#578EFC"/>
+<stop offset="1" stop-color="#0058CC"/>
+</linearGradient>
+<clipPath id="clip0_80_1384">
+<rect width="36" height="28" fill="white" transform="translate(12.0005 16)"/>
+</clipPath>
+</defs>
 </svg>

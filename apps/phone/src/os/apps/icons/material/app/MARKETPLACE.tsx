@@ -1,5 +1,5 @@
 import React from 'react';
-import img from '../../../../../../src/apps/imgs/marketplace.png';
+import img from '../../../../../../src/apps/imgs/marketplace.svg';
 
 const MarketplaceIcon: React.FC = () => <img src={img} alt="Marketplace Icon" />;
 
