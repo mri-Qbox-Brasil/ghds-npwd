@@ -17,26 +17,28 @@ function ProfileEditor() {
   if (!profile && !noProfileExists) return <Loader />;
 
   return (
-    <div className="h-full w-full flex flex-col bg-background animate-in fade-in duration-500">
-      {/* Header / Toggle Section */}
-      <div className="px-6 pt-6 pb-2">
-        <label className="flex items-center justify-between p-4 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-white/5 cursor-pointer transition-all active:scale-[0.98]">
-          <span className="text-sm font-bold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">
+    <div className="h-full w-full flex flex-col bg-white dark:bg-black">
+      {/* Toggle */}
+      <div className="px-4 pt-4 pb-2">
+        <div
+          onClick={toggleSwitch}
+          className="flex items-center justify-between p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-800 cursor-pointer active:bg-neutral-100 dark:active:bg-neutral-700 transition-colors"
+        >
+          <span className="text-[14px] font-medium text-neutral-600 dark:text-neutral-400">
             {t<string>('MATCH.EDIT_PROFILE_PREVIEW')}
           </span>
           <div
-            onClick={toggleSwitch}
             className={cn(
-              "w-12 h-6 rounded-full relative transition-all duration-300",
-              showPreview ? "bg-primary shadow-lg shadow-primary/20" : "bg-neutral-300 dark:bg-neutral-700"
+              "w-[51px] h-[31px] rounded-full relative transition-all duration-300",
+              showPreview ? "bg-pink-500" : "bg-neutral-300 dark:bg-neutral-600"
             )}
           >
             <div className={cn(
-              "absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-all duration-300 shadow-sm",
-              showPreview ? "translate-x-6" : "translate-x-0"
+              "absolute top-[2px] left-[2px] w-[27px] h-[27px] rounded-full bg-white transition-all duration-300 shadow-sm",
+              showPreview ? "translate-x-5" : "translate-x-0"
             )} />
           </div>
-        </label>
+        </div>
       </div>
 
       <div className="flex-grow overflow-hidden">

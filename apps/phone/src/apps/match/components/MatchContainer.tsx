@@ -28,12 +28,17 @@ const MatchContainer: React.FC = () => {
   }, [setNoProfileExists, profile]);
 
   return (
-    <AppWrapper className="bg-background">
+    <AppWrapper className="bg-white dark:bg-black">
+      {/* Header com padding pro status bar */}
+      <header className="flex items-center justify-center pt-[60px] pb-3 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-neutral-200/30 dark:border-neutral-800/30 shrink-0 z-20">
+        <span className="text-[17px] font-semibold text-neutral-900 dark:text-white">Match</span>
+      </header>
+
       <AppContent className="flex flex-col h-full overflow-hidden">
         {noProfileExists ? (
           <ProfileEditor />
         ) : (
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-hidden flex flex-col relative w-full h-full">
             <Route path="/match/" exact component={MatchPage} />
             <Route path="/match/matches" exact component={MatchList} />
             <Route path="/match/profile" exact component={ProfileEditor} />

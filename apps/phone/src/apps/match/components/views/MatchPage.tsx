@@ -33,7 +33,7 @@ const MatchPage = () => {
   if (!activeProfile) return <PageText text={t('MATCH.FEEDBACK.NO_PROFILES') as string} />;
 
   return (
-    <div className="h-full w-full bg-background overflow-hidden animate-in fade-in duration-700">
+    <div className="h-full w-full bg-white dark:bg-black overflow-hidden">
       <ActiveProfile profile={activeProfile} onSwipe={handleSwipe} />
     </div>
   );
