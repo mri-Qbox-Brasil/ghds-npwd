@@ -7,7 +7,7 @@ import { useMessageAPI } from '../../hooks/useMessageAPI';
 import { useMyPhoneNumber } from '@os/simcard/hooks/useMyPhoneNumber';
 import { PreDBConversation } from '@typings/messages';
 import { PreDBContact } from '@typings/contact';
-import { User, X, Check, Plus, PlusCircle } from 'lucide-react';
+import { User, X, Check, Plus, PlusCircle, ArrowUp } from 'lucide-react';
 import { cn } from '@utils/cn';
 
 const NewMessageGroupForm = ({ phoneNumber }: { phoneNumber?: string }) => {
@@ -19,20 +19,7 @@ const NewMessageGroupForm = ({ phoneNumber }: { phoneNumber?: string }) => {
   const { getContactByNumber } = useContactActions();
   const realContacts = useContactsValue();
 
-  // ── Mock Data (remover depois de testar) ──
-  const mockContacts = [
-    { display: 'João Silva', number: '555-1234', avatar: '' },
-    { display: 'Maria Oliveira', number: '555-5678', avatar: '' },
-    { display: 'Carlos Santos', number: '555-9012', avatar: '' },
-    { display: 'Ana Pereira', number: '555-3456', avatar: '' },
-    { display: 'Pedro Costa', number: '555-7890', avatar: '' },
-    { display: 'Juliana Lima', number: '555-2345', avatar: '' },
-    { display: 'Rafael Souza', number: '555-6789', avatar: '' },
-    { display: 'Fernanda Alves', number: '555-0123', avatar: '' },
-    { display: 'Lucas Mendes', number: '555-4567', avatar: '' },
-    { display: 'Beatriz Rocha', number: '555-8901', avatar: '' },
-  ];
-  const contacts = realContacts.length > 0 ? realContacts : mockContacts;
+  const contacts = realContacts;
   const { addConversation } = useMessageAPI();
   const myPhoneNumber = useMyPhoneNumber();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -68,18 +55,7 @@ const NewMessageGroupForm = ({ phoneNumber }: { phoneNumber?: string }) => {
     if (exists) {
       setParticipants(participants.filter(p => p.number !== contact.number));
     } else {
-      const newParticipants = [...participants, contact];
-      setParticipants(newParticipants);
-
-      // iOS behavior: auto-create conversation for single contact (DM)
-      if (newParticipants.length === 1 && contact.number !== myPhoneNumber) {
-        const dto: PreDBConversation = {
-          conversationLabel: '',
-          participants: [myPhoneNumber, contact.number],
-          isGroupChat: false,
-        };
-        addConversation(dto);
-      }
+      setParticipants([...participants, contact]);
     }
     setSearchTerm("");
   };
@@ -88,18 +64,6 @@ const NewMessageGroupForm = ({ phoneNumber }: { phoneNumber?: string }) => {
     const trimmed = searchTerm.trim();
     if (!trimmed) return;
     if (participants.find(p => p.number === trimmed)) {
-      setSearchTerm("");
-      return;
-    }
-
-    // iOS behavior: auto-create conversation for single number (DM)
-    if (participants.length === 0 && trimmed !== myPhoneNumber) {
-      const dto: PreDBConversation = {
-        conversationLabel: '',
-        participants: [myPhoneNumber, trimmed],
-        isGroupChat: false,
-      };
-      addConversation(dto);
       setSearchTerm("");
       return;
     }
@@ -115,6 +79,9 @@ const NewMessageGroupForm = ({ phoneNumber }: { phoneNumber?: string }) => {
 
   const isYourself = participants.find((p) => p.number === myPhoneNumber);
   const disableSubmit = !participants?.length || (isGroupChat && !conversationLabel) || !!isYourself;
+
+  // Auto-submit when a single participant is selected (like iOS does)
+  // Users can still add more participants to create a group
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-black overflow-hidden">
@@ -319,26 +286,27 @@ const NewMessageGroupForm = ({ phoneNumber }: { phoneNumber?: string }) => {
         )}
       </div>
 
-      {/* ── Bottom: Group action only ── */}
-      {isGroupChat && (
-        <div className="shrink-0 px-4 py-3 bg-white dark:bg-black border-t border-neutral-200 dark:border-white/10 safe-area-bottom animate-in slide-in-from-bottom-2 duration-300">
-          {!conversationLabel ? (
-            <p className="text-[13px] text-neutral-400 text-center font-medium py-2">
-              Defina um nome para o grupo para continuar
-            </p>
+      {/* ── Bottom Action Bar (only when ready to submit) ── */}
+      {participants.length > 0 && !isYourself && (
+        <div className="shrink-0 safe-area-bottom animate-in fade-in slide-in-from-bottom-1 duration-300">
+          {isGroupChat && !conversationLabel ? (
+            <div className="px-4 py-3 border-t border-neutral-200 dark:border-white/10">
+              <p className="text-[13px] text-neutral-400 text-center font-medium">
+                Defina um nome para o grupo para continuar
+              </p>
+            </div>
           ) : (
-            <button
-              onClick={handleSubmit}
-              disabled={disableSubmit}
-              className={cn(
-                "w-full h-[50px] rounded-[14px] font-semibold text-[17px] transition-all active:scale-[0.98] flex items-center justify-center gap-2",
-                disableSubmit
-                  ? "bg-neutral-100 dark:bg-neutral-900 text-neutral-400 cursor-not-allowed"
-                  : "bg-blue-500 text-white active:bg-blue-600"
-              )}
-            >
-              Criar Grupo
-            </button>
+            <div className="px-4 py-2.5 border-t border-neutral-200 dark:border-white/10 bg-white dark:bg-black">
+              <button
+                onClick={handleSubmit}
+                disabled={disableSubmit}
+                className="w-full flex items-center justify-center gap-2 py-2.5 active:opacity-60 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <span className="text-[17px] font-normal text-blue-500">
+                  {isGroupChat ? 'Criar Grupo' : 'Iniciar Conversa'}
+                </span>
+              </button>
+            </div>
           )}
         </div>
       )}
