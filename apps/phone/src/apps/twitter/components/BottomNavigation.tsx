@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Search, User, Bell } from 'lucide-react';
+import { Home, Search, User } from 'lucide-react';
 import { cn } from '@utils/cn';
 
 export function TwitterBottomNavigation({ activePage }: { activePage: number }) {
@@ -11,7 +11,7 @@ export function TwitterBottomNavigation({ activePage }: { activePage: number }) 
   ];
 
   return (
-    <nav className="flex items-center justify-around h-16 bg-background/80 backdrop-blur-md border-t border-neutral-100 dark:border-neutral-800 shrink-0 z-30">
+    <nav className="flex items-center justify-around px-6 py-2 pb-6 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-t border-neutral-200/50 dark:border-neutral-800/50 shrink-0 z-30">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = activePage === item.id;
@@ -22,16 +22,14 @@ export function TwitterBottomNavigation({ activePage }: { activePage: number }) 
             to={item.path}
             exact={item.exact}
             className={cn(
-              "flex flex-col items-center justify-center grow h-full transition-all group active:scale-95",
-              isActive ? "text-sky-500" : "text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200"
+              "flex flex-col items-center gap-1 py-1 transition-colors",
+              isActive
+                ? "text-sky-500"
+                : "text-neutral-400"
             )}
           >
-            <div className={cn(
-              "p-1.5 rounded-2xl transition-colors",
-              isActive ? "bg-sky-50 dark:bg-sky-500/10" : "group-hover:bg-neutral-50 dark:group-hover:bg-neutral-800/50"
-            )}>
-              <Icon size={26} strokeWidth={isActive ? 2.5 : 2} />
-            </div>
+            <Icon size={24} strokeWidth={isActive ? 2.5 : 1.5} />
+            <span className="text-[10px] font-medium">{item.label}</span>
           </NavLink>
         );
       })}

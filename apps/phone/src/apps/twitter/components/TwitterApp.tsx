@@ -1,11 +1,10 @@
-import { memo, useState } from 'react';
+import { memo, useRef } from 'react';
 import { Route, useLocation } from 'react-router-dom';
 import { AppWrapper } from '@ui/components';
 import { AppContent } from '@ui/components/AppContent';
 import TweetListContainer from './tweet/TweetListContainer';
 import AddTweetModal from './AddTweetModal';
 import TweetButton from './buttons/TweetButton';
-import { TwitterTitle } from './TwitterTitle';
 import BottomNavigation from './BottomNavigation';
 import TwitterProfile from './profile/Profile';
 import TwitterSearch from './TwitterSearch';
@@ -19,10 +18,10 @@ import { twitterState } from '../hooks/state';
 import { WordFilterProvider } from '@os/wordfilter/providers/WordFilterProvider';
 import InjectDebugData from '@os/debug/InjectDebugData';
 import { TwitterEvents } from '@typings/twitter';
+import { Bird } from 'lucide-react';
 
 const TwitterApp = () => {
   const setModalVisible = useSetRecoilState(twitterState.showCreateTweetModal);
-
   const { profile } = useProfile();
   const location = useLocation();
   const activePage = location.pathname.includes('/profile') ? 2 : location.pathname.includes('/search') ? 1 : 0;
@@ -34,12 +33,17 @@ const TwitterApp = () => {
     !promptProfileName && activePage === 0 && location.pathname === '/twitter';
 
   return (
-    <AppWrapper id="twitter-app">
+    <AppWrapper id="twitter-app" className="bg-white dark:bg-black">
       <WordFilterProvider>
         <AddTweetModal />
       </WordFilterProvider>
-      <TwitterTitle />
-      <AppContent className="flex flex-col">
+
+      {/* Header fixo com padding pro status bar */}
+      <header className="flex items-center justify-center pt-[60px] pb-3 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-neutral-200/30 dark:border-neutral-800/30 shrink-0 z-20">
+        <Bird size={26} className="text-sky-500 fill-sky-500/10" />
+      </header>
+
+      <AppContent className="flex flex-col grow scrollbar-hide h-full relative">
         {promptProfileName ? (
           <ProfilePrompt />
         ) : (
@@ -50,6 +54,7 @@ const TwitterApp = () => {
           </>
         )}
       </AppContent>
+
       {showTweetButton && <TweetButton openModal={openModal} />}
       {!promptProfileName && (
         <BottomNavigation activePage={activePage} />

@@ -51,21 +51,21 @@ export function TweetList({ tweets }: { tweets: FormattedTweet[] }) {
 
   const Footer = () => {
     return (
-      <div className="flex justify-center items-center py-8 text-sky-500 font-medium text-sm">
+      <div className="flex justify-center items-center py-8 pb-24 text-sky-500 font-medium text-sm bg-white dark:bg-black">
         {hasNextPage ? (
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
-            <span>Loading Tweets...</span>
+            <span>Carregando...</span>
           </div>
         ) : (
-          <span>Nothing More To Load!</span>
+          <span className="text-neutral-400">Sem mais tweets</span>
         )}
       </div>
     );
   };
 
   return (
-    <ul className="h-full divide-y divide-neutral-200 dark:divide-neutral-800 bg-background overflow-hidden list-none p-0 m-0">
+    <ul className="h-full divide-y divide-neutral-200 dark:divide-neutral-800 bg-white dark:bg-black overflow-hidden list-none p-0 m-0">
       <Virtuoso
         style={{ height: '100%', width: '100%' }}
         data={tweetsData}

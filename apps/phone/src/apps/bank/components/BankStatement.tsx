@@ -54,8 +54,8 @@ const BankStatement = () => {
   }, []);
 
   const filteredTransactions = transactions.filter(t =>
-    t.targetName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    t.identifier.toLowerCase().includes(searchTerm.toLowerCase())
+    (t.targetName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (t.identifier || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

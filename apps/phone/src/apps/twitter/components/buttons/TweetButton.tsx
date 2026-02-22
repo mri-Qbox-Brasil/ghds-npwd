@@ -4,18 +4,18 @@ import { cn } from '@utils/cn';
 
 export function TweetButton({ openModal }) {
   return (
-    <div className="fixed bottom-20 right-6 z-40">
+    <div className="absolute bottom-[90px] right-4 z-40">
       <button
         className={cn(
-          'flex h-16 w-16 items-center justify-center rounded-full text-white shadow-2xl shadow-sky-500/40',
-          'bg-sky-500 hover:bg-sky-600 transition-all active:scale-90 focus:outline-none focus:ring-4 focus:ring-sky-500/20',
+          'flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg shadow-sky-500/30',
+          'bg-sky-500 active:bg-sky-600 transition-all active:scale-90',
         )}
         onClick={openModal}
         onMouseUp={() => {
           toggleKeys(false);
         }}
       >
-        <Edit2 size={28} />
+        <Edit2 size={22} />
       </button>
     </div>
   );
