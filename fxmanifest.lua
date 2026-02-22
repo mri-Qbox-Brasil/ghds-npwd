@@ -1,8 +1,10 @@
-fx_version("cerulean")
-game("gta5")
-description("js runtime monkaW")
-authors({ "itschip", "erik-sn", "TasoOneAsia", "kidz", "RockySouthpaw", "SamShanks", "c-wide", "mojito", "ghds" })
-version("3.15.1-beta.2")
+fx_version "cerulean"
+game "gta5"
+description "MRI NPWD"
+
+version "4.0.0"
+
+credits({ "itschip", "erik-sn", "TasoOneAsia", "kidz", "RockySouthpaw", "SamShanks", "c-wide", "mojito", "ghds", "mur4i" })
 
 client_scripts({
 	"dist/game/client/client.js",

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, PlusCircle, ShoppingBag, Plus } from 'lucide-react';
+import { ShoppingBag, PlusCircle } from 'lucide-react';
 import { cn } from '@utils/cn';
 
 export const NavigationBar: React.FC = () => {
@@ -22,27 +22,20 @@ export const NavigationBar: React.FC = () => {
   ];
 
   return (
-    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[240px] h-[64px] bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl border border-white/20 dark:border-neutral-800 shadow-2xl rounded-[28px] flex items-center justify-around px-2 z-50">
+    <div className="absolute bottom-0 left-0 right-0 flex items-center justify-around px-8 py-2 pb-6 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl border-t border-neutral-200/50 dark:border-neutral-800/50 z-50">
       {navItems.map((item) => (
         <Link
           key={item.path}
           to={item.path}
           className={cn(
-            "relative flex flex-col items-center justify-center gap-1 w-16 h-12 rounded-2xl transition-all duration-300 group",
+            "flex flex-col items-center gap-1 py-1 transition-colors",
             item.active
-              ? "text-blue-500 scale-110"
-              : "text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200"
+              ? "text-blue-500"
+              : "text-neutral-400"
           )}
         >
-          <div className={cn(
-            "p-2 rounded-xl transition-all duration-300",
-            item.active ? "bg-blue-500/10" : "group-hover:bg-neutral-100 dark:group-hover:bg-neutral-800"
-          )}>
-            <item.icon size={22} strokeWidth={item.active ? 3 : 2} />
-          </div>
-          {item.active && (
-            <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-blue-500 animate-in zoom-in duration-300" />
-          )}
+          <item.icon size={24} strokeWidth={item.active ? 2.5 : 1.5} />
+          <span className="text-[10px] font-medium">{item.label}</span>
         </Link>
       ))}
     </div>

@@ -3,7 +3,7 @@ import { ListingForm } from './ListingForm';
 
 export const ListingFormContainer: React.FC = () => {
   return (
-    <div>
+    <div className="h-full">
       <ListingForm />
     </div>
   );
