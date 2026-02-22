@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import fetchNui from '@utils/fetchNui';
-import { UserCircle, ArrowUpRight, ArrowDownLeft, Wallet, Calendar, Search } from 'lucide-react';
-import TransactionModal from './TransactionModal';
+import { ArrowUpRight, ArrowDownLeft, Search } from 'lucide-react';
 import { cn } from '@utils/cn';
 
 interface Transaction {
@@ -25,7 +24,6 @@ const mockTransactions: Transaction[] = [
 const BankStatement = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [openModal, setOpenModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
   const numberFormat = (value: number) =>
@@ -61,93 +59,70 @@ const BankStatement = () => {
   );
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-neutral-900/50 rounded-t-[40px] shadow-inner animate-in slide-in-from-bottom duration-700">
-      {/* Search and Filters Header */}
-      <div className="px-6 pt-8 pb-4 space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-black uppercase tracking-[0.2em] text-neutral-400 italic">Últimas Atividades</h3>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setOpenModal(true)}
-              className="p-2 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition-all active:scale-95"
-            >
-              <ArrowUpRight size={18} strokeWidth={3} />
-            </button>
-          </div>
-        </div>
+    <div className="flex flex-col">
+      {/* Section Title + Search */}
+      <div className="px-4 pb-3 space-y-3">
+        <h3 className="text-[13px] font-semibold text-neutral-500 uppercase px-1">Últimas atividades</h3>
 
-        <div className="relative group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-300 group-focus-within:text-emerald-500 transition-colors" size={18} />
+        <div className="relative">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
+            <Search size={16} className="stroke-[2.5px]" />
+          </div>
           <input
             type="text"
             placeholder="Buscar por nome ou código..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full h-11 pl-11 pr-4 bg-neutral-50 dark:bg-neutral-800 border-none rounded-2xl text-xs font-bold text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:ring-2 focus:ring-emerald-500/50 transition-all"
+            className="w-full h-9 pl-9 pr-4 rounded-[10px] bg-neutral-200/60 dark:bg-neutral-800/60 border-none text-[15px] focus:ring-0 transition-all text-neutral-900 dark:text-white placeholder:text-neutral-500"
           />
         </div>
       </div>
 
       {/* Transaction List */}
-      <div className="flex-1 overflow-y-auto px-6 pb-20 scrollbar-hide space-y-2">
+      <div className="px-4">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 opacity-20 text-emerald-500 gap-3">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
-            <span className="text-[10px] font-black uppercase tracking-widest italic text-neutral-400">Consultando extrato...</span>
+          <div className="flex flex-col items-center justify-center py-16 gap-3">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
+            <span className="text-[13px] text-neutral-400">Consultando extrato...</span>
           </div>
         ) : filteredTransactions.length > 0 ? (
-          filteredTransactions.map((transaction, index) => (
-            <div
-              key={transaction.id}
-              className="flex items-center justify-between p-4 bg-white dark:bg-neutral-800/40 rounded-3xl border border-neutral-50 dark:border-neutral-800 shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] animate-in fade-in slide-in-from-right duration-500"
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              <div className="flex items-center gap-4">
-                <div className={cn(
-                  "flex h-12 w-12 items-center justify-center rounded-2xl transition-colors",
-                  transaction.type === 'sent'
-                    ? "bg-red-50 dark:bg-red-500/10 text-red-500"
-                    : "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500"
-                )}>
-                  {transaction.type === 'sent' ? <ArrowUpRight size={22} strokeWidth={3} /> : <ArrowDownLeft size={22} strokeWidth={3} />}
-                </div>
+          <div className="bg-white dark:bg-neutral-800/50 rounded-[10px] overflow-hidden divide-y divide-neutral-200/60 dark:divide-neutral-700/40">
+            {filteredTransactions.map((transaction) => (
+              <div
+                key={transaction.id}
+                className="flex items-center justify-between px-4 py-3 active:bg-neutral-100 dark:active:bg-neutral-700/30 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className={cn(
+                    "flex h-9 w-9 items-center justify-center rounded-full",
+                    transaction.type === 'sent'
+                      ? "bg-red-100 dark:bg-red-500/15 text-red-500"
+                      : "bg-emerald-100 dark:bg-emerald-500/15 text-emerald-500"
+                  )}>
+                    {transaction.type === 'sent' ? <ArrowUpRight size={18} strokeWidth={2.5} /> : <ArrowDownLeft size={18} strokeWidth={2.5} />}
+                  </div>
 
-                <div className="flex flex-col min-w-0">
-                  <span className="font-bold text-sm text-neutral-900 dark:text-white truncate tracking-tight">{transaction.targetName}</span>
-                  <div className="flex items-center gap-2 text-[10px] font-bold text-neutral-400 uppercase tracking-widest mt-0.5">
-                    <span className="flex items-center gap-1"><Calendar size={10} /> {transaction.date}</span>
-                    <span className="opacity-40">/</span>
-                    <span className="truncate max-w-[60px]">{transaction.identifier}</span>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-[15px] font-medium text-neutral-900 dark:text-white truncate">{transaction.targetName}</span>
+                    <span className="text-[12px] text-neutral-400">{transaction.date}</span>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex flex-col items-end shrink-0">
                 <span className={cn(
-                  "text-[15px] font-black italic tracking-tighter",
+                  "text-[15px] font-semibold tabular-nums",
                   transaction.type === 'sent' ? "text-red-500" : "text-emerald-500"
                 )}>
                   {transaction.type === 'sent' ? `- ${numberFormat(transaction.amount)}` : `+ ${numberFormat(transaction.amount)}`}
                 </span>
-                <span className="text-[9px] font-bold text-neutral-300 dark:text-neutral-600 uppercase tracking-widest">BRL</span>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 opacity-20 text-neutral-400 gap-4">
-            <Wallet size={48} />
-            <p className="font-bold uppercase tracking-widest text-xs italic">Nenhuma transação encontrada</p>
+          <div className="flex flex-col items-center justify-center py-16 gap-2">
+            <p className="text-[13px] text-neutral-400">Nenhuma transação encontrada</p>
           </div>
         )}
-
-        <div className="py-6 text-center">
-          <p className="text-[10px] font-bold text-neutral-300 dark:text-neutral-600 uppercase tracking-[0.2em] italic">
-            Visite uma agência para contas PJ
-          </p>
-        </div>
       </div>
-
-      <TransactionModal open={openModal} onClose={() => setOpenModal(false)} />
     </div>
   );
 };

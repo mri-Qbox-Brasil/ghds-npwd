@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import TwitterApp from './TwitterApp';
 import { LoadingSpinner } from '@ui/components/LoadingSpinner';
 
-const LifeInvaderContainer = () => {
+const TwitterContainer = () => {
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <TwitterApp />
@@ -10,4 +10,4 @@ const LifeInvaderContainer = () => {
   );
 };
 
-export default LifeInvaderContainer;
+export default TwitterContainer;

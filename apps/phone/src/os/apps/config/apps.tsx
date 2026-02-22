@@ -12,7 +12,7 @@ import { AppRoute } from '../components/AppRoute';
 import { INotificationIcon } from '@os/notifications/providers/NotificationsProvider';
 import { BrowserApp } from '@apps/browser/components/BrowserApp';
 import { MatchApp } from '@apps/match/components/MatchApp';
-import LifeInvaderContainer from '@apps/twitter/components/TwitterContainer';
+import TwitterContainer from '@apps/twitter/components/TwitterContainer';
 import { IPhoneSettings } from '@typings/settings';
 import { i18n } from 'i18next';
 
@@ -153,7 +153,7 @@ export const APPS: IAppConfig[] = [
     color: '#ffffff',
     path: '/twitter',
     Route: () => (
-      <AppRoute id="TWITTER" path="/twitter" component={LifeInvaderContainer} emitOnOpen={false} />
+      <AppRoute id="TWITTER" path="/twitter" component={TwitterContainer} emitOnOpen={false} />
     ),
   },
   {
@@ -190,17 +190,17 @@ export const APPS: IAppConfig[] = [
     path: '/camera',
     Route: () => <AppRoute id="CAMERA" path="/camera" component={CameraApp} emitOnOpen={false} />,
   },
-  {
-    id: 'WEATHER',
-    nameLocale: 'APPS_WEATHER',
-    icon: <WeatherIcon />,
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-    color: '#ffffff',
-    path: '/test',
-    // Route: () => <AppRoute id="EXAMPLE" path="/example" component={ExampleAppWrapper} emitOnOpen={false} />
-    Route: () => <div></div>,
+  // {
+  //   id: 'WEATHER',
+  //   nameLocale: 'APPS_WEATHER',
+  //   icon: <WeatherIcon />,
+  //   backgroundColor: 'rgba(0, 0, 0, 0)',
+  //   color: '#ffffff',
+  //   path: '/test',
+  //   // Route: () => <AppRoute id="EXAMPLE" path="/example" component={ExampleAppWrapper} emitOnOpen={false} />
+  //   Route: () => <div></div>,
 
-  },
+  // },
   {
     id: 'BANK',
     nameLocale: 'APPS_BANK',
@@ -216,15 +216,28 @@ export const APPS: IAppConfig[] = [
 
 // Example app only in dev
 if (import.meta.env.DEV) {
-  APPS.push({
-    id: 'EXAMPLE',
-    nameLocale: 'APPS_EXAMPLE',
-    icon: <ExampleIcon />,
-    backgroundColor: '#3b82f6', // blue 500
-    color: '#eff6ff', // blue 50
-    path: '/example',
-    Route: () => (
-      <AppRoute id="EXAMPLE" path="/example" component={ExampleAppWrapper} emitOnOpen={false} />
-    ),
-  });
+  APPS.push(
+    {
+      id: 'EXAMPLE',
+      nameLocale: 'APPS_EXAMPLE',
+      icon: <ExampleIcon />,
+      backgroundColor: '#3b82f6', // blue 500
+      color: '#eff6ff', // blue 50
+      path: '/example',
+      Route: () => (
+        <AppRoute id="EXAMPLE" path="/example" component={ExampleAppWrapper} emitOnOpen={false} />
+      ),
+    },
+    {
+      id: 'WEATHER',
+      nameLocale: 'APPS_WEATHER',
+      icon: <WeatherIcon />,
+      backgroundColor: 'rgba(0, 0, 0, 0)',
+      color: '#ffffff',
+      path: '/test',
+      // Route: () => <AppRoute id="EXAMPLE" path="/example" component={ExampleAppWrapper} emitOnOpen={false} />
+      Route: () => <div></div>,
+
+    },
+  );
 }
