@@ -231,7 +231,7 @@ const ContactsInfoPage: React.FC = () => {
                 <NPWDInput
                   value={name}
                   onChange={handleDisplayChange}
-                  className="w-full bg-transparent border-none p-0 focus:ring-0 text-[17px] text-foreground font-normal"
+                  className="w-full bg-transparent border-none p-0 focus:ring-0 rounded-none text-[17px] text-foreground font-normal"
                   placeholder="Nome..."
                 />
               </div>
@@ -245,7 +245,7 @@ const ContactsInfoPage: React.FC = () => {
                 <NPWDInput
                   value={number}
                   onChange={handleNumberChange}
-                  className="w-full bg-transparent border-none p-0 focus:ring-0 text-[17px] text-[#007AFF]"
+                  className="w-full bg-transparent border-none p-0 focus:ring-0 rounded-none text-[17px] text-[#007AFF]"
                   placeholder="Número celular"
                 />
               ) : (
@@ -263,7 +263,7 @@ const ContactsInfoPage: React.FC = () => {
                 <NPWDInput
                   value={avatar}
                   onChange={handleAvatarChange}
-                  className="w-full bg-transparent border-none p-0 focus:ring-0 text-[17px] text-[#007AFF] truncate"
+                  className="w-full bg-transparent border-none p-0 focus:ring-0 rounded-none text-[17px] text-[#007AFF] truncate"
                   placeholder="https://"
                 />
               ) : (
