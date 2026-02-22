@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { useApp } from '@os/apps/hooks/useApps';
-import { ArrowLeft, Edit, Check, Shield, LogOut, Hash } from 'lucide-react';
+import { ChevronLeft, Pencil, Check, Shield, LogOut, Hash, Users } from 'lucide-react';
 import { useHistory } from 'react-router-dom';
-import { useActiveDarkchatValue } from '../../state/state';
+import { useActiveDarkchatValue, useDarkchatMembersValue } from '../../state/state';
 import { useDarkchatAPI } from '../../hooks/useDarkchatAPI';
 import { useMyPhoneNumber } from '@os/simcard/hooks/useMyPhoneNumber';
 import { useModal } from '@apps/darkchat/hooks/useModal';
@@ -15,6 +14,7 @@ const DarkChatHeader: React.FC = () => {
   const { leaveChannel, updateChannelLabel } = useDarkchatAPI();
   const { goBack } = useHistory();
   const myPhoneNumber = useMyPhoneNumber();
+  const channelMembers = useDarkchatMembersValue();
   const [t] = useTranslation();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -42,70 +42,70 @@ const DarkChatHeader: React.FC = () => {
   const isOwner = myPhoneNumber === activeConversation.owner;
 
   return (
-    <header className="h-[72px] bg-neutral-950 border-b border-neutral-900 px-4 flex items-center justify-between z-50 overflow-hidden">
-      <div className="flex items-center gap-2 min-w-0 flex-1">
-        <button
-          onClick={goBack}
-          className="p-2.5 rounded-2xl bg-neutral-900 text-neutral-400 hover:text-white hover:bg-neutral-800 transition-all active:scale-90"
-        >
-          <ArrowLeft size={22} strokeWidth={2.5} />
-        </button>
+    <header className="shrink-0 pt-[60px] pb-3 px-4 bg-[#313338] border-b border-[#1E1F22] z-50">
+      <div className="flex items-center justify-between">
+        {/* Left — Back + Channel Name */}
+        <div className="flex items-center gap-1 min-w-0 flex-1">
+          <button
+            onClick={goBack}
+            className="text-[#B5BAC1] active:text-white transition-colors p-0.5 -ml-1 shrink-0"
+          >
+            <ChevronLeft size={24} strokeWidth={2} />
+          </button>
 
-        <div className="flex items-center gap-3 min-w-0 truncate">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-500">
-            <Hash size={20} strokeWidth={2.5} />
-          </div>
+          <Hash size={18} strokeWidth={2.5} className="text-[#80848E] shrink-0" />
 
-          <div className="flex flex-col min-w-0 pr-2">
-            {isEditing ? (
-              <div className="flex items-center gap-2">
-                <input
-                  autoFocus
-                  className="bg-neutral-900 border-none rounded-lg px-2 py-1 text-sm font-bold text-white focus:ring-1 focus:ring-indigo-500 min-w-0"
-                  value={label}
-                  onChange={(e) => setLabel(e.currentTarget.value)}
-                  onBlur={handleUpdateLabel}
-                  onKeyDown={(e) => e.key === 'Enter' && handleUpdateLabel()}
-                />
-                <button onClick={handleUpdateLabel} className="text-emerald-500 p-1">
-                  <Check size={18} strokeWidth={3} />
+          {isEditing ? (
+            <div className="flex items-center gap-1.5 min-w-0">
+              <input
+                autoFocus
+                className="bg-[#1E1F22] border-none rounded-[3px] px-2 py-0.5 text-[15px] font-semibold text-white focus:ring-1 focus:ring-[#5865F2] min-w-0 flex-1"
+                value={label}
+                onChange={(e) => setLabel(e.currentTarget.value)}
+                onBlur={handleUpdateLabel}
+                onKeyDown={(e) => e.key === 'Enter' && handleUpdateLabel()}
+              />
+              <button onClick={handleUpdateLabel} className="text-[#5865F2] p-0.5 shrink-0">
+                <Check size={16} strokeWidth={3} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="text-[15px] font-semibold text-white truncate">{label}</span>
+              {isOwner && (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="text-[#80848E] hover:text-white transition-colors shrink-0"
+                >
+                  <Pencil size={12} strokeWidth={2.5} />
                 </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 min-w-0">
-                <h2 className="text-lg font-black text-white truncate tracking-tighter uppercase italic">{label}</h2>
-                {isOwner && (
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="text-neutral-600 hover:text-indigo-400 transition-colors"
-                  >
-                    <Edit size={14} strokeWidth={2.5} />
-                  </button>
-                )}
-              </div>
-            )}
-            <span className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest leading-none mt-0.5">Anonymous Channel</span>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Right — Actions */}
+        <div className="flex items-center gap-2 shrink-0">
+          {isOwner ? (
+            <button
+              onClick={openOwnerModal}
+              className="text-[#B5BAC1] hover:text-white transition-colors p-1"
+            >
+              <Shield size={20} strokeWidth={2} />
+            </button>
+          ) : (
+            <button
+              onClick={handleLeaveChannel}
+              className="text-[#ED4245] hover:text-[#FF6668] transition-colors p-1"
+              title={t('DARKCHAT.LEAVE') as string}
+            >
+              <LogOut size={20} strokeWidth={2} />
+            </button>
+          )}
+          <div className="text-[#B5BAC1] p-1">
+            <Users size={20} strokeWidth={2} />
           </div>
         </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        {isOwner ? (
-          <button
-            onClick={openOwnerModal}
-            className="p-2.5 rounded-2xl bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500 hover:text-white transition-all active:scale-90"
-          >
-            <Shield size={22} strokeWidth={2.5} />
-          </button>
-        ) : (
-          <button
-            onClick={handleLeaveChannel}
-            className="px-4 py-2.5 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white font-black text-[10px] uppercase tracking-widest transition-all active:scale-90 flex items-center gap-2"
-          >
-            <LogOut size={14} strokeWidth={3} />
-            {t('DARKCHAT.LEAVE')}
-          </button>
-        )}
       </div>
     </header>
   );

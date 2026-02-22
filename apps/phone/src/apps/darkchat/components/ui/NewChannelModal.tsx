@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal2 } from '@ui/components/Modal';
 import { useTranslation } from 'react-i18next';
 import { useDarkchatAPI } from '../../hooks/useDarkchatAPI';
-import { Hash, Plus, X, Fingerprint } from 'lucide-react';
+import { Hash, Fingerprint } from 'lucide-react';
 import { cn } from '@utils/cn';
 
 interface NewChannelModalProps {
@@ -23,57 +23,50 @@ export const NewChannelModal: React.FC<NewChannelModalProps> = ({ open, closeMod
   };
 
   return (
-    <Modal2 visible={open} handleClose={closeModal} className="p-0 overflow-hidden bg-neutral-900 rounded-[32px] border border-neutral-800 shadow-2xl">
-      <header className="p-6 border-b border-neutral-800 bg-neutral-900/50 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-2xl bg-indigo-500/10 text-indigo-500">
-            <Plus size={24} strokeWidth={2.5} />
-          </div>
-          <h2 className="text-xl font-black text-white uppercase tracking-tighter italic">Novo Canal</h2>
-        </div>
-        <button onClick={closeModal} className="text-neutral-600 hover:text-red-500 transition-colors">
-          <X size={24} strokeWidth={3} />
-        </button>
-      </header>
+    <Modal2 visible={open} handleClose={closeModal} className="p-0 overflow-hidden bg-[#313338] rounded-[4px] shadow-2xl border border-[#1E1F22]">
+      {/* Header */}
+      <div className="px-4 pt-5 pb-2">
+        <h2 className="text-[20px] font-bold text-white text-center">Entrar em um Canal</h2>
+        <p className="text-[13px] text-[#B5BAC1] text-center mt-1 leading-snug">
+          {t('DARKCHAT.NEW_CHANNEL_TITLE') as string || 'Crie ou entre em um canal usando um identificador secreto.'}
+        </p>
+      </div>
 
-      <div className="p-8 space-y-6">
-        <div className="space-y-3">
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 px-1 italic">Identificador do Canal:</p>
-          <div className="relative group">
-            <Fingerprint className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600 group-focus-within:text-indigo-500 transition-colors" size={20} />
-            <input
-              type="password"
-              className="w-full h-14 pl-12 pr-4 bg-black border border-neutral-800 rounded-2xl text-sm font-bold text-white placeholder:text-neutral-700 focus:ring-1 focus:ring-indigo-500/50 transition-all shadow-inner"
-              placeholder={t('DARKCHAT.NEW_CHANNEL_INPUT_PLACEHOLDER') as string || "Codinome do canal..."}
-              value={channelValue}
-              onChange={(e) => setChannelValue(e.currentTarget.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleJoinChannel()}
-            />
-          </div>
-          <p className="px-1 text-[10px] font-bold text-neutral-600 italic leading-snug">
-            {t('DARKCHAT.NEW_CHANNEL_TITLE') as string || 'Crie ou entre em um canal usando um identificador secreto.'}
-          </p>
+      {/* Content */}
+      <div className="p-4 space-y-4">
+        <div className="space-y-2">
+          <label className="text-[12px] font-bold text-[#B5BAC1] uppercase tracking-wide">
+            Identificador do Canal <span className="text-[#ED4245]">*</span>
+          </label>
+          <input
+            type="password"
+            className="w-full h-10 px-3 bg-[#1E1F22] border-none rounded-[3px] text-[15px] font-normal text-[#DBDEE1] placeholder:text-[#6D6F78] focus:ring-2 focus:ring-[#5865F2] transition-all"
+            placeholder={t('DARKCHAT.NEW_CHANNEL_INPUT_PLACEHOLDER') as string || "Codinome do canal..."}
+            value={channelValue}
+            onChange={(e) => setChannelValue(e.currentTarget.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleJoinChannel()}
+          />
         </div>
 
-        <div className="flex flex-col gap-3">
+        {/* Actions */}
+        <div className="flex justify-end gap-3 pt-1">
+          <button
+            onClick={closeModal}
+            className="px-4 py-2 text-[14px] font-medium text-[#DBDEE1] hover:text-white hover:underline transition-colors"
+          >
+            Cancelar
+          </button>
           <button
             onClick={handleJoinChannel}
             disabled={!channelValue.trim()}
             className={cn(
-              "w-full py-4 rounded-2xl font-black uppercase tracking-[0.2em] transition-all active:scale-95 flex items-center justify-center gap-3",
+              "px-6 py-2 rounded-[3px] text-[14px] font-medium transition-all",
               channelValue.trim()
-                ? "bg-white text-black hover:bg-neutral-200 shadow-lg shadow-white/5"
-                : "bg-neutral-800 text-neutral-600 cursor-not-allowed"
+                ? "bg-[#5865F2] text-white hover:bg-[#4752C4] active:bg-[#3C45A5]"
+                : "bg-[#5865F2]/50 text-white/50 cursor-not-allowed"
             )}
           >
-            <Hash size={20} strokeWidth={3} />
-            {t('DARKCHAT.JOIN_BUTTON') as string || 'Acessar Canal'}
-          </button>
-          <button
-            onClick={closeModal}
-            className="w-full py-3.5 text-neutral-500 font-bold uppercase tracking-widest hover:text-red-500 transition-colors"
-          >
-            Cancelar
+            {t('DARKCHAT.JOIN_BUTTON') as string || 'Entrar'}
           </button>
         </div>
       </div>

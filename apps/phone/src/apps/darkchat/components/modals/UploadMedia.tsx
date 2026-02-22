@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal2 } from '@ui/components/Modal';
 import { useModal } from '../../hooks/useModal';
-import { Image as ImageIcon, Send, X, Camera, Link as LinkIcon } from 'lucide-react';
+import { Image as ImageIcon, Send, Camera, Link as LinkIcon } from 'lucide-react';
 import { useHistory, useLocation } from 'react-router-dom';
 import qs from 'qs';
 import { isImageValid } from '../../../../common/utils/isImageValid';
@@ -44,74 +44,68 @@ export const UploadMediaModal = () => {
         setModalMedia('');
       })
       .catch(() => {
-        // Handle error silently or show alert
+        // Handle error silently
       });
   };
 
   return (
-    <Modal2 visible={modalVisible} handleClose={() => setModalVisible(false)} className="p-0 overflow-hidden bg-neutral-900 rounded-[32px] border border-neutral-800 shadow-2xl">
-      <header className="p-6 border-b border-neutral-800 bg-neutral-900/50 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-2xl bg-indigo-500/10 text-indigo-500">
-            <ImageIcon size={24} strokeWidth={2.5} />
-          </div>
-          <h2 className="text-xl font-black text-white uppercase tracking-tighter italic">Enviar Mídia</h2>
-        </div>
-        <button onClick={() => setModalVisible(false)} className="text-neutral-600 hover:text-red-500 transition-colors">
-          <X size={24} strokeWidth={3} />
-        </button>
-      </header>
+    <Modal2 visible={modalVisible} handleClose={() => setModalVisible(false)} className="p-0 overflow-hidden bg-[#313338] rounded-[4px] shadow-2xl border border-[#1E1F22]">
+      {/* Header */}
+      <div className="px-4 pt-5 pb-2">
+        <h2 className="text-[20px] font-bold text-white text-center">Enviar Mídia</h2>
+      </div>
 
-      <div className="p-8 space-y-8">
-        <div className="flex items-center gap-4">
+      {/* Content */}
+      <div className="p-4 space-y-4">
+        {/* Quick Actions */}
+        <div className="flex gap-3">
           <button
             onClick={handleImageGallery}
-            className="flex-1 flex flex-col items-center justify-center p-6 bg-neutral-800 hover:bg-neutral-700 rounded-3xl border border-neutral-700 transition-all active:scale-95 group gap-2"
+            className="flex-1 flex flex-col items-center justify-center p-4 bg-[#2B2D31] rounded-[4px] hover:bg-[#35373C] transition-colors gap-2 group"
           >
-            <div className="p-3 bg-indigo-500/10 text-indigo-500 group-hover:bg-indigo-500 group-hover:text-white rounded-2xl transition-all">
-              <Camera size={24} strokeWidth={2.5} />
+            <div className="h-10 w-10 rounded-full bg-[#5865F2] flex items-center justify-center group-hover:bg-[#4752C4] transition-colors">
+              <Camera size={20} strokeWidth={2} className="text-white" />
             </div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 group-hover:text-white transition-colors">Câmera</span>
+            <span className="text-[13px] font-medium text-[#B5BAC1]">Câmera</span>
           </button>
-          <div className="h-10 w-px bg-neutral-800" />
-          <div className="flex-1 flex flex-col items-center justify-center p-4 gap-1 opacity-20 cursor-not-allowed">
-            <ImageIcon size={24} className="text-neutral-500" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Galeria</span>
+          <div className="flex-1 flex flex-col items-center justify-center p-4 bg-[#2B2D31] rounded-[4px] opacity-30 cursor-not-allowed gap-2">
+            <div className="h-10 w-10 rounded-full bg-[#80848E] flex items-center justify-center">
+              <ImageIcon size={20} strokeWidth={2} className="text-white" />
+            </div>
+            <span className="text-[13px] font-medium text-[#80848E]">Galeria</span>
           </div>
         </div>
 
-        <div className="space-y-3">
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 px-1 italic">Ou cole o link:</p>
-          <div className="relative group">
-            <LinkIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600 group-focus-within:text-indigo-500 transition-colors" size={20} />
-            <input
-              className="w-full h-14 pl-12 pr-4 bg-black border border-neutral-800 rounded-2xl text-sm font-bold text-white placeholder:text-neutral-700 focus:ring-1 focus:ring-indigo-500/50 transition-all shadow-inner"
-              placeholder={t('DARKCHAT.MEDIA_PLACEHOLDER') as string || "https://..."}
-              value={modalMedia}
-              onChange={(e) => setModalMedia(e.currentTarget.value)}
-            />
-          </div>
+        {/* URL Input */}
+        <div className="space-y-2">
+          <label className="text-[12px] font-bold text-[#B5BAC1] uppercase tracking-wide">Link da imagem</label>
+          <input
+            className="w-full h-10 px-3 bg-[#1E1F22] border-none rounded-[3px] text-[15px] font-normal text-[#DBDEE1] placeholder:text-[#6D6F78] focus:ring-2 focus:ring-[#5865F2] transition-all"
+            placeholder={t('DARKCHAT.MEDIA_PLACEHOLDER') as string || "https://..."}
+            value={modalMedia}
+            onChange={(e) => setModalMedia(e.currentTarget.value)}
+          />
         </div>
 
-        <div className="flex flex-col gap-3 pt-2">
+        {/* Actions */}
+        <div className="flex justify-end gap-3 pt-1">
+          <button
+            onClick={() => setModalVisible(false)}
+            className="px-4 py-2 text-[14px] font-medium text-[#DBDEE1] hover:text-white hover:underline transition-colors"
+          >
+            Cancelar
+          </button>
           <button
             onClick={handleSendImage}
             disabled={!modalMedia.trim()}
             className={cn(
-              "w-full py-4 rounded-2xl font-black uppercase tracking-[0.2em] transition-all active:scale-95 flex items-center justify-center gap-3 shadow-xl",
+              "px-6 py-2 rounded-[3px] text-[14px] font-medium transition-all",
               modalMedia.trim()
-                ? "bg-indigo-500 text-white hover:bg-indigo-600 shadow-indigo-500/20"
-                : "bg-neutral-800 text-neutral-600 cursor-not-allowed"
+                ? "bg-[#5865F2] text-white hover:bg-[#4752C4] active:bg-[#3C45A5]"
+                : "bg-[#5865F2]/50 text-white/50 cursor-not-allowed"
             )}
           >
-            <Send size={20} strokeWidth={3} />
-            {t('GENERIC.SEND') as string || 'Enviar Imagem'}
-          </button>
-          <button
-            onClick={() => setModalVisible(false)}
-            className="w-full py-3.5 text-neutral-500 font-bold uppercase tracking-widest hover:text-red-500 transition-colors"
-          >
-            Cancelar
+            {t('GENERIC.SEND') as string || 'Enviar'}
           </button>
         </div>
       </div>

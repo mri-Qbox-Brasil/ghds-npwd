@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, Image as ImageIcon, Plus } from 'lucide-react';
+import { ArrowUp, PlusCircle, Image as ImageIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useDarkchatAPI } from '../../hooks/useDarkchatAPI';
 import { useActiveDarkchatValue } from '../../state/state';
@@ -34,41 +34,38 @@ const ChannelInput: React.FC = () => {
   };
 
   return (
-    <div className="flex items-end gap-2 animate-in slide-in-from-bottom-4 duration-700">
+    <div className="flex items-end gap-0 bg-[#383A40] rounded-[8px] px-1">
+      {/* Attachment Button */}
       <button
         onClick={() => setModalVisible(true)}
-        className="h-12 w-12 shrink-0 flex items-center justify-center rounded-2xl bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white hover:bg-neutral-800 transition-all active:scale-90"
+        className="h-11 w-11 shrink-0 flex items-center justify-center text-[#B5BAC1] hover:text-[#DBDEE1] transition-colors active:scale-95"
       >
-        <ImageIcon size={20} strokeWidth={2.5} />
+        <PlusCircle size={22} strokeWidth={2} />
       </button>
 
-      <div className="relative flex-1 group">
-        <textarea
-          rows={1}
-          className="w-full min-h-[48px] max-h-32 p-3.5 pr-12 bg-neutral-900 border border-neutral-800 rounded-2xl text-sm font-bold text-white placeholder:text-neutral-600 focus:ring-1 focus:ring-indigo-500/50 transition-all resize-none scrollbar-hide"
-          placeholder={t('DARKCHAT.MESSAGE_PLACEHOLDER') as string || "Diga algo anônimo..."}
-          value={message}
-          onChange={(e) => {
-            setMessage(e.currentTarget.value);
-            e.currentTarget.style.height = 'auto';
-            e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
-          }}
-          onKeyDown={handleKeyPress}
-        />
+      {/* Input */}
+      <textarea
+        rows={1}
+        className="flex-1 min-h-[44px] max-h-28 py-[11px] px-1 bg-transparent border-none text-[15px] font-normal text-[#DBDEE1] placeholder:text-[#6D6F78] focus:ring-0 resize-none scrollbar-hide"
+        placeholder={t('DARKCHAT.MESSAGE_PLACEHOLDER') as string || "Enviar mensagem anônima..."}
+        value={message}
+        onChange={(e) => {
+          setMessage(e.currentTarget.value);
+          e.currentTarget.style.height = 'auto';
+          e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
+        }}
+        onKeyDown={handleKeyPress}
+      />
 
+      {/* Send Button */}
+      {message.trim() && (
         <button
           onClick={handleSendMessage}
-          disabled={!message.trim()}
-          className={cn(
-            "absolute right-2 bottom-2 h-8 w-8 flex items-center justify-center rounded-xl transition-all active:scale-95",
-            message.trim()
-              ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/30"
-              : "bg-neutral-800 text-neutral-600 opacity-50 cursor-not-allowed"
-          )}
+          className="h-11 w-11 shrink-0 flex items-center justify-center text-[#5865F2] hover:text-[#7983F5] transition-colors active:scale-95 animate-in zoom-in-50 duration-200"
         >
-          <Send size={16} strokeWidth={3} />
+          <ArrowUp size={22} strokeWidth={2.5} />
         </button>
-      </div>
+      )}
     </div>
   );
 };

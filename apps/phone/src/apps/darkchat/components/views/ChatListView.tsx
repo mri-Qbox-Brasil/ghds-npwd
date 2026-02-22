@@ -1,59 +1,75 @@
 import React, { useState } from 'react';
 import { useChannelsValue } from '../../state/state';
 import { ChannelItem } from '../ui/ChannelItem';
-import { List } from '@ui/components/List';
-import { Plus, Hash, Ghost } from 'lucide-react';
+import { Plus, Search, Hash, Ghost } from 'lucide-react';
 import { NewChannelModal } from '../ui/NewChannelModal';
 
 const ChatList: React.FC = () => {
   const channels = useChannelsValue();
   const [modal, setModal] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const toggleModal = () => {
     setModal((curVal) => !curVal);
   };
 
+  const filteredChannels = channels.filter((channel) =>
+    (channel.label ?? channel.identifier).toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="flex flex-col h-full bg-neutral-950 relative overflow-hidden">
+    <div className="flex flex-col h-full bg-[#2B2D31] relative overflow-hidden">
       <NewChannelModal open={modal} closeModal={toggleModal} />
 
-      {/* Background Graphic Effect */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none flex items-center justify-center scale-150 rotate-12">
-        <Hash size={400} strokeWidth={1} />
-      </div>
-
-      <header className="px-6 py-6 border-b border-neutral-900 flex items-center justify-between z-10">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-2xl bg-indigo-500/10 text-indigo-500">
-            <Ghost size={24} strokeWidth={2.5} />
-          </div>
-          <h2 className="text-xl font-black text-white uppercase tracking-tighter italic">Canais Dark</h2>
+      {/* Discord-style Header */}
+      <header className="shrink-0 pt-[60px] h-auto px-4 pb-3 bg-[#2B2D31] border-b border-[#1E1F22] flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Hash size={20} strokeWidth={2.5} className="text-[#80848E]" />
+          <h1 className="text-[17px] font-semibold text-white tracking-tight">Xiscord</h1>
         </div>
-        <span className="text-[10px] font-bold text-neutral-600 uppercase tracking-widest">{channels.length} Ativos</span>
+        <span className="text-[12px] font-medium text-[#80848E]">{channels.length} online</span>
       </header>
 
-      <div className="flex-1 overflow-y-auto px-4 py-4 z-10 scrollbar-hide">
-        {channels.length > 0 ? (
-          <div className="space-y-1">
-            {channels.map((channel) => (
+      {/* Search */}
+      <div className="px-3 py-2 bg-[#2B2D31]">
+        <div className="relative">
+          <Search size={16} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#6D6F78]" />
+          <input
+            type="text"
+            className="w-full h-8 pl-8 pr-3 rounded-[4px] bg-[#1E1F22] border-none text-[14px] text-[#DBDEE1] placeholder:text-[#6D6F78] focus:ring-0 transition-all"
+            onChange={(e) => setSearchTerm(e.currentTarget.value)}
+            placeholder="Buscar"
+            value={searchTerm}
+          />
+        </div>
+      </div>
+
+      {/* Channel List */}
+      <div className="flex-1 overflow-y-auto px-2 pt-2 scrollbar-hide">
+        <div className="flex items-center px-2 mb-1">
+          <span className="text-[11px] font-bold text-[#80848E] uppercase tracking-wide flex-1">
+            Canais de texto — {filteredChannels.length}
+          </span>
+          <button
+            onClick={toggleModal}
+            className="text-[#80848E] hover:text-white transition-colors"
+          >
+            <Plus size={16} strokeWidth={2.5} />
+          </button>
+        </div>
+
+        {filteredChannels.length > 0 ? (
+          <div className="space-y-0.5">
+            {filteredChannels.map((channel) => (
               <ChannelItem key={channel.id} {...channel} />
             ))}
           </div>
         ) : (
-          <div className="py-20 flex flex-col items-center justify-center text-center opacity-20 text-neutral-400 gap-4">
-            <Ghost size={64} />
-            <p className="font-bold uppercase tracking-widest text-xs italic">Nenhum canal encontrado</p>
+          <div className="py-16 flex flex-col items-center justify-center text-center text-[#6D6F78] gap-3">
+            <Ghost size={48} strokeWidth={1.5} />
+            <p className="text-[14px] font-medium">Nenhum canal encontrado</p>
           </div>
         )}
-      </div>
-
-      <div className="absolute bottom-10 right-8 z-20">
-        <button
-          onClick={toggleModal}
-          className="h-16 w-16 bg-white text-black rounded-3xl shadow-2xl shadow-white/10 flex items-center justify-center hover:scale-110 active:scale-95 transition-all group"
-        >
-          <Plus size={32} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-500" />
-        </button>
       </div>
     </div>
   );

@@ -1,22 +1,15 @@
 import React from 'react';
 import { AppWrapper } from '@ui/components';
 import { AppContent } from '@ui/components/AppContent';
-import { useApp } from '@os/apps/hooks/useApps';
-import { AppTitle } from '@ui/components/AppTitle';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import ChatList from './components/views/ChatListView';
 import { ConversationView } from './components/views/ConversationView';
 import { LoadingSpinner } from '@ui/components/LoadingSpinner';
-import DarkChatHeader from './components/ui/DarkChatHeader';
 
 const DarkChatApp = () => {
-  const darkchatApp = useApp('DARKCHAT');
-  const { pathname } = useLocation();
-
   return (
-    <AppWrapper className="bg-neutral-950">
-      {pathname === '/darkchat' ? <AppTitle app={darkchatApp} /> : <DarkChatHeader />}
-      <AppContent className="scrollbar-hide">
+    <AppWrapper className="!bg-[#1E1F22]">
+      <AppContent className="flex flex-col h-full overflow-hidden scrollbar-hide !bg-[#1E1F22]">
         <React.Suspense fallback={<LoadingSpinner />}>
           <Switch>
             <Route exact path="/darkchat" component={ChatList} />
