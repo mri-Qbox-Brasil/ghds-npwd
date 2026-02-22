@@ -8,13 +8,17 @@ interface DynamicHeaderProps {
     scrollRef?: React.RefObject<HTMLDivElement>;
     showBackButton?: boolean;
     variant?: 'pinned' | 'largeTitle' | 'both';
+    rightContent?: React.ReactNode;
+    leftContent?: React.ReactNode;
 }
 
 export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
     title,
     scrollRef,
     showBackButton = false,
-    variant = 'both'
+    variant = 'both',
+    rightContent,
+    leftContent
 }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const history = useHistory();
@@ -37,9 +41,9 @@ export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
         <div
             className={cn(
                 variant === 'pinned' ? "absolute inset-x-0 top-0" : "sticky top-0",
-                "z-50 w-full pt-16 pb-3 px-4 flex items-center justify-center transition-colors duration-200 border-b",
+                "z-10 w-full pt-[54px] pb-3 px-4 flex items-center justify-center transition-colors duration-200 border-b",
                 isScrolled
-                    ? "bg-[#F2F2F7] dark:bg-[#000000] border-neutral-300 dark:border-white/10"
+                    ? "bg-[#F2F2F7]/80 dark:bg-[#000000]/80 backdrop-blur-md border-neutral-300 dark:border-white/10"
                     : "bg-transparent border-transparent"
             )}
         >
@@ -54,6 +58,7 @@ export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
                         <span className="text-[17px] font-normal tracking-tight">Voltar</span>
                     </button>
                 )}
+                {!showBackButton && leftContent}
             </div>
 
             {/* Center Title (Perfect hardware-centered alignment) */}
@@ -69,6 +74,11 @@ export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
                 >
                     {title}
                 </span>
+            </div>
+
+            {/* Right Side */}
+            <div className="absolute right-6 z-10 flex items-center">
+                {rightContent}
             </div>
         </div>
     );

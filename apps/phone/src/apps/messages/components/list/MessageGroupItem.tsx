@@ -63,8 +63,8 @@ const MessageGroupItem = ({
     <div
       onClick={!isEditing ? handleClick(messageConversation) : () => handleToggle(messageConversation.id)}
       className={cn(
-        "flex items-center gap-4 py-3 px-2 cursor-pointer transition-all active:scale-[0.98] relative overflow-hidden",
-        isChecked ? "bg-blue-50/50 dark:bg-blue-500/5" : "hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+        "flex items-center gap-4 cursor-pointer transition-colors hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60 active:bg-neutral-200/80 dark:active:bg-neutral-800/80 relative overflow-hidden pl-4",
+        isChecked ? "bg-neutral-200/60 dark:bg-neutral-800/60" : ""
       )}
     >
       {/* Seleção de Edição */}
@@ -82,18 +82,18 @@ const MessageGroupItem = ({
       {/* Avatar */}
       <div className="relative shrink-0">
         {messageConversation.isGroupChat ? (
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500 text-white shadow-lg shadow-blue-500/20">
-            <Users size={28} />
+          <div className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400">
+            <Users size={24} className="opacity-80" />
           </div>
         ) : contact?.avatar ? (
           <img
             src={contact.avatar}
-            className="h-14 w-14 rounded-2xl object-cover shadow-md border border-neutral-100 dark:border-neutral-800"
+            className="h-[52px] w-[52px] rounded-full object-cover border border-neutral-100 dark:border-neutral-800"
             alt="avatar"
           />
         ) : (
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-neutral-800 dark:to-neutral-900 shadow-inner">
-            <span className="text-neutral-500 dark:text-neutral-400 font-bold text-lg">
+          <div className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gradient-to-b from-neutral-200 to-neutral-300 dark:from-neutral-700 dark:to-neutral-800">
+            <span className="text-white font-semibold text-xl">
               {initials(getLabelOrContact())}
             </span>
           </div>
@@ -101,38 +101,38 @@ const MessageGroupItem = ({
 
         {/* Badge de Não Lida */}
         {!isEditing && messageConversation.unreadCount > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 flex h-6 min-w-[24px] items-center justify-center rounded-full bg-blue-500 px-1.5 text-[11px] font-black text-white ring-4 ring-white dark:ring-neutral-900 shadow-lg animate-in zoom-in">
+          <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-blue-500 px-1.5 text-[12px] font-semibold text-white ring-2 ring-background dark:ring-background animate-in zoom-in">
             {messageConversation.unreadCount > 99 ? '99+' : messageConversation.unreadCount}
           </span>
         )}
       </div>
 
       {/* Info Conversa */}
-      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-        <div className="flex items-center justify-between">
+      <div className="flex-1 min-w-0 flex flex-col justify-center h-full border-b border-black/5 dark:border-white/10 py-3 pr-4">
+        <div className="flex items-center justify-between mb-0.5">
           <h3 className={cn(
-            "font-bold truncate transition-colors",
-            messageConversation.unreadCount > 0 ? "text-neutral-900 dark:text-white" : "text-neutral-700 dark:text-neutral-300"
+            "text-[17px] truncate transition-colors",
+            messageConversation.unreadCount > 0 ? "font-semibold text-neutral-900 dark:text-white" : "font-medium text-neutral-900 dark:text-white"
           )}>
             {getLabelOrContact()}
           </h3>
-          <span className="text-[11px] font-medium text-neutral-400 shrink-0">
+          <span className="text-[15px] font-normal text-neutral-500 shrink-0">
             {/* Timer logic could be added here if needed */}
           </span>
         </div>
-        <p className={cn(
-          "text-sm truncate",
-          messageConversation.unreadCount > 0 ? "font-bold text-blue-500" : "text-neutral-400 font-medium"
-        )}>
-          {messageConversation.last_message || "Nenhuma mensagem"}
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-[15px] text-neutral-500 truncate pr-2 font-normal">
+            {messageConversation.last_message || "Nenhuma mensagem"}
+          </p>
+
+          {!isEditing && (
+            <div className="text-neutral-300 dark:text-neutral-600">
+              <ChevronRight size={18} strokeWidth={2.5} />
+            </div>
+          )}
+        </div>
       </div>
 
-      {!isEditing && (
-        <div className="pr-2 text-neutral-300 dark:text-neutral-700">
-          <ChevronRight size={18} />
-        </div>
-      )}
     </div>
   );
 };

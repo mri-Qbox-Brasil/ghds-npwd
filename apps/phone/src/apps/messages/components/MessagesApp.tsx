@@ -31,9 +31,6 @@ export const MessagesApp = () => {
                         </Switch>
                     </React.Suspense>
                 </AppContent>
-                <Route exact path="/messages">
-                    <NewMessageGroupButton onClick={() => history.push('/messages/new')} />
-                </Route>
             </WordFilterProvider>
         </AppWrapper>
     );

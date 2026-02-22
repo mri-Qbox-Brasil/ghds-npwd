@@ -153,8 +153,6 @@ export const SettingsApp: React.FC = () => {
 
       <AppContent
         ref={scrollRef}
-        backdrop={isMenuOpen}
-        onClickBackdrop={closeMenu}
         className="flex flex-col grow pb-24 scrollbar-hide h-full relative"
       >
         <DynamicHeader title="Ajustes" scrollRef={scrollRef} variant="largeTitle" />

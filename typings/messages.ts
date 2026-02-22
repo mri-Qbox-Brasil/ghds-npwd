@@ -36,6 +36,7 @@ export interface MessageConversation {
   unread?: number;
   unreadCount?: number;
   updatedAt?: number;
+  last_message?: string;
 }
 
 export interface PreDBConversation {
