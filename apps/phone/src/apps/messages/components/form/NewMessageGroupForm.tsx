@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useContactActions } from '../../../contacts/hooks/useContactActions';
@@ -7,8 +7,9 @@ import { useMessageAPI } from '../../hooks/useMessageAPI';
 import { useMyPhoneNumber } from '@os/simcard/hooks/useMyPhoneNumber';
 import { PreDBConversation } from '@typings/messages';
 import { PreDBContact } from '@typings/contact';
-import { Search, User, X, Check, Users, ArrowLeft } from 'lucide-react';
+import { Search, User, X, Check, Users, Plus } from 'lucide-react';
 import { cn } from '@utils/cn';
+import { DynamicHeader } from '../../../../ui/components/DynamicHeader';
 
 const NewMessageGroupForm = ({ phoneNumber }: { phoneNumber?: string }) => {
   const history = useHistory();
@@ -20,6 +21,7 @@ const NewMessageGroupForm = ({ phoneNumber }: { phoneNumber?: string }) => {
   const contacts = useContactsValue();
   const { addConversation } = useMessageAPI();
   const myPhoneNumber = useMyPhoneNumber();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const isGroupChat = participants.length > 1;
 
@@ -77,130 +79,115 @@ const NewMessageGroupForm = ({ phoneNumber }: { phoneNumber?: string }) => {
   const isYourself = participants.find((p) => p.number === myPhoneNumber);
   const disableSubmit = !participants?.length || (isGroupChat && !conversationLabel) || !!isYourself;
 
+  const rightActions = (
+    <button
+      onClick={handleCancel}
+      className="text-blue-500 font-medium text-[17px] active:opacity-70 transition-opacity"
+    >
+      Cancelar
+    </button>
+  );
+
   return (
-    <div className="flex flex-col h-full bg-background animate-in slide-in-from-right duration-500 overflow-hidden">
-      <header className="px-6 py-4 border-b border-neutral-100 dark:border-neutral-800 bg-background/80 backdrop-blur-md sticky top-0 z-10 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleCancel}
-            className="p-2 rounded-2xl bg-neutral-100 dark:bg-neutral-800 text-neutral-500 hover:text-blue-500 transition-all active:scale-90"
-          >
-            <ArrowLeft size={20} />
-          </button>
-          <h1 className="text-xl font-black text-neutral-900 dark:text-white uppercase tracking-tighter italic">Nova Conversa</h1>
-        </div>
-        <button
-          onClick={handleCancel}
-          className="text-xs font-bold text-neutral-400 hover:text-red-500 uppercase tracking-widest transition-colors"
-        >
-          Cancelar
-        </button>
-      </header>
+    <div className="flex flex-col h-full bg-white dark:bg-[#000000] overflow-hidden">
+      <DynamicHeader
+        title="Nova Mensagem"
+        variant="pinned"
+        rightContent={rightActions}
+        forceBackdrop={true}
+      />
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
-        {/* Recipientes Selecionados */}
-        <div className="space-y-3">
-          <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-400 px-1">Para:</h2>
-          <div className={cn(
-            "flex flex-wrap gap-2 p-3 rounded-2xl border border-dashed transition-colors",
-            participants.length > 0
-              ? "bg-blue-50/30 dark:bg-blue-500/5 border-blue-200 dark:border-blue-500/20"
-              : "bg-neutral-50 dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800"
-          )}>
-            {participants.length === 0 ? (
-              <span className="text-sm text-neutral-400 font-medium italic p-1">Nenhum contato selecionado...</span>
-            ) : (
-              participants.map(p => (
-                <div key={p.number} className="flex items-center gap-2 px-3 py-1.5 bg-blue-500 text-white rounded-xl text-xs font-black shadow-sm animate-in zoom-in-95">
-                  <span className="truncate max-w-[120px]">{p.display || p.number}</span>
-                  <button onClick={() => toggleParticipant(p)} className="hover:bg-white/20 p-0.5 rounded-lg transition-colors">
-                    <X size={14} strokeWidth={3} />
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
+      <div className="flex-1 overflow-y-auto pt-[110px]" ref={scrollRef}>
+        {/* Recipient Input (To: field) */}
+        <div className="px-4 py-2 flex flex-wrap items-center gap-2 border-b border-neutral-100 dark:border-white/5 min-h-[50px]">
+          <span className="text-neutral-400 text-[15px] font-normal mr-2">Para:</span>
+
+          {participants.map(p => (
+            <div
+              key={p.number}
+              className="flex items-center gap-1.5 px-2 py-0.5 bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 rounded-[4px] text-[15px] animate-in zoom-in-95 group transition-colors hover:bg-blue-200 dark:hover:bg-blue-500/30"
+            >
+              <span>{p.display || p.number}</span>
+              <button
+                onClick={() => toggleParticipant(p)}
+                className="p-0.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-sm"
+              >
+                <X size={12} strokeWidth={2.5} />
+              </button>
+            </div>
+          ))}
+
+          <input
+            type="text"
+            className="flex-1 min-w-[120px] bg-transparent border-none text-[15px] p-1 focus:ring-0 text-neutral-900 dark:text-white caret-blue-500"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.currentTarget.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addManualNumber()}
+            autoFocus
+          />
         </div>
 
-        {/* Busca e Lista */}
-        <div className="space-y-4">
-          <div className="relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within:text-blue-500 transition-colors" size={20} />
-            <input
-              type="text"
-              className="w-full h-12 pl-12 pr-4 bg-neutral-100 dark:bg-neutral-800 border-none rounded-2xl text-sm font-bold text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:ring-2 focus:ring-blue-500/50 transition-all"
-              placeholder="Busque por nome ou número..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.currentTarget.value)}
-              onKeyDown={(e) => e.key === 'Enter' && addManualNumber()}
-            />
-          </div>
-
-          <div className="space-y-1">
-            {searchTerm.length > 0 ? (
-              <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                {filteredContacts.length > 0 ? (
-                  filteredContacts.map(contact => (
-                    <button
-                      key={contact.number}
-                      onClick={() => toggleParticipant(contact)}
-                      className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-neutral-100 dark:hover:bg-neutral-800/60 text-neutral-900 dark:text-neutral-100 transition-all active:scale-[0.98] border border-transparent hover:border-neutral-200 dark:hover:border-neutral-800 group"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-neutral-200 dark:bg-neutral-700 text-neutral-500 group-hover:bg-blue-500 group-hover:text-white transition-all">
-                          {contact.avatar ? (
-                            <img src={contact.avatar} className="h-full w-full object-cover rounded-2xl" alt="avatar" />
-                          ) : (
-                            <User size={22} />
-                          )}
-                        </div>
-                        <div className="flex flex-col items-start min-w-0">
-                          <span className="font-bold text-sm truncate">{contact.display}</span>
-                          <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-widest">{contact.number}</span>
-                        </div>
-                      </div>
-                      {participants.find(p => p.number === contact.number) ? (
-                        <div className="h-6 w-6 rounded-full bg-blue-500 flex items-center justify-center text-white shadow-sm">
-                          <Check size={14} strokeWidth={4} />
-                        </div>
+        {/* Suggested Contacts List */}
+        <div className="flex-1">
+          {searchTerm.length > 0 ? (
+            <div className="py-2 animate-in fade-in duration-300">
+              {filteredContacts.length > 0 ? (
+                filteredContacts.map(contact => (
+                  <button
+                    key={contact.number}
+                    onClick={() => toggleParticipant(contact)}
+                    className="w-full flex items-center px-4 py-3 hover:bg-neutral-50 dark:hover:bg-neutral-900 active:bg-neutral-100 dark:active:bg-neutral-800 transition-colors group"
+                  >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-400 mr-3 overflow-hidden">
+                      {contact.avatar ? (
+                        <img src={contact.avatar} className="h-full w-full object-cover" alt="avatar" />
                       ) : (
-                        <div className="h-6 w-6 rounded-full border-2 border-neutral-300 dark:border-neutral-700" />
+                        <User size={20} />
                       )}
-                    </button>
-                  ))
-                ) : (
-                  !participants.find(p => p.number === searchTerm) && (
-                    <button
-                      onClick={addManualNumber}
-                      className="w-full flex items-center gap-4 p-4 rounded-2xl bg-blue-50/50 dark:bg-blue-500/5 text-blue-500 border border-blue-100 dark:border-blue-500/20 transition-all active:scale-95 group font-bold"
-                    >
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-100 dark:bg-blue-900/40 group-hover:bg-blue-500 group-hover:text-white transition-all">
-                        <Plus size={22} strokeWidth={3} />
+                    </div>
+                    <div className="flex flex-col items-start min-w-0 flex-1 border-b border-neutral-100 dark:border-white/5 pb-3">
+                      <span className="font-semibold text-[16px] text-neutral-900 dark:text-white truncate">{contact.display}</span>
+                      <span className="text-[14px] text-neutral-500 truncate">{contact.number}</span>
+                    </div>
+                    {participants.find(p => p.number === contact.number) && (
+                      <div className="ml-2 text-blue-500">
+                        <Check size={18} strokeWidth={3} />
                       </div>
-                      <div className="flex flex-col items-start translate-y-[1px]">
-                        <span className="text-xs uppercase tracking-widest opacity-60">Usar número manual</span>
-                        <span>{searchTerm}</span>
-                      </div>
-                    </button>
-                  )
-                )}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-20 opacity-20 text-neutral-400 gap-2">
-                <Users size={48} />
-                <p className="font-bold uppercase tracking-widest text-xs italic">Busque um contato acima</p>
-              </div>
-            )}
-          </div>
+                    )}
+                  </button>
+                ))
+              ) : (
+                !participants.find(p => p.number === searchTerm) && (
+                  <button
+                    onClick={addManualNumber}
+                    className="w-full flex items-center px-4 py-3 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors group text-blue-500"
+                  >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-500/10 mr-3">
+                      <Plus size={20} strokeWidth={3} />
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className="text-[16px] font-medium">Usar número manual</span>
+                      <span className="text-[14px] opacity-70">{searchTerm}</span>
+                    </div>
+                  </button>
+                )
+              )}
+            </div>
+          ) : (
+            <div className="px-4 py-10 flex flex-col items-center justify-center text-neutral-300 dark:text-neutral-700 select-none">
+              <Users size={64} strokeWidth={1.5} className="mb-4 opacity-20" />
+              <p className="text-[15px] font-medium opacity-40">Busque um contato para iniciar</p>
+            </div>
+          )}
         </div>
 
-        {/* Nome do Grupo (Condicional) */}
+        {/* Group Name (Conditional) */}
         {isGroupChat && (
-          <div className="space-y-3 pt-4 border-t border-neutral-100 dark:border-neutral-800 animate-in slide-in-from-top-4 duration-500">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-400 px-1">Nome do Grupo:</h2>
+          <div className="p-4 space-y-3 animate-in slide-in-from-top-4 duration-500 border-t border-neutral-100 dark:border-white/5">
+            <h2 className="text-[13px] font-medium text-neutral-400 uppercase tracking-tight px-1 italic opacity-60">Nome do Grupo (Obrigatório)</h2>
             <input
-              className="w-full h-12 px-4 bg-neutral-100 dark:bg-neutral-800 border-none rounded-2xl text-sm font-bold text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:ring-2 focus:ring-blue-500/50 transition-all"
-              placeholder="Ex: Amigos da MRI, Elite Squad..."
+              className="w-full h-11 px-4 bg-neutral-100/50 dark:bg-neutral-900/50 border-none rounded-xl text-[16px] text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:ring-1 focus:ring-blue-500/20 transition-all border border-transparent focus:border-blue-500/20"
+              placeholder="Ex: Família, Trabalho..."
               value={conversationLabel}
               onChange={(e) => setConversationLabel(e.currentTarget.value)}
             />
@@ -208,22 +195,22 @@ const NewMessageGroupForm = ({ phoneNumber }: { phoneNumber?: string }) => {
         )}
       </div>
 
-      <footer className="p-6 bg-background/80 backdrop-blur-md border-t border-neutral-100 dark:border-neutral-800">
+      <footer className="p-4 bg-white/80 dark:bg-black/80 backdrop-blur-md border-t border-neutral-100 dark:border-white/5 safe-area-bottom">
         <button
           onClick={handleSubmit}
           disabled={disableSubmit}
           className={cn(
-            "w-full h-14 rounded-2xl font-black uppercase tracking-[0.15em] transition-all active:scale-95 shadow-xl flex items-center justify-center gap-3",
+            "w-full h-12 rounded-xl font-bold text-[17px] transition-all active:scale-95 flex items-center justify-center gap-2",
             disableSubmit
-              ? "bg-neutral-200 dark:bg-neutral-800 text-neutral-400 cursor-not-allowed shadow-none"
-              : "bg-blue-500 text-white hover:bg-blue-600 shadow-blue-500/30"
+              ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-400 cursor-not-allowed"
+              : "bg-blue-500 text-white shadow-lg shadow-blue-500/20"
           )}
         >
-          {isGroupChat ? "Criar Grupo" : "Iniciar Conversa"}
-          {!disableSubmit && <div className="p-1 rounded-lg bg-white/20"><Check size={18} strokeWidth={4} /></div>}
+          {isGroupChat ? "Criar Grupo" : "Iniciar"}
+          {!disableSubmit && <Check size={18} strokeWidth={3} />}
         </button>
         {isYourself && (
-          <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest text-center mt-3">Você não pode enviar mensagens para si mesmo</p>
+          <p className="text-[12px] text-red-500 font-medium text-center mt-3">Você não pode enviar mensagens para si mesmo</p>
         )}
       </footer>
     </div>

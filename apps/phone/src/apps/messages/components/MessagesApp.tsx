@@ -12,21 +12,21 @@ export const MessagesApp = () => {
 
     return (
         <WordFilterProvider>
-            <React.Suspense fallback={<LoadingSpinner />}>
-                <Switch>
-                    <Route path="/messages/conversations/:groupId">
-                        <MessageModal />
-                    </Route>
-                    <Route exact path="/messages">
-                        <MessagesList />
-                    </Route>
-                </Switch>
-                <Switch>
-                    <Route exact path={['/messages/new/:phoneNumber', '/messages/new']}>
-                        <MessageGroupModal />
-                    </Route>
-                </Switch>
-            </React.Suspense>
+            <AppWrapper className="bg-[#white] dark:bg-black p-0 m-0 overflow-hidden text-neutral-900 dark:text-white">
+                <React.Suspense fallback={<LoadingSpinner />}>
+                    <Switch>
+                        <Route path="/messages/conversations/:groupId">
+                            <MessageModal />
+                        </Route>
+                        <Route exact path={['/messages/new/:phoneNumber', '/messages/new']}>
+                            <MessageGroupModal />
+                        </Route>
+                        <Route exact path="/messages">
+                            <MessagesList />
+                        </Route>
+                    </Switch>
+                </React.Suspense>
+            </AppWrapper>
         </WordFilterProvider>
     );
 };

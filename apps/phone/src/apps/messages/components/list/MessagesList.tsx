@@ -102,7 +102,7 @@ const MessagesList = (): any => {
     );
 
     return (
-        <AppWrapper className="bg-white dark:bg-black animate-in fade-in duration-500 p-0 m-0">
+        <>
             <DynamicHeader
                 title="Mensagens"
                 scrollRef={scrollRef}
@@ -113,7 +113,7 @@ const MessagesList = (): any => {
 
             <AppContent
                 ref={scrollRef}
-                className="flex flex-col grow pb-24 scrollbar-hide h-full relative"
+                className="flex flex-col grow pb-24 scrollbar-hide h-full relative animate-in fade-in duration-500"
             >
                 <DynamicHeader title="Mensagens" scrollRef={scrollRef} variant="largeTitle" />
 
@@ -158,7 +158,7 @@ const MessagesList = (): any => {
                     )}
                 </div>
             </AppContent>
-        </AppWrapper>
+        </>
     );
 };
 

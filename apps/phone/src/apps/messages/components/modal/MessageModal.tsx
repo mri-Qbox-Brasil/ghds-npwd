@@ -200,62 +200,60 @@ export const MessageModal = () => {
   );
 
   return (
-    <div className="inset-0 z-[100] flex h-full w-full flex-col animate-in slide-in-from-right duration-300">
-      <AppWrapper className="p-0 m-0 bg-white dark:bg-[#000000]">
-        <DynamicHeader
-          title=""
-          variant="pinned"
-          leftContent={leftActions}
-          rightContent={rightActions}
-          centerContent={centerActions}
-          forceBackdrop={true}
-        />
+    <div className="inset-0 z-[100] flex h-full w-full flex-col animate-in slide-in-from-right duration-300 bg-white dark:bg-black">
+      <DynamicHeader
+        title=""
+        variant="pinned"
+        leftContent={leftActions}
+        rightContent={rightActions}
+        centerContent={centerActions}
+        forceBackdrop={true}
+      />
 
-        <main className="relative flex-1 overflow-hidden">
-          {isLoaded && ResourceConfig ? (
-            <Conversation
-              isVoiceEnabled={ResourceConfig.voiceMessage.enabled}
-              messages={messages}
-              activeMessageGroup={activeMessageConversation}
-            />
-          ) : (
-            <div className="p-4 space-y-4">
-              <MessageSkeletonList />
-            </div>
-          )}
-        </main>
-
-        <footer className="shrink-0">
-          {audioContextMenuOpen ? (
-            <div className="px-2 py-2 pb-5 bg-white/80 dark:bg-black/80 backdrop-blur-xl flex items-end animate-in slide-in-from-bottom duration-300">
-              <AudioContextMenu onClose={() => setAudioContextMenuOpen(false)} />
-            </div>
-          ) : (
-            <MessageInput
-              messageGroupName={activeMessageConversation.participant}
-              messageConversation={activeMessageConversation}
-              onAddImageClick={() => setContextMenuOpen(true)}
-              onVoiceClick={() => setAudioContextMenuOpen(true)}
-              voiceEnabled={ResourceConfig?.voiceMessage?.enabled}
-            />
-          )}
-
-          <MessageContextMenu
-            messageGroup={activeMessageConversation}
-            isOpen={contextMenuOpen}
-            onClose={() => setContextMenuOpen(false)}
-            image={referalImage}
-            note={referalNote}
+      <main className="relative flex-1 overflow-hidden">
+        {isLoaded && ResourceConfig ? (
+          <Conversation
+            isVoiceEnabled={ResourceConfig.voiceMessage.enabled}
+            messages={messages}
+            activeMessageGroup={activeMessageConversation}
           />
-        </footer>
+        ) : (
+          <div className="p-4 space-y-4">
+            <MessageSkeletonList />
+          </div>
+        )}
+      </main>
 
-        <GroupDetailsModal
-          open={isGroupModalOpen}
-          onClose={closeGroupModal}
-          conversationList={activeMessageConversation.conversationList}
-          addContact={handleAddContact}
+      <footer className="shrink-0">
+        {audioContextMenuOpen ? (
+          <div className="px-2 py-2 pb-5 bg-white/80 dark:bg-black/80 backdrop-blur-xl flex items-end animate-in slide-in-from-bottom duration-300">
+            <AudioContextMenu onClose={() => setAudioContextMenuOpen(false)} />
+          </div>
+        ) : (
+          <MessageInput
+            messageGroupName={activeMessageConversation.participant}
+            messageConversation={activeMessageConversation}
+            onAddImageClick={() => setContextMenuOpen(true)}
+            onVoiceClick={() => setAudioContextMenuOpen(true)}
+            voiceEnabled={ResourceConfig?.voiceMessage?.enabled}
+          />
+        )}
+
+        <MessageContextMenu
+          messageGroup={activeMessageConversation}
+          isOpen={contextMenuOpen}
+          onClose={() => setContextMenuOpen(false)}
+          image={referalImage}
+          note={referalNote}
         />
-      </AppWrapper>
+      </footer>
+
+      <GroupDetailsModal
+        open={isGroupModalOpen}
+        onClose={closeGroupModal}
+        conversationList={activeMessageConversation.conversationList}
+        addContact={handleAddContact}
+      />
     </div>
   );
 };
