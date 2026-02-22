@@ -6,21 +6,61 @@ import { GalleryModal } from './modal/GalleryModal';
 import { Route, Switch } from 'react-router-dom';
 import { LoadingSpinner } from '@ui/components/LoadingSpinner';
 import NewPhotoButton from './NewPhotoButton';
+import { usePhotosValue, useIsEditing, useCheckedPhotos } from '../hooks/state';
 
 const CameraApp: React.FC = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const photos = usePhotosValue();
+  const [isEditing, setIsEditing] = useIsEditing();
+  const [checkedPhotos, setCheckedPhotos] = useCheckedPhotos();
+
+  const toggleEdit = () => {
+    setIsEditing((prev) => !prev);
+    if (isEditing) setCheckedPhotos([]);
+  };
+
+  const rightActions = !!photos.length ? (
+    <button
+      onClick={toggleEdit}
+      className="text-[17px] font-normal text-blue-500 active:text-blue-600 transition-colors"
+    >
+      {isEditing ? "OK" : "Selecionar"}
+    </button>
+  ) : null;
+
   return (
     <AppWrapper id="camera-app" className="bg-white/40 dark:bg-black/40 backdrop-blur-md">
-      <AppContent className="flex flex-col h-full overflow-hidden">
-        <Switch>
+      <Switch>
+        <Route path="/camera" exact>
+          {/* Pinned header — outside AppContent */}
+          <DynamicHeader
+            title="Galeria"
+            scrollRef={scrollRef}
+            variant="pinned"
+            rightContent={rightActions}
+          />
+
+          <AppContent
+            ref={scrollRef}
+            className="flex flex-col grow pb-24 scrollbar-hide h-full relative"
+          >
+            {/* Large title — inside AppContent */}
+            <DynamicHeader title="Galeria" scrollRef={scrollRef} variant="largeTitle" />
+
+            <React.Suspense fallback={<LoadingSpinner />}>
+              <GalleryGrid />
+            </React.Suspense>
+          </AppContent>
+
+          <NewPhotoButton />
+        </Route>
+
+        <Route path="/camera/image" exact>
           <React.Suspense fallback={<LoadingSpinner />}>
-            <Route path="/camera" exact component={GalleryGrid} />
-            <Route path="/camera/image" exact component={GalleryModal} />
+            <GalleryModal />
           </React.Suspense>
-        </Switch>
-      </AppContent>
-      <Route exact path="/camera">
-        <NewPhotoButton />
-      </Route>
+        </Route>
+      </Switch>
     </AppWrapper>
   );
 };
