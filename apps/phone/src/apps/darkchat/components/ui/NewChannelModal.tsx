@@ -39,7 +39,6 @@ export const NewChannelModal: React.FC<NewChannelModalProps> = ({ open, closeMod
             Identificador do Canal <span className="text-[#ED4245]">*</span>
           </label>
           <input
-            type="password"
             className="w-full h-10 px-3 bg-[#1E1F22] border-none rounded-[3px] text-[15px] font-normal text-[#DBDEE1] placeholder:text-[#6D6F78] focus:ring-2 focus:ring-[#5865F2] transition-all"
             placeholder={t('DARKCHAT.NEW_CHANNEL_INPUT_PLACEHOLDER') as string || "Codinome do canal..."}
             value={channelValue}

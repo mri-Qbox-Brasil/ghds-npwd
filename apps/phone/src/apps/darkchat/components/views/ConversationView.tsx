@@ -51,17 +51,17 @@ export const ConversationView: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col h-full bg-[#313338] overflow-hidden">
+    <div className="flex flex-col h-full bg-[#313338] overflow-hidden absolute inset-0">
       <UploadMediaModal />
       <OwnerModal open={ownerModal} closeModal={() => setOwnerModal(false)} />
 
-      {/* Header */}
+      {/* Header — fixed at top */}
       <DarkChatHeader />
 
-      {/* Messages Area */}
+      {/* Messages Area — only this scrolls */}
       <div
         ref={scrollRef}
-        className="flex-1 overflow-y-auto px-4 py-4 scroll-smooth scrollbar-hide"
+        className="flex-1 overflow-y-auto px-4 py-4 scroll-smooth scrollbar-hide min-h-0"
       >
         {messages.length > 0 ? (
           <div className="space-y-4">
@@ -90,8 +90,8 @@ export const ConversationView: React.FC = () => {
         )}
       </div>
 
-      {/* Input Area */}
-      <footer className="px-4 pb-5 pt-1 bg-[#313338]">
+      {/* Input Area — fixed at bottom */}
+      <footer className="shrink-0 px-6 pb-6 pt-1 bg-[#313338]">
         <ChannelInput />
       </footer>
     </div>
