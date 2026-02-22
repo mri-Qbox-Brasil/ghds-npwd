@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
-import { AppWrapper, AppContent, AppTitle } from '@ui/components';
+import React, { useEffect, useRef } from 'react';
+import { AppWrapper, AppContent } from '@ui/components';
+import { DynamicHeader } from '@ui/components/DynamicHeader';
 import { useApp } from '@os/apps/hooks/useApps';
 import NoteList from './list/NoteList';
 import { NoteModal } from './modal/NoteModal';
-import { RiEditBoxLine } from "@react-icons/all-files/ri/RiEditBoxLine";
+import { Edit } from 'lucide-react';
 import { Route } from 'react-router-dom';
 import { useSetModalVisible, useSetSelectedNote, useNotesValue } from './hooks/state';
 import { LoadingSpinner } from '@ui/components/LoadingSpinner';
@@ -15,6 +16,7 @@ export const NotesApp: React.FC = () => {
   const setSelectedNote = useSetSelectedNote();
   const setModalVisible = useSetModalVisible();
   const notes = useNotesValue();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const onClickCreate = () => {
     setSelectedNote({ title: '', content: '' });
@@ -34,27 +36,42 @@ export const NotesApp: React.FC = () => {
   }, [setModalVisible, title, content, setSelectedNote]);
 
   return (
-    <AppWrapper id="notes-app" className="bg-background">
-      <AppTitle app={notesApp} />
+    <AppWrapper id="notes-app" className="bg-white/40 dark:bg-black/40 backdrop-blur-md">
       <NoteModal />
-      <AppContent className="flex flex-col h-full overflow-hidden">
+
+      {/* Pinned header */}
+      <DynamicHeader
+        title="Notas"
+        scrollRef={scrollRef}
+        variant="pinned"
+        rightContent={
+          <button
+            className="text-yellow-600 dark:text-yellow-500 active:text-yellow-700 transition-colors"
+            onClick={onClickCreate}
+          >
+            <Edit size={22} strokeWidth={2} />
+          </button>
+        }
+      />
+
+      <AppContent
+        ref={scrollRef}
+        className="flex flex-col grow pb-24 scrollbar-hide h-full relative"
+      >
+        {/* Large title */}
+        <DynamicHeader title="Notas" scrollRef={scrollRef} variant="largeTitle" />
+
         <React.Suspense fallback={<LoadingSpinner />}>
           <Route path="/notes" component={NoteList} />
         </React.Suspense>
       </AppContent>
 
-      <div className="flex justify-center py-4 border-t border-neutral-100 dark:border-neutral-800">
+      {/* iOS bottom toolbar */}
+      <div className="flex justify-center py-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
         <p className="text-xs text-neutral-500 font-medium">
-          {notes.length} {notes.length === 1 ? 'Nota' : 'Notas'}
+          {notes.length} {notes.length === 1 ? 'nota' : 'notas'}
         </p>
       </div>
-
-      <button
-        className="absolute right-6 bottom-20 z-10 p-3 rounded-full bg-blue-500 text-white shadow-lg shadow-blue-500/30 transition-all hover:bg-blue-600 active:scale-90"
-        onClick={onClickCreate}
-      >
-        <RiEditBoxLine size={24} />
-      </button>
     </AppWrapper>
   );
 };

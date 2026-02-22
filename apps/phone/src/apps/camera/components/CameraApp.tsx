@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { AppWrapper, AppContent } from '@ui/components';
+import { DynamicHeader } from '@ui/components/DynamicHeader';
 import { GalleryGrid } from './grid/GalleryGrid';
 import { GalleryModal } from './modal/GalleryModal';
 import { Route, Switch } from 'react-router-dom';
@@ -8,7 +9,7 @@ import NewPhotoButton from './NewPhotoButton';
 
 const CameraApp: React.FC = () => {
   return (
-    <AppWrapper id="camera-app" className="bg-background">
+    <AppWrapper id="camera-app" className="bg-white/40 dark:bg-black/40 backdrop-blur-md">
       <AppContent className="flex flex-col h-full overflow-hidden">
         <Switch>
           <React.Suspense fallback={<LoadingSpinner />}>

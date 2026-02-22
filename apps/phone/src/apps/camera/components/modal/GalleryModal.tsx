@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useCallback } from 'react';
-import { ArrowLeft, Trash2, Share } from 'lucide-react';
+import { ChevronLeft, Trash2, Share } from 'lucide-react';
 import { useHistory } from 'react-router-dom';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 import { ShareModal } from './ShareModal';
@@ -9,7 +9,6 @@ import fetchNui from '@utils/fetchNui';
 import { ServerPromiseResp } from '@typings/common';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from '@os/snackbar/hooks/useSnackbar';
-import { cn } from '@utils/cn';
 
 export const GalleryModal = () => {
   const [shareOpen, setShareOpen] = useState<GalleryPhoto | null>(null);
@@ -53,15 +52,18 @@ export const GalleryModal = () => {
     <div className="fixed inset-0 z-50 flex flex-col bg-black animate-in fade-in duration-300">
       <ShareModal referal={referal} meta={shareOpen} onClose={() => setShareOpen(null)} />
 
-      <header className="absolute top-0 w-full flex h-20 items-center justify-between px-4 z-20 bg-gradient-to-b from-black/80 to-transparent">
+      {/* Header with back button */}
+      <header className="absolute top-0 w-full flex items-center justify-between px-4 pt-[50px] pb-3 z-20 bg-gradient-to-b from-black/80 to-transparent">
         <button
           onClick={_handleClose}
-          className="p-3 text-white rounded-full hover:bg-white/10 transition-colors"
+          className="flex items-center gap-0.5 text-white active:opacity-70 transition-opacity"
         >
-          <ArrowLeft size={28} />
+          <ChevronLeft size={28} strokeWidth={2} />
+          <span className="text-[17px] font-medium">Galeria</span>
         </button>
       </header>
 
+      {/* Image */}
       <main className="flex-1 flex items-center justify-center w-full">
         <img
           src={meta.image}
@@ -70,29 +72,25 @@ export const GalleryModal = () => {
         />
       </main>
 
-      <footer className="absolute bottom-0 w-full px-12 py-8 flex items-center justify-between z-20 bg-gradient-to-t from-black/80 to-transparent">
+      {/* iOS bottom toolbar */}
+      <footer className="absolute bottom-0 w-full px-8 pb-8 pt-4 flex items-center justify-around z-20 bg-gradient-to-t from-black/80 to-transparent">
         <button
           onClick={handleDeletePhoto}
-          className="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-red-500/20 text-red-400 group transition-all"
+          className="flex flex-col items-center gap-1 text-white/80 active:text-red-400 transition-colors"
         >
-          <div className="h-12 w-12 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 shadow-lg group-hover:scale-110 transition-transform">
-            <Trash2 size={24} />
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Excluir</span>
+          <Trash2 size={22} />
+          <span className="text-[10px] font-medium">Excluir</span>
         </button>
 
         <button
           onClick={handleSharePhoto}
-          className="flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-white/10 text-white group transition-all"
+          className="flex flex-col items-center gap-1 text-white/80 active:text-blue-400 transition-colors"
         >
-          <div className="h-12 w-12 rounded-xl flex items-center justify-center bg-white/10 border border-white/20 shadow-lg group-hover:scale-110 transition-transform">
-            <Share size={24} />
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Enviar</span>
+          <Share size={22} />
+          <span className="text-[10px] font-medium">Enviar</span>
         </button>
       </footer>
 
-      {/* Overlay opcional para quando o modal de compartilhamento está aberto */}
       {shareOpen && <div className="absolute inset-0 bg-black/40 z-30 backdrop-blur-sm transition-all" />}
     </div>
   );

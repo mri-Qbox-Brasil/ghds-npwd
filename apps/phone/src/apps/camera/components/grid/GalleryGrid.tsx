@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 import { addQueryToLocation } from '@common/utils/addQueryToLocation';
 import { getLocationFromUrl } from '@common/utils/getLocationFromUrl';
 import { usePhotosValue, useIsEditing, useCheckedPhotos } from '../../hooks/state';
-import { Edit2, CheckCircle2, Circle } from 'lucide-react';
+import { CheckCircle2, Circle } from 'lucide-react';
+import { DynamicHeader } from '@ui/components/DynamicHeader';
 import { cn } from '@utils/cn';
 
 export const GalleryGrid = () => {
@@ -13,6 +14,7 @@ export const GalleryGrid = () => {
   const photos = usePhotosValue();
   const [isEditing, setIsEditing] = useIsEditing();
   const [checkedPhotos, setCheckedPhotos] = useCheckedPhotos();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const referal = query.referal ? decodeURIComponent(query.referal) : '/camera/image';
 
@@ -22,7 +24,7 @@ export const GalleryGrid = () => {
 
   const toggleEdit = () => {
     setIsEditing((prev) => !prev);
-    if (isEditing) setCheckedPhotos([]); // Limpa seleção ao sair do modo edição
+    if (isEditing) setCheckedPhotos([]);
   };
 
   const toggleCheck = (photoId: number) => {
@@ -38,63 +40,69 @@ export const GalleryGrid = () => {
     setCheckedPhotos(newChecked);
   };
 
+  const rightActions = !!photos.length ? (
+    <button
+      onClick={toggleEdit}
+      className="text-[17px] font-normal text-blue-500 active:text-blue-600 transition-colors"
+    >
+      {isEditing ? "OK" : "Selecionar"}
+    </button>
+  ) : null;
+
   return (
-    <div className="flex flex-col h-full bg-background animate-in fade-in duration-300">
-      <header className="flex h-16 shrink-0 items-center justify-between px-6 sticky top-0 z-20 bg-background/80 backdrop-blur-md">
-        <h1 className="text-2xl font-bold text-neutral-900 dark:text-white">Galeria</h1>
-        {!!photos.length && (
-          <button
-            onClick={toggleEdit}
-            className={cn(
-              "flex items-center gap-2 px-4 py-2 rounded-xl transition-all font-medium",
-              isEditing
-                ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
-                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200"
-            )}
-          >
-            {isEditing ? "Concluído" : <Edit2 size={20} />}
-          </button>
-        )}
-      </header>
+    <div className="flex flex-col h-full animate-in fade-in duration-300">
+      {/* Pinned header */}
+      <DynamicHeader
+        title="Galeria"
+        scrollRef={scrollRef}
+        variant="pinned"
+        rightContent={rightActions}
+      />
 
-      <div className="flex-1 overflow-y-auto">
-        <div className="grid grid-cols-3 gap-0.5 pb-20">
-          {photos.map((photo) => {
-            const isChecked = checkedPhotos.indexOf(photo.id) !== -1;
+      <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-hide">
+        {/* Large title */}
+        <DynamicHeader title="Galeria" scrollRef={scrollRef} variant="largeTitle" />
 
-            return (
-              <div
-                key={photo.id}
-                className="relative aspect-square group overflow-hidden bg-neutral-100 dark:bg-neutral-800 cursor-pointer active:opacity-80 transition-opacity"
-                onClick={() => isEditing ? toggleCheck(photo.id) : handlePhotoOpen(photo)}
-              >
-                <img
-                  src={photo.image}
-                  alt=""
-                  className={cn(
-                    "h-full w-full object-cover transition-transform duration-500 group-hover:scale-110",
-                    isEditing && isChecked && "scale-90 opacity-70"
-                  )}
-                />
+        {photos.length > 0 ? (
+          <div className="grid grid-cols-3 gap-[2px] pb-20">
+            {photos.map((photo) => {
+              const isChecked = checkedPhotos.indexOf(photo.id) !== -1;
 
-                {isEditing && (
-                  <div className="absolute top-2 right-2 z-10 animate-in zoom-in">
-                    {isChecked ? (
-                      <CheckCircle2 className="text-blue-500 fill-white dark:fill-neutral-900 h-6 w-6" />
-                    ) : (
-                      <Circle className="text-white/80 h-6 w-6" strokeWidth={1.5} />
+              return (
+                <div
+                  key={photo.id}
+                  className="relative aspect-square overflow-hidden bg-neutral-100 dark:bg-neutral-800 cursor-pointer active:opacity-80 transition-opacity"
+                  onClick={() => isEditing ? toggleCheck(photo.id) : handlePhotoOpen(photo)}
+                >
+                  <img
+                    src={photo.image}
+                    alt=""
+                    className={cn(
+                      "h-full w-full object-cover transition-transform duration-300",
+                      isEditing && isChecked && "scale-90 rounded-lg opacity-70"
                     )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                  />
 
-        {photos.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-32 opacity-40">
-            <div className="text-5xl mb-4 text-neutral-300 dark:text-neutral-700">📸</div>
-            <p className="font-medium text-neutral-500">Nenhuma foto encontrada</p>
+                  {isEditing && (
+                    <div className="absolute bottom-2 right-2 z-10">
+                      {isChecked ? (
+                        <CheckCircle2 className="text-blue-500 fill-white dark:fill-neutral-900 h-6 w-6 drop-shadow" />
+                      ) : (
+                        <Circle className="text-white/80 h-6 w-6 drop-shadow" strokeWidth={1.5} />
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-32 gap-3">
+            <span className="text-5xl">📸</span>
+            <p className="text-[15px] font-medium text-neutral-400 dark:text-neutral-500">Nenhuma foto</p>
+            <p className="text-[13px] text-neutral-400 dark:text-neutral-600">
+              Tire uma foto com o botão abaixo
+            </p>
           </div>
         )}
       </div>
