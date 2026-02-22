@@ -22,9 +22,9 @@ export const DialerApp: React.FC = () => {
             </React.Suspense>
           </Route>
           <Route path="/phone/favorites">
-            <div className="flex-1 flex flex-col items-center justify-center text-neutral-500">
+            <div className="flex-1 h-full flex flex-col items-center justify-center text-neutral-500 pt-[80px]">
               <Star size={48} className="mb-4 opacity-20" />
-              <p>Favoritos (Em breve)</p>
+              <p className="text-[17px]">Favoritos (Em breve)</p>
             </div>
           </Route>
           <Route path="/phone">
