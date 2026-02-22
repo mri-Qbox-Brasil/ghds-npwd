@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { CircleDot, X, Square, Play, Pause, Send, Mic } from 'lucide-react';
+import { CircleDot, X, Square, Play, Pause, Send, Mic, Trash2, SendHorizontal } from 'lucide-react';
 import { useRecorder } from '@os/audio/hooks/useRecorder';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
@@ -84,78 +84,80 @@ const AudioContextMenu: React.FC<AudioContextMenuProps> = ({ onClose }) => {
   const isRecording = recordingState.isRecording;
 
   return (
-    <div className="flex items-center justify-between w-full h-14 bg-neutral-100 dark:bg-neutral-800 rounded-2xl px-3 gap-3 shadow-inner border border-transparent focus-within:border-blue-500/30 animate-in slide-in-from-bottom-4 duration-300">
-      <div className="flex items-center gap-2">
-        {recordedAudio && !isRecording ? (
-          <button
-            className="h-10 w-10 flex items-center justify-center rounded-xl bg-blue-500 text-white shadow-md active:scale-90 transition-all"
-            onClick={playing ? pause : play}
-          >
-            {playing ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" />}
-          </button>
-        ) : (
-          <div className="flex items-center gap-2">
-            {!isRecording ? (
-              <button
-                className="h-10 w-10 flex items-center justify-center rounded-xl bg-red-500 text-white shadow-md active:scale-90 transition-all hover:bg-red-600"
-                onClick={handleStartRecord}
-              >
-                <Mic size={20} />
-              </button>
-            ) : (
-              <button
-                className="h-10 w-10 flex items-center justify-center rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-black shadow-md active:scale-90 transition-all animate-pulse"
-                onClick={handleStopRecording}
-              >
-                <Square size={20} fill="currentColor" />
-              </button>
-            )}
-          </div>
-        )}
-      </div>
-
-      <div className="flex-1 flex flex-col items-center justify-center">
-        {!recordedAudio && !isRecording ? (
-          <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Toque para gravar</span>
-        ) : isRecording ? (
-          <div className="flex flex-col items-center">
-            <span className="text-red-500 text-[10px] font-black uppercase tracking-tighter flex items-center gap-1.5 italic animate-pulse">
-              <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-              Gravando áudio
-            </span>
-            <span className="text-xs font-bold tabular-nums text-neutral-900 dark:text-white mt-0.5">
-              {dayjs.duration(recordingState.duration, 'seconds').format('mm:ss')}
-            </span>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center">
-            <span className="text-blue-500 text-[10px] font-black uppercase tracking-tighter italic">Revisar áudio</span>
-            <span className="text-xs font-bold tabular-nums text-neutral-900 dark:text-white mt-0.5">
-              {dayjs.duration((currentTime || 0) * 1000).format('mm:ss')}
-              {durationValue !== Infinity && <span className="text-neutral-400 mx-1">/</span>}
-              {durationValue !== Infinity && dayjs.duration(Math.trunc(durationValue) * 1000).format('mm:ss')}
-            </span>
-          </div>
-        )}
-      </div>
-
-      <div className="flex items-center gap-2">
-        {!isRecording && recordedAudio && blob && (
-          <button
-            className="h-10 w-10 flex items-center justify-center rounded-xl bg-green-500 text-white shadow-md active:scale-90 transition-all hover:bg-green-600"
-            onClick={handleSendRecording}
-          >
-            <Send size={18} fill="currentColor" />
-          </button>
-        )}
+    <div className="flex items-end justify-between w-full gap-1 animate-in fade-in slide-in-from-bottom-2 duration-300">
+      {/* Left Action: Trash/Cancel - Matches Plus Button exactly */}
+      <div className="flex items-center justify-center mb-0.5">
         <button
-          className="h-10 w-10 flex items-center justify-center rounded-xl text-neutral-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all active:scale-90"
+          className="p-2 rounded-full text-neutral-400 hover:text-red-500 transition-all active:scale-95"
           onClick={onClose}
           disabled={isRecording}
         >
-          <X size={22} strokeWidth={3} />
+          <Trash2 size={24} className="stroke-[2px]" />
         </button>
       </div>
+
+      {/* Center Record/Review Pill - Matches Message Input Pill exactly */}
+      <div className="flex-1 min-w-0 bg-neutral-100 dark:bg-[#1C1C1E] border border-neutral-300/50 dark:border-white/10 rounded-[20px] px-3 py-1 flex items-end transition-all">
+        <div className="flex-1 flex items-center justify-center min-h-[32px] min-w-0">
+          {!recordedAudio && !isRecording ? (
+            <button
+              className="flex items-center gap-2 px-3 py-1 rounded-full transition-colors active:opacity-70"
+              onClick={handleStartRecord}
+            >
+              <Mic size={20} className="text-red-500" />
+              <span className="text-[16px] font-medium text-neutral-500">Tap to record</span>
+            </button>
+          ) : isRecording ? (
+            <div className="flex items-center gap-3 py-1">
+              <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+              <span className="text-[17px] font-semibold tabular-nums text-neutral-900 dark:text-white leading-none">
+                {dayjs.duration(recordingState.duration, 'seconds').format('mm:ss')}
+              </span>
+              <button
+                onClick={handleStopRecording}
+                className="ml-4 h-[26px] px-3 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-black text-[11px] font-bold uppercase tracking-wider active:scale-95 transition-all"
+              >
+                Stop
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 w-full py-1">
+              <button
+                className="h-7 w-7 flex items-center justify-center rounded-full bg-blue-500 text-white shadow-sm active:scale-90 transition-all"
+                onClick={playing ? pause : play}
+              >
+                {playing ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" className="ml-0.5" />}
+              </button>
+
+              <div className="flex-1 h-1 bg-neutral-300 dark:bg-neutral-700 rounded-full overflow-hidden relative">
+                <div
+                  className="absolute left-0 top-0 h-full bg-blue-500 transition-all duration-100"
+                  style={{ width: `${((currentTime || 0) / (durationValue || 1)) * 100}%` }}
+                />
+              </div>
+
+              <span className="text-[14px] font-semibold tabular-nums text-neutral-900 dark:text-white">
+                {dayjs.duration(Math.trunc(durationValue) * 1000).format('m:ss')}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Action Button inside Pill - Matches Send position */}
+        {!isRecording && recordedAudio && blob && (
+          <div className="mb-0.5 ml-1">
+            <button
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-500 text-white transition-all active:scale-90"
+              onClick={handleSendRecording}
+            >
+              <SendHorizontal size={16} fill="white" />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Spacing to match MessageInput exactly */}
+      <div className="w-1" />
     </div>
   );
 };

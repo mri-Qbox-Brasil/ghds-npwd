@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Users, UserPlus, Phone, ArrowLeft } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Users, UserPlus, Phone, ArrowLeft, ChevronRight } from 'lucide-react';
 import useMessages from '../../hooks/useMessages';
 import Conversation, { CONVERSATION_ELEMENT_ID } from './Conversation';
 import MessageSkeletonList from './MessageSkeletonList';
@@ -18,6 +18,9 @@ import AudioContextMenu from './AudioContextMenu';
 import MessageContextMenu from './MessageContextMenu';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 import { cn } from '@utils/cn';
+import { AppWrapper } from '@ui/components/AppWrapper';
+import { DynamicHeader } from '@ui/components/DynamicHeader';
+import { initials } from '@utils/misc';
 
 const LARGE_HEADER_CHARS = 30;
 const MAX_HEADER_CHARS = 80;
@@ -123,103 +126,135 @@ export const MessageModal = () => {
 
   const doesContactExist = getConversationParticipant(activeMessageConversation.conversationList);
 
-  return (
-    <div className="fixed inset-0 z-[100] flex h-full w-full flex-col bg-background animate-in slide-in-from-right duration-300">
-      <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-neutral-100 dark:border-neutral-800 px-4 bg-background/80 backdrop-blur-md sticky top-0 z-20">
-        <div className="flex items-center gap-2 overflow-hidden">
-          <button
-            onClick={closeModal}
-            className="rounded-2xl p-2.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all active:scale-90"
-          >
-            <ArrowLeft size={24} strokeWidth={2.5} />
-          </button>
-          <div className="flex flex-col min-w-0">
-            <h1 className={cn(
-              "font-black text-neutral-900 dark:text-white truncate tracking-tight uppercase italic",
-              header.length > LARGE_HEADER_CHARS ? "text-base" : "text-lg"
-            )}>
-              {header}
-            </h1>
-            {activeMessageConversation.isGroupChat && (
-              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest -mt-1">
-                Grupo · {activeMessageConversation.conversationList.split('+').length} membros
-              </span>
-            )}
-          </div>
+  const contact = !activeMessageConversation.isGroupChat ? getContactByNumber(targetNumber) : null;
+
+  const leftActions = (
+    <div className="flex items-center gap-1 -ml-3">
+      <button
+        onClick={closeModal}
+        className="flex items-center p-1 rounded-2xl text-blue-500 hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-90"
+      >
+        <ArrowLeft size={24} strokeWidth={2.5} />
+      </button>
+    </div>
+  );
+
+  const centerActions = (
+    <div className="flex flex-col items-center justify-center min-w-0 pointer-events-auto cursor-pointer" onClick={() => activeMessageConversation.isGroupChat && openGroupModal()}>
+      {activeMessageConversation.isGroupChat ? (
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 mb-1">
+          <Users size={16} className="opacity-80" />
         </div>
-
-        <div className="flex items-center gap-1">
-          {!activeMessageConversation.isGroupChat && (
-            <button
-              onClick={() => initializeCall(targetNumber)}
-              className="p-2.5 rounded-2xl text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all active:scale-90"
-            >
-              <Phone size={22} fill="currentColor" className="opacity-20 absolute" />
-              <Phone size={22} className="relative" />
-            </button>
-          )}
-          {activeMessageConversation.isGroupChat ? (
-            <button
-              onClick={openGroupModal}
-              className="p-2.5 rounded-2xl text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all active:scale-90"
-            >
-              <Users size={22} />
-            </button>
-          ) : !doesContactExist ? (
-            <button
-              onClick={() => handleAddContact(targetNumber)}
-              className="p-2.5 rounded-2xl text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all active:scale-90"
-            >
-              <UserPlus size={22} />
-            </button>
-          ) : null}
-        </div>
-      </header>
-
-      <main className="relative flex-1 overflow-hidden">
-        {isLoaded && ResourceConfig ? (
-          <Conversation
-            isVoiceEnabled={ResourceConfig.voiceMessage.enabled}
-            messages={messages}
-            activeMessageGroup={activeMessageConversation}
-          />
-        ) : (
-          <div className="p-4 space-y-4">
-            <MessageSkeletonList />
-          </div>
-        )}
-      </main>
-
-      <footer className="shrink-0 bg-background">
-        {audioContextMenuOpen ? (
-          <div className="p-3 border-t border-neutral-100 dark:border-neutral-800 bg-background/95 backdrop-blur-md">
-            <AudioContextMenu onClose={() => setAudioContextMenuOpen(false)} />
-          </div>
-        ) : (
-          <MessageInput
-            messageGroupName={activeMessageConversation.participant}
-            messageConversation={activeMessageConversation}
-            onAddImageClick={() => setContextMenuOpen(true)}
-            onVoiceClick={() => setAudioContextMenuOpen(true)}
-            voiceEnabled={ResourceConfig.voiceMessage.enabled}
-          />
-        )}
-
-        <MessageContextMenu
-          messageGroup={activeMessageConversation}
-          isOpen={contextMenuOpen}
-          onClose={() => setContextMenuOpen(false)}
-          image={referalImage}
-          note={referalNote}
+      ) : contact?.avatar ? (
+        <img
+          src={contact.avatar}
+          className="h-8 w-8 rounded-full object-cover border border-neutral-100 dark:border-neutral-800 mb-1"
+          alt="avatar"
         />
-      </footer>
+      ) : (
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-b from-neutral-200 to-neutral-300 dark:from-neutral-700 dark:to-neutral-800 mb-1">
+          <span className="text-white font-semibold text-sm">
+            {initials(header)}
+          </span>
+        </div>
+      )}
 
-      <GroupDetailsModal
-        open={isGroupModalOpen}
-        onClose={closeGroupModal}
-        conversationList={activeMessageConversation.conversationList}
-        addContact={handleAddContact}
-      />
+      <div className="flex items-center gap-0.5 max-w-full">
+        <h1 className={cn(
+          "font-semibold text-neutral-900 dark:text-white truncate tracking-tight text-[12px] leading-tight",
+        )}>
+          {header}
+        </h1>
+        <ChevronRight size={10} className="text-neutral-400 mt-0.5" />
+      </div>
+    </div>
+  );
+
+  const rightActions = (
+    <div className="flex items-center gap-1">
+      {!activeMessageConversation.isGroupChat && (
+        <button
+          onClick={() => initializeCall(targetNumber)}
+          className="p-2 rounded-2xl text-blue-500 hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-90"
+        >
+          <Phone size={22} fill="currentColor" className="opacity-20 absolute" />
+          <Phone size={22} className="relative" />
+        </button>
+      )}
+      {activeMessageConversation.isGroupChat ? (
+        <button
+          onClick={openGroupModal}
+          className="p-2 rounded-2xl text-blue-500 hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-90"
+        >
+          <Users size={22} />
+        </button>
+      ) : !doesContactExist ? (
+        <button
+          onClick={() => handleAddContact(targetNumber)}
+          className="p-2 rounded-2xl text-blue-500 hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-90"
+        >
+          <UserPlus size={22} />
+        </button>
+      ) : null}
+    </div>
+  );
+
+  return (
+    <div className="inset-0 z-[100] flex h-full w-full flex-col bg-background animate-in slide-in-from-right duration-300">
+      <AppWrapper className="p-0 m-0 bg-white dark:bg-[#000000]">
+        <DynamicHeader
+          title=""
+          variant="pinned"
+          leftContent={leftActions}
+          rightContent={rightActions}
+          centerContent={centerActions}
+        />
+
+        <main className="relative flex-1 overflow-hidden pt-[130px]">
+          {isLoaded && ResourceConfig ? (
+            <Conversation
+              isVoiceEnabled={ResourceConfig.voiceMessage.enabled}
+              messages={messages}
+              activeMessageGroup={activeMessageConversation}
+            />
+          ) : (
+            <div className="p-4 space-y-4">
+              <MessageSkeletonList />
+            </div>
+          )}
+        </main>
+
+        <footer className="shrink-0">
+          {audioContextMenuOpen ? (
+            <div className="px-2 py-2 pb-5 bg-white/80 dark:bg-black/80 backdrop-blur-xl flex items-end animate-in slide-in-from-bottom duration-300">
+              <AudioContextMenu onClose={() => setAudioContextMenuOpen(false)} />
+            </div>
+          ) : (
+            <MessageInput
+              messageGroupName={activeMessageConversation.participant}
+              messageConversation={activeMessageConversation}
+              onAddImageClick={() => setContextMenuOpen(true)}
+              onVoiceClick={() => setAudioContextMenuOpen(true)}
+              voiceEnabled={ResourceConfig?.voiceMessage?.enabled}
+            />
+          )}
+
+          <MessageContextMenu
+            messageGroup={activeMessageConversation}
+            isOpen={contextMenuOpen}
+            onClose={() => setContextMenuOpen(false)}
+            image={referalImage}
+            note={referalNote}
+          />
+        </footer>
+
+        <GroupDetailsModal
+          open={isGroupModalOpen}
+          onClose={closeGroupModal}
+          conversationList={activeMessageConversation.conversationList}
+          addContact={handleAddContact}
+        />
+      </AppWrapper>
     </div>
   );
 };

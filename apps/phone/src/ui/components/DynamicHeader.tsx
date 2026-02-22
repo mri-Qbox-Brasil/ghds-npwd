@@ -10,6 +10,7 @@ interface DynamicHeaderProps {
     variant?: 'pinned' | 'largeTitle' | 'both';
     rightContent?: React.ReactNode;
     leftContent?: React.ReactNode;
+    centerContent?: React.ReactNode;
 }
 
 export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
@@ -18,7 +19,8 @@ export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
     showBackButton = false,
     variant = 'both',
     rightContent,
-    leftContent
+    leftContent,
+    centerContent
 }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const history = useHistory();
@@ -41,14 +43,14 @@ export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
         <div
             className={cn(
                 variant === 'pinned' ? "absolute inset-x-0 top-0" : "sticky top-0",
-                "z-10 w-full pt-[54px] pb-3 px-4 flex items-center justify-center transition-colors duration-200 border-b",
+                "z-10 w-full pt-[60px] pb-4 px-4 grid grid-cols-3 items-center transition-colors duration-200 border-b",
                 isScrolled
                     ? "bg-[#F2F2F7]/80 dark:bg-[#000000]/80 backdrop-blur-md border-neutral-300 dark:border-white/10"
                     : "bg-transparent border-transparent"
             )}
         >
             {/* Left Side (Back Button or Empty Space) */}
-            <div className="absolute left-6 z-10 flex items-center">
+            <div className="flex items-center justify-start z-10 min-w-0">
                 {showBackButton && (
                     <button
                         onClick={() => history.goBack()}
@@ -64,20 +66,24 @@ export const DynamicHeader: React.FC<DynamicHeaderProps> = ({
             {/* Center Title (Perfect hardware-centered alignment) */}
             <div
                 className={cn(
-                    "pointer-events-none transition-opacity duration-200 flex items-center justify-center",
-                    isScrolled ? "opacity-100" : "opacity-0"
+                    "transition-opacity duration-200 flex items-center justify-center min-w-0",
+                    centerContent ? "opacity-100" : (isScrolled ? "opacity-100" : "opacity-0")
                 )}
             >
-                <span
-                    className="text-[17px] font-semibold text-neutral-900 dark:text-white tracking-tight truncate px-12 block m-0 p-0 leading-none"
-                    style={{ transform: 'translateZ(0)', WebkitFontSmoothing: 'antialiased' }}
-                >
-                    {title}
-                </span>
+                {centerContent ? (
+                    centerContent
+                ) : (
+                    <span
+                        className="text-[17px] font-semibold text-neutral-900 dark:text-white tracking-tight truncate px-2 block m-0 p-0 leading-none"
+                        style={{ transform: 'translateZ(0)', WebkitFontSmoothing: 'antialiased' }}
+                    >
+                        {title}
+                    </span>
+                )}
             </div>
 
             {/* Right Side */}
-            <div className="absolute right-6 z-10 flex items-center">
+            <div className="flex items-center justify-end z-10 min-w-0">
                 {rightContent}
             </div>
         </div>

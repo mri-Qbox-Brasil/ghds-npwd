@@ -100,7 +100,7 @@
   "disabledApps": [],
   "apps": [],
   "voiceMessage": {
-    "enabled": false,
+    "enabled": true,
     "authorizationHeader": "Authorization",
     "url": "https://api.fivemange/api/audio",
     "returnedDataIndexes": ["url"]
