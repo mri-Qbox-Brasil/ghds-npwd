@@ -12,7 +12,7 @@ export const MessagesApp = () => {
 
     return (
         <WordFilterProvider>
-            <AppWrapper className="bg-[#white] dark:bg-black p-0 m-0 overflow-hidden text-neutral-900 dark:text-white">
+            <AppWrapper className="bg-white dark:bg-black p-0 m-0 overflow-hidden text-neutral-900 dark:text-white">
                 <React.Suspense fallback={<LoadingSpinner />}>
                     <Switch>
                         <Route path="/messages/conversations/:groupId">

@@ -86,7 +86,7 @@ export const Navigation: React.FC = () => {
   return (
     <div
       className={cn(
-        "absolute bottom-0 left-1/2 -translate-x-1/2 w-[200px] h-2 z-[1000] pointer-events-auto flex items-end justify-center pb-2",
+        "absolute bottom-0 left-1/2 -translate-x-1/2 w-[200px] h-4 z-[1000] pointer-events-auto flex items-end justify-center pb-2",
         isOverIframe && "mix-blend-difference"
       )}
       onMouseEnter={() => setIsHovered(true)}
