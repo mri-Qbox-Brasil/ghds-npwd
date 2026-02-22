@@ -8,9 +8,10 @@ import { cn } from '@utils/cn';
 
 export const Navigation: React.FC = () => {
   const containerRef = useRef<HTMLButtonElement>(null);
-  const [isVisible, setisVisible] = useState(true)
+  const [isVisible, setisVisible] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [isBrieflyVisible, setIsBrieflyVisible] = useState(false);
+  const [isOverIframe, setIsOverIframe] = useState(false);
   const [navBarStyle, setNavigationBarStyle] = useNavigationBarStyle();
   const wallpaper = useWallpaper();
   const history = useHistory();
@@ -36,9 +37,18 @@ export const Navigation: React.FC = () => {
       if (!containerRef.current) return;
 
       const rect = containerRef.current.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+
+      const elements = document.elementsFromPoint(x, y);
+      const overIframe = elements.some((el) => el.tagName.toLowerCase() === 'iframe');
+      setIsOverIframe(overIframe);
+
+      if (overIframe) return; // Skip Canvas reading if over Iframe
+
       const style = await getAmbientBrightness(
-        rect.left + rect.width / 2,
-        rect.top + rect.height / 2,
+        x,
+        y,
         containerRef.current,
         wallpaper
       );
@@ -75,7 +85,10 @@ export const Navigation: React.FC = () => {
 
   return (
     <div
-      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[200px] h-2 z-[1000] pointer-events-auto flex items-end justify-center pb-2"
+      className={cn(
+        "absolute bottom-0 left-1/2 -translate-x-1/2 w-[200px] h-2 z-[1000] pointer-events-auto flex items-end justify-center pb-2",
+        isOverIframe && "mix-blend-difference"
+      )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -89,8 +102,10 @@ export const Navigation: React.FC = () => {
           onClick={handleGoToMenu}
         >
           <div className={cn(
-            "w-[145px] h-[5px] rounded-[0.5rem] shadow-[0_1px_4px_rgba(0,0,0,0.1)] transition-colors duration-500",
-            navBarStyle === 'light' ? "bg-white/80" : "bg-black/80"
+            "w-[145px] h-[5px] rounded-[0.5rem] transition-colors duration-500",
+            isOverIframe
+              ? "bg-white"
+              : cn("shadow-[0_1px_4px_rgba(0,0,0,0.1)]", navBarStyle === 'light' ? "bg-white/80" : "bg-black/80")
           )} />
         </button>
       }

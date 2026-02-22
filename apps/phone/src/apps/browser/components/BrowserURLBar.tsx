@@ -45,7 +45,7 @@ export const BrowserURLBar: React.FC<BrowserControlsProps> = ({
   const transformedUrl = isFocused ? inputState : styledUrl;
 
   return (
-    <div className="flex items-center gap-2 p-3 bg-neutral-100/50 dark:bg-neutral-900/50 backdrop-blur-md border-b border-neutral-200 dark:border-white/10">
+    <div className="flex items-center gap-2 pt-[80px] pb-3 px-3 bg-neutral-100/50 dark:bg-neutral-900/50 backdrop-blur-md border-b border-neutral-200 dark:border-white/10">
       <div className="flex items-center gap-1">
         <button
           onClick={() => reloadPage()}

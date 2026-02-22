@@ -17,7 +17,7 @@ export type NotificationBaseComponent = React.FC<NotificationBaseProps>;
 
 const NotificationBase = forwardRef<HTMLDivElement, NotificationBaseProps>((props, ref) => {
     const { markAsRead } = useNotification();
-    const { app, message, secondaryTitle, path, onClick, ...other } = props;
+    const { app, message, secondaryTitle, path, onClick, hideIconVariant, iconVariant, ...other } = props;
     const [t] = useTranslation();
     const history = useHistory();
 

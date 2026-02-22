@@ -72,25 +72,24 @@ export const BrowserApp: React.FC = () => {
   }, [ResourceConfig.browser.homepageUrl]);
 
   return (
-    <AppWrapper id="browser" className="bg-white dark:bg-black">
-      <AppContent className="flex flex-col h-full grow scrollbar-hide">
-        <BrowserURLBar
-          browserUrl={browserUrl}
-          browserHasHistory={browserHistory.length > 1}
-          setBrowser={_setBrowserUrl}
-          goBack={handleGoBack}
-          reloadPage={reloadPage}
+    <AppWrapper id="browser" className="bg-white dark:bg-black overflow-hidden">
+      <BrowserURLBar
+        browserUrl={browserUrl}
+        browserHasHistory={browserHistory.length > 1}
+        setBrowser={_setBrowserUrl}
+        goBack={handleGoBack}
+        reloadPage={reloadPage}
+      />
+      <div className="flex-1 w-full bg-white dark:bg-black relative">
+        <iframe
+          is="x-frame-bypass"
+          src={browserUrl}
+          style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+          className="animate-in fade-in duration-1000"
+          title="npwd-browser"
+          ref={iframeRef}
         />
-        <div className="flex-grow w-full h-full relative overflow-hidden bg-white">
-          <iframe
-            is="x-frame-bypass"
-            src={browserUrl}
-            className="w-full h-full border-none animate-in fade-in duration-1000"
-            title="npwd-browser"
-            ref={iframeRef}
-          />
-        </div>
-      </AppContent>
+      </div>
     </AppWrapper>
   );
 };
