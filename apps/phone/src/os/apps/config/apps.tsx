@@ -37,6 +37,9 @@ import BankIcon from '../icons/material/app/BANK';
 import BankApp from '@apps/bank/components/BankApp';
 import EmailIcon from '../icons/material/app/EMAIL';
 import MailApp from '@apps/mail/components/MailApp';
+import GarageIcon from '../icons/material/app/GARAGE';
+import GarageApp from '../../../apps/garage/Garage';
+
 
 export interface IAppConfig {
   id: string;
@@ -221,7 +224,17 @@ export const APPS: IAppConfig[] = [
     path: '/mail',
     Route: () => <AppRoute id="MAIL" path="/mail" component={MailApp} emitOnOpen={false} />,
   },
+  {
+    id: 'GARAGE',
+    nameLocale: 'APPS_GARAGE',
+    icon: <GarageIcon />,
+    backgroundColor: '#10B981',
+    color: '#ffffff',
+    path: '/garage',
+    Route: () => <AppRoute id="GARAGE" path="/garage" component={GarageApp} emitOnOpen={false} />,
+  },
 ];
+
 
 // Example app only in dev
 if (import.meta.env.DEV) {

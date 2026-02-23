@@ -49,6 +49,14 @@ build({
           from: 'server/bank/bank.lua',
           to: '../../dist/game/server/bank.lua',
         },
+        {
+          from: 'client/garage/garage.lua',
+          to: '../../dist/game/client/cl_garage.lua',
+        },
+        {
+          from: 'server/garage/garage.lua',
+          to: '../../dist/game/server/sv_garage.lua',
+        },
       ],
     }),
   ],

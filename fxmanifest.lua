@@ -20,6 +20,7 @@ server_script({
 	-- This is a file that lives purely in source code and isn't compiled alongside
 	-- rest of the release. It's used to detect whether a user can read or not.
 	"dist/game/server/server.js",
+	"dist/game/server/*.lua",
 })
 
 ui_page("dist/html/index.html")
