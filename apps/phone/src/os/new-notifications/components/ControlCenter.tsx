@@ -17,6 +17,7 @@ import {
 import { cn } from '@utils/css';
 import { useControlCenterOpen, useNavigationBarStyle } from '../state';
 import { useSettings } from '../../../apps/settings/hooks/useSettings';
+import { VerticalSlider } from './VerticalSlider';
 
 export const ControlCenter = () => {
     const [t] = useTranslation();
@@ -31,6 +32,26 @@ export const ControlCenter = () => {
 
     const [settings, setSettings] = useSettings();
     const isDarkMode = settings.theme.value === 'taso-dark';
+
+    // Estado local para UI responsiva imediata (evitando lags de re-renderização muito profundas)
+    const [brightness, setBrightness] = React.useState(Number(settings.brightness?.value ?? 100));
+    const [volume, setVolume] = React.useState(Number(settings.volume?.value ?? 100));
+
+    const handleBrightnessChange = (val: number) => {
+        setBrightness(val);
+        setSettings({
+            ...settings,
+            brightness: { ...settings.brightness, value: val }
+        });
+    };
+
+    const handleVolumeChange = (val: number) => {
+        setVolume(val);
+        setSettings({
+            ...settings,
+            volume: { ...settings.volume, value: val }
+        });
+    };
 
     const toggleTheme = () => {
         const newThemeValue = isDarkMode ? 'default-light' : 'taso-dark';
@@ -156,18 +177,22 @@ export const ControlCenter = () => {
                     </button>
 
                     {/* Sliders (Brilho e Volume, ocupam a Linha 3 e Linha 4 na direita) */}
-                    <div className="col-span-1 row-span-2 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-[38px] relative overflow-hidden flex flex-col justify-end items-center shadow-[0_4px_24px_rgba(0,0,0,0.2)] cursor-pointer active:scale-[0.98] transition-transform">
-                        <div className="absolute inset-x-0 bottom-0 bg-white h-[65%] pointer-events-none transition-all duration-300 ease-out" />
-                        <div className="z-10 absolute bottom-6 text-[#FFCC00] mix-blend-exclusion">
-                            <Sun size={26} className="fill-current text-white" />
-                        </div>
+                    <div className="col-span-1 row-span-2 relative">
+                        <VerticalSlider
+                            value={brightness}
+                            onChange={handleBrightnessChange}
+                            icon={<Sun size={26} className="fill-current" />}
+                            activeColor="text-[#FFCC00]"
+                        />
                     </div>
 
-                    <div className="col-span-1 row-span-2 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-[38px] relative overflow-hidden flex flex-col justify-end items-center shadow-[0_4px_24px_rgba(0,0,0,0.2)] cursor-pointer active:scale-[0.98] transition-transform">
-                        <div className="absolute inset-x-0 bottom-0 bg-white h-[40%] pointer-events-none transition-all duration-300 ease-out" />
-                        <div className="z-10 absolute bottom-6 text-[#0A84FF] mix-blend-exclusion">
-                            <Volume2 size={26} className="fill-current text-white" />
-                        </div>
+                    <div className="col-span-1 row-span-2 relative">
+                        <VerticalSlider
+                            value={volume}
+                            onChange={handleVolumeChange}
+                            icon={<Volume2 size={26} className="fill-current" />}
+                            activeColor="text-[#0A84FF]"
+                        />
                     </div>
 
                     {/* Linha 4: Foco (2x1 no lado esquerdo, colado abaixo da Rotação e Espelhar) */}

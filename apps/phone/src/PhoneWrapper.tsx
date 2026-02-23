@@ -43,6 +43,8 @@ const PhoneWrapper: React.FC<PhoneWrapperProps> = ({ children }) => {
             backgroundImage: wallpaper,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            filter: `brightness(${Math.max(30, Number(settings.brightness?.value ?? 100))}%)`,
+            transition: 'filter 0.3s ease-out'
           }}
         >
           {/* iOS 26 Glass Overlay for Apps */}
