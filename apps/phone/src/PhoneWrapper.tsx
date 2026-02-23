@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSettings } from './apps/settings/hooks/useSettings';
 import { usePhoneVisibility } from '@os/phone/hooks/usePhoneVisibility';
 
 import { useWallpaper } from './apps/settings/hooks/useWallpaper';
 import { useLocation } from 'react-router-dom';
+import { toggleKeys } from './ui/components/Input';
 
 interface PhoneWrapperProps {
   children: React.ReactNode;
@@ -13,8 +14,33 @@ const PhoneWrapper: React.FC<PhoneWrapperProps> = ({ children }) => {
   const [settings] = useSettings();
   const { bottom, visibility } = usePhoneVisibility();
   const wallpaper = useWallpaper();
-
   const { pathname } = useLocation();
+
+  const [keepGameFocus, setKeepGameFocus] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Alt' && visibility) {
+        // Intercepta a tecla Alt para liberar/restringir movimentação do player no FiveM
+        e.preventDefault();
+        const newState = !keepGameFocus;
+        setKeepGameFocus(newState);
+        toggleKeys(newState);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [keepGameFocus, visibility]);
+
+  // Se o celular fechar, garante que o foco volte ao normal para a próxima abertura
+  useEffect(() => {
+    if (!visibility && keepGameFocus) {
+      setKeepGameFocus(false);
+    }
+  }, [visibility]);
 
   return (
     <div

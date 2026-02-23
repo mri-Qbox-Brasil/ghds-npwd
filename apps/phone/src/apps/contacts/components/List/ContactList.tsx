@@ -40,8 +40,8 @@ export const ContactList: React.FC = () => {
 
 
   return (
-    <div className="flex flex-col h-full bg-background animate-in fade-in duration-300">
-      <header className="px-6 pb-2 space-y-4 bg-background sticky top-0 z-30 pt-[80px]">
+    <div className="flex flex-col h-full bg-white dark:bg-black animate-in fade-in duration-300">
+      <header className="px-6 pb-2 space-y-4 bg-white dark:bg-black sticky top-0 z-30 pt-[80px]">
         <div className="flex items-center justify-between">
           <h1 className="text-[34px] font-bold text-foreground tracking-tight">Contatos</h1>
           <button
@@ -67,7 +67,7 @@ export const ContactList: React.FC = () => {
               .sort()
               .map((letter) => (
                 <div key={letter} className="flex flex-col">
-                  <div className="sticky top-0 z-20 px-6 py-1 bg-neutral-100/80 dark:bg-neutral-900/80 backdrop-blur-md">
+                  <div className="sticky top-0 z-20 px-6 py-1 bg-[#F2F2F7]/90 dark:bg-[#1C1C1E]/90 backdrop-blur-md">
                     <h3 className="text-[14px] font-bold text-neutral-500 dark:text-neutral-400 uppercase">{letter}</h3>
                   </div>
                   <div className="flex flex-col divide-y divide-neutral-100 dark:divide-neutral-800/50 px-6">

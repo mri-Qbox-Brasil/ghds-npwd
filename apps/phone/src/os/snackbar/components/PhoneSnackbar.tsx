@@ -17,7 +17,7 @@ export const PhoneSnackbar: React.FC = () => {
   if (!isOpen) return null;
 
   return (
-    <div className="flex justify-center items-center h-auto max-w-[280px] overflow-auto mx-auto absolute left-0 bottom-[75px] right-0 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
+    <div className="flex justify-center items-center h-auto w-full px-4 overflow-visible mx-auto absolute left-0 bottom-[100px] right-0 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
       <Alert severity={alert?.type || 'info'}>
         {alert?.message || ''}
       </Alert>

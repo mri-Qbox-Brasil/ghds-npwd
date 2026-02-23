@@ -38,7 +38,9 @@
     "authorizationHeader": "Authorization",
     "authorizationPrefix": "",
     "useAuthorization": true,
-    "returnedDataIndexes": ["url"]
+    "returnedDataIndexes": [
+      "url"
+    ]
   },
   "imageSafety": {
     "filterUnsafeImageUrls": true,
@@ -64,7 +66,10 @@
   },
   "profanityFilter": {
     "enabled": false,
-    "badWords": ["esx", "vrp"]
+    "badWords": [
+      "esx",
+      "vrp"
+    ]
   },
   "twitter": {
     "showNotifications": true,
@@ -98,11 +103,15 @@
   },
   "defaultContacts": [],
   "disabledApps": [],
-  "apps": [],
+  "apps": [
+    "npwd_qbx_mail"
+  ],
   "voiceMessage": {
     "enabled": false,
     "authorizationHeader": "Authorization",
     "url": "https://api.fivemange/api/audio",
-    "returnedDataIndexes": ["url"]
+    "returnedDataIndexes": [
+      "url"
+    ]
   }
 }

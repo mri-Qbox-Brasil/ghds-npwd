@@ -143,7 +143,7 @@ export function ProfileForm({ profile, showPreview }: IProps) {
         setVoiceMessage={handleSetVoiceMessage}
       />
 
-      <div className="flex-1 overflow-y-auto space-y-6 p-6 pb-32">
+      <div className="flex-1 overflow-y-auto space-y-6 pt-6 px-6 pb-24 custom-scrollbar">
         {/* Foto de Perfil */}
         <section className="space-y-3">
           <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">
@@ -240,15 +240,14 @@ export function ProfileForm({ profile, showPreview }: IProps) {
             </div>
           </section>
         )}
-      </div>
-
-      <div className="p-6 bg-background/80 backdrop-blur-md border-t border-neutral-100 dark:border-neutral-800 fixed bottom-0 w-full z-10 lg:w-[350px]">
-        <button
-          onClick={handleUpdate}
-          className="w-full h-14 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-2xl shadow-lg shadow-pink-500/30 transition-all active:scale-95"
-        >
-          Salvar Perfil
-        </button>
+        <div className="mt-6 border-t border-neutral-100 dark:border-neutral-800/50 pt-6">
+          <button
+            onClick={handleUpdate}
+            className="w-full h-14 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-2xl shadow-lg shadow-pink-500/30 transition-all active:scale-95"
+          >
+            Salvar Perfil
+          </button>
+        </div>
       </div>
     </div>
   );

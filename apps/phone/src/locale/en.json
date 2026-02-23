@@ -220,6 +220,7 @@
       "NO_IMAGE": "No image provided"
     },
     "MESSAGES": {
+      "NO_RESULTS": "No results found",
       "MESSAGES": {
         "MESSAGE_CONVERSATION_CREATE_ALL_NUMBERS_FAILED": "None of the phone numbers could be found!",
         "UNREAD_MESSAGES": "You have {{ count }} unread messages",

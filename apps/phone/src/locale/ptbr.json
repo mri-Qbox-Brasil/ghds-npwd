@@ -212,6 +212,7 @@
       "NO_IMAGE": "Nenhuma imagem fornecida"
     },
     "MESSAGES": {
+      "NO_RESULTS": "Nenhum resultado encontrado",
       "MESSAGES": {
         "MESSAGE_CONVERSATION_CREATE_ALL_NUMBERS_FAILED": "Nenhum dos números de telefone foi encontrado!",
         "UNREAD_MESSAGES": "Você tem {{ count }} mensagens não lidas",
