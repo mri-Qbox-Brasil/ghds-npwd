@@ -50,6 +50,11 @@ export const barUncollapsed = atom<boolean>({
   default: false,
 });
 
+export const controlCenterOpen = atom<boolean>({
+  key: 'npwd:controlCenterOpen',
+  default: false,
+});
+
 export const notificationsForApp = selectorFamily<NPWDNotification[], string>({
   key: 'npwd:notificationsForApp',
   get:
@@ -103,6 +108,9 @@ export const useSetNavigationBarStyle = () => useSetRecoilState(navigationBarSty
 
 export const useNavbarUncollapsed = () => useRecoilState(barUncollapsed);
 export const useSetNavbarUncollapsed = () => useSetRecoilState(barUncollapsed);
+
+export const useControlCenterOpen = () => useRecoilState(controlCenterOpen);
+export const useSetControlCenterOpen = () => useSetRecoilState(controlCenterOpen);
 
 export const useUnreadNotificationIds = () => useRecoilValue(unreadNotificationIds);
 export const useUnreadNotifications = () => useRecoilValue(unreadNotifications);

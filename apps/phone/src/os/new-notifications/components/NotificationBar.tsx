@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 
 import { Flex } from '@ui/components/ui/flex';
 import { Typography } from '@ui/components/ui/typography';
-import { List } from '@ui/components/List';
 
 import { ChevronUp } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';
@@ -10,6 +9,7 @@ import usePhoneTime from '../../phone/hooks/usePhoneTime';
 import { NoNotificationText } from './NoNotificationText';
 import {
   useNavbarUncollapsed,
+  useControlCenterOpen,
   useUnreadNotificationIds,
   useUnreadNotifications,
   useStatusBarStyle,
@@ -21,6 +21,7 @@ import { cn } from '@utils/css';
 import { getAmbientBrightness } from '@utils/getBrightness';
 import { useLocation } from 'react-router-dom';
 import { useWallpaper } from '../../../apps/settings/hooks/useWallpaper';
+import { ControlCenter } from './ControlCenter';
 
 
 interface WrapperGridProps {
@@ -68,6 +69,8 @@ export const NotificationBar = () => {
   const wallpaper = useWallpaper();
 
   const [barCollapsed, setBarUncollapsed] = useNavbarUncollapsed();
+  const [controlCenterOpen, setControlCenterOpen] = useControlCenterOpen();
+
   const [statusStyle, setStatusBarStyle] = useStatusBarStyle();
   const unreadNotificationIds = useUnreadNotificationIds();
   const unreadNotifications = useUnreadNotifications();
@@ -89,7 +92,6 @@ export const NotificationBar = () => {
       setStatusBarStyle(style);
     };
 
-    // Run detection with a slight delay to ensure app is rendered
     const timeout = setTimeout(detectBrightness, 200);
     return () => clearTimeout(timeout);
   }, [pathname, wallpaper, setStatusBarStyle]);
@@ -105,80 +107,111 @@ export const NotificationBar = () => {
     }
   }, [unreadNotificationIds, setBarUncollapsed]);
 
+  const handleLeftClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (controlCenterOpen) {
+      setControlCenterOpen(false);
+      return;
+    }
+    setBarUncollapsed((curr) => !curr);
+  };
+
+  const handleRightClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (barCollapsed) {
+      setBarUncollapsed(false);
+      return;
+    }
+    setControlCenterOpen((curr) => !curr);
+  };
 
   return (
     <>
       <div
         ref={containerRef}
         className={cn(
-          "absolute top-0 left-0 w-full z-[999] px-10 pt-6 pb-2 flex items-center justify-between shrink-0 hover:cursor-pointer bg-transparent pointer-events-auto transition-colors duration-300",
+          "absolute top-0 left-0 w-full z-[999] px-8 pt-6 pb-2 flex items-center justify-between shrink-0 bg-transparent pointer-events-none transition-colors duration-300",
           statusStyle === 'light' ? "text-white" : "text-black"
         )}
-        onClick={() => setBarUncollapsed((curr) => !curr)}
       >
-        {time ? (
-          <div className="font-sans text-[14px] font-medium tracking-tight leading-none">
-            {time}
-          </div>
-        ) : <div className="w-10" />}
-
-        <div className="flex items-center gap-1">
-          {unreadNotifications &&
-            unreadNotifications
-              .filter((val, idx, self) => idx === self.findIndex((t) => t.appId === val.appId))
-              .map((notification, idx) => (
-                <IconUnreadGrid tgtNoti={notification} key={idx} />
-              ))}
+        {/* Invisible hitboxes for iOS-like swipe from top */}
+        <div className="absolute inset-0 flex w-full h-12 pointer-events-auto z-10">
+          <div className="flex-1 h-full cursor-pointer" onClick={handleLeftClick} />
+          <div className="w-[120px] h-full cursor-pointer" onClick={handleRightClick} />
         </div>
 
-        <div className="flex items-center gap-1.5 overflow-visible">
+        <div className="font-sans text-[15px] font-semibold tracking-tight leading-none z-0 mt-0.5">
+          {time || '00:00'}
+        </div>
+
+        <div className="flex items-center gap-1.5 overflow-visible z-0 mt-0.5">
           <SignalIcon color="currentColor" />
           <BatteryIcon color="currentColor" />
         </div>
       </div>
 
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflow: 'hidden', zIndex: 97, pointerEvents: barCollapsed ? 'auto' : 'none' }}>
+      {/* Control Center */}
+      <ControlCenter />
+
+      {/* Notification Center */}
+      <div
+        className="absolute inset-0 overflow-hidden z-[97]"
+        style={{ pointerEvents: barCollapsed ? 'auto' : 'none' }}
+      >
+        {/* Blur backdrop overlay */}
         <div
           className={cn(
-            "absolute top-2.5 left-0 w-full h-full transition-all duration-400 cubic-bezier(0.16, 1, 0.3, 1)",
-            barCollapsed ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+            "absolute inset-0 bg-black/40 backdrop-blur-2xl transition-opacity duration-500",
+            barCollapsed ? "opacity-100" : "opacity-0"
+          )}
+          onClick={() => setBarUncollapsed(false)}
+        />
+
+        <div
+          className={cn(
+            "absolute inset-0 w-full h-full pt-[80px] px-4 flex flex-col transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1)",
+            barCollapsed ? "translate-y-0" : "-translate-y-full"
           )}
         >
-          <div
-            className="absolute left-[6%] top-[60px] w-[88%] z-[98] rounded-[20px] overflow-hidden backdrop-blur-md bg-background/70 border border-border/50 shadow-2xl"
-          >
-            <div className="flex items-center justify-between px-4 pt-4 pb-2">
-              <Typography variant="body2" className="text-[13px] font-bold tracking-tight uppercase text-muted-foreground">
-                Notificações
-              </Typography>
-              {unreadNotificationIds?.length > 0 && (
-                <button className="font-sans text-[13px] font-bold text-blue-500 uppercase appearance-none p-0 min-w-auto bg-transparent border-none cursor-pointer hover:text-blue-400 active:scale-95 transition-all" onClick={handleClearNotis}>
-                  Limpar tudo
-                </button>
-              )}
-            </div>
-
-            <div className="pb-2 px-2">
-              <List>
-                {unreadNotificationIds &&
-                  unreadNotificationIds
-                    .filter((val, idx, self) => idx === self.findIndex((t: string) => t === val))
-                    .map((notification, idx) => (
-                      <UnreadNotificationListItem key={idx} tgtNotiId={notification} />
-                    ))}
-              </List>
-              {!unreadNotificationIds.length && <NoNotificationText />}
-            </div>
-
-            <Flex justify="center" className="pb-2">
+          {/* Header and Clear Button */}
+          <div className="flex items-center justify-between px-2 mb-4">
+            <Typography variant="body2" className="text-[20px] font-bold tracking-tight text-white drop-shadow-md">
+              Central de Notificações
+            </Typography>
+            {unreadNotificationIds?.length > 0 && (
               <button
-                className="mx-auto text-muted-foreground hover:text-foreground cursor-pointer appearance-none bg-transparent border-none p-1.5 rounded-full hover:bg-black/10 dark:hover:bg-white/10 active:scale-90 transition-all"
-                onClick={() => setBarUncollapsed(false)}
+                className="bg-white/20 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-[13px] font-semibold hover:bg-white/30 active:scale-95 transition-all shadow-sm border border-white/10"
+                onClick={handleClearNotis}
               >
-                <ChevronUp size={20} strokeWidth={2.5} />
+                Limpar
               </button>
-            </Flex>
+            )}
           </div>
+
+          <div className="flex-1 overflow-y-auto pb-10 hide-scrollbar space-y-2.5">
+            {unreadNotificationIds &&
+              unreadNotificationIds
+                .filter((val, idx, self) => idx === self.findIndex((t: string) => t === val))
+                .map((notification, idx) => (
+                  <UnreadNotificationListItem key={idx} tgtNotiId={notification} />
+                ))}
+
+            {!unreadNotificationIds.length && (
+              <div className="flex flex-col items-center justify-center mt-20 opacity-60">
+                <span className="text-white font-medium text-[16px]">Nenhuma notificação nova</span>
+                <span className="text-white/70 text-[13px] mt-1">Sua caixa de entrada está limpa.</span>
+              </div>
+            )}
+          </div>
+
+          <Flex justify="center" className="pb-8 pt-2">
+            <button
+              className="mx-auto text-white/50 hover:text-white cursor-pointer appearance-none bg-transparent border-none p-2 rounded-full active:scale-90 transition-all font-semibold"
+              onClick={() => setBarUncollapsed(false)}
+            >
+              Deslize para Cima
+            </button>
+          </Flex>
         </div>
       </div>
     </>

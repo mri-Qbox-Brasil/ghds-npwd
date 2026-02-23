@@ -17,7 +17,7 @@ import { useCallService } from '@os/call/hooks/useCallService';
 import { useDialService } from './apps/dialer/hooks/useDialService';
 import { useMatchService } from './apps/match/hooks/useMatchService';
 import InjectDebugData from './os/debug/InjectDebugData';
-import { NotificationAlert } from '@os/notifications/components/NotificationAlert';
+import { NotificationAlert } from '@os/new-notifications/components/NotificationAlert';
 import { useCallModal } from '@os/call/hooks/useCallModal';
 import WindowSnackbar from './ui/components/WindowSnackbar';
 import { GameBlur } from './ui/components/GameBlur';

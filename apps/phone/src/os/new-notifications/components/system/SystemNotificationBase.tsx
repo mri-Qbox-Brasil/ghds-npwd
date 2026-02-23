@@ -26,51 +26,60 @@ export const SystemNotificationBase = forwardRef<HTMLDivElement, SystemNotificat
       closeSnackbar(props.id);
     };
 
-    const handleConfirmAction = async () => {
+    const handleConfirmAction = async (e: React.MouseEvent) => {
+      e.stopPropagation();
       await fetchNui('npwd:onNotificationConfirm', props.id);
     };
 
-    const handleCancelAction = async () => {
+    const handleCancelAction = async (e: React.MouseEvent) => {
+      e.stopPropagation();
       await fetchNui('npwd:onNotificationCancel', props.id);
     };
 
     return (
-      <SnackbarContent style={{ minWidth: '370px' }} ref={ref}>
-        <Flex
-          direction="col"
+      <SnackbarContent style={{ minWidth: '100%', display: 'flex', justifyContent: 'center' }} ref={ref}>
+        <div
           onClick={handleCloseNoti}
-          className="bg-paper p-4 rounded-xl shadow-[0_5px_15px_rgba(0,0,0,0.35)] w-full"
+          className="relative cursor-pointer w-[360px] min-h-[72px] mx-auto bg-white/80 dark:bg-[#1C1C1E]/80 backdrop-blur-3xl text-neutral-900 dark:text-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] border border-white/20 dark:border-white/10 overflow-hidden flex flex-col p-4 mt-2 pointer-events-auto transition-transform active:scale-[0.98]"
         >
-          <Flex align="center" className="text-white w-full mb-2">
-            <Flex
-              align="center"
-              justify="center"
-              className="p-1 rounded-full text-base"
+          <div className="flex items-center w-full mb-1">
+            <div
+              className="w-6 h-6 rounded-[6px] flex items-center justify-center shadow-sm text-white"
               style={{ backgroundColor: app.backgroundColor }}
             >
-              <app.NotificationIcon fontSize="inherit" />
-            </Flex>
-            <div className="text-[#bfbfbf] font-normal pl-2 flex-grow text-base">
+              <app.NotificationIcon fontSize="small" />
+            </div>
+            <div className="font-semibold text-[13px] opacity-60 ml-2 flex-grow uppercase tracking-wide">
               {t('APPS_SYSTEM') as unknown as string}
             </div>
-            <div>
-              <Typography color="default" className="text-[#bfbfbf]">{secondaryTitle}</Typography>
-            </div>
-          </Flex>
-          <div className="text-white text-base line-clamp-2 overflow-hidden text-ellipsis">
+            {secondaryTitle && (
+              <div className="text-[12px] opacity-50 font-medium">
+                {secondaryTitle}
+              </div>
+            )}
+          </div>
+
+          <div className="font-medium text-[15px] leading-tight line-clamp-3 mt-1 text-black dark:text-white">
             {message as string}
           </div>
+
           {controls && (
-            <Flex className="mt-2 text-white">
-              <button onClick={handleConfirmAction} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                <CheckCircle size={20} />
+            <div className="flex gap-3 mt-3">
+              <button
+                onClick={handleConfirmAction}
+                className="flex-1 bg-neutral-900 dark:bg-white text-white dark:text-black py-2 rounded-xl font-semibold text-[14px] transition-colors flex justify-center items-center opacity-90 hover:opacity-100"
+              >
+                Confirmar
               </button>
-              <button onClick={handleCancelAction} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                <XCircle size={20} />
+              <button
+                onClick={handleCancelAction}
+                className="flex-1 bg-red-500/10 text-red-500 py-2 rounded-xl font-semibold text-[14px] transition-colors flex justify-center items-center hover:bg-red-500/20"
+              >
+                Cancelar
               </button>
-            </Flex>
+            </div>
           )}
-        </Flex>
+        </div>
       </SnackbarContent>
     );
   },
