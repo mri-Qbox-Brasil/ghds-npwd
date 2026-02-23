@@ -35,6 +35,8 @@ import ExampleIcon from '../icons/material/app/EXAMPLE';
 import WeatherIcon from '../icons/material/app/WEATHER';
 import BankIcon from '../icons/material/app/BANK';
 import BankApp from '@apps/bank/components/BankApp';
+import EmailIcon from '../icons/material/app/EMAIL';
+import MailApp from '@apps/mail/components/MailApp';
 
 export interface IAppConfig {
   id: string;
@@ -208,9 +210,16 @@ export const APPS: IAppConfig[] = [
     backgroundColor: '#008000',
     color: '#ffffff',
     path: '/bank',
-    // Route: () => <AppRoute id="EXAMPLE" path="/example" component={ExampleAppWrapper} emitOnOpen={false} />
     Route: () => <AppRoute id="BANK" path="/bank" component={BankApp} emitOnOpen={false}></AppRoute>,
-
+  },
+  {
+    id: 'MAIL',
+    nameLocale: 'APPS_MAIL',
+    icon: <EmailIcon />,
+    backgroundColor: '#007AFF', // iOS blue
+    color: '#ffffff',
+    path: '/mail',
+    Route: () => <AppRoute id="MAIL" path="/mail" component={MailApp} emitOnOpen={false} />,
   },
 ];
 

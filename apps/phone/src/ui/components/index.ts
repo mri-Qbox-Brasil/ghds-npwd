@@ -1,4 +1,5 @@
 export * from './Alert';
+export * from './AlertDialog';
 export * from './AppContent';
 export * from './AppIcon';
 export * from './AppWrapper';

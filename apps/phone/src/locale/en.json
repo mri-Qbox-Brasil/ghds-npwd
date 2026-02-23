@@ -339,6 +339,10 @@
     "APPS_MATCH": "Matchmaker",
     "APPS_CALCULATOR_COPIED": "Result was copied to clipboard!",
     "APPS_DARKCHAT": "IRC",
+    "APPS_MAIL": "Mail",
+    "MAIL": {
+      "EMPTY": "This inbox is empty"
+    },
     "GENERIC_CLICK_TO_REVEAL": "Click to reveal",
     "GENERIC_LOADING": "Loading...",
     "GENERIC_WAIT": "Please wait...",

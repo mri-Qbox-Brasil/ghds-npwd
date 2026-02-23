@@ -26,6 +26,7 @@ import './match/match.controller';
 import './darkchat/darkchat.controller';
 import './audio/audio.controller';
 import './weather/weather.controller';
+import './mail/mail.controller';
 
 // setup exports
 import './bridge/sv_exports';

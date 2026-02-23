@@ -9,6 +9,8 @@ export * from './match';
 export * from './messages';
 export * from './notes';
 export * from './phone';
+export * from './darkchat';
+export * from './mail';
 export * from './photo';
 export * from './settings';
 export * from './twitter';

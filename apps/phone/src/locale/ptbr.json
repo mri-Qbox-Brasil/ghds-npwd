@@ -301,6 +301,10 @@
     "APPS_MATCH": "Match",
     "APPS_CALCULATOR_COPIED": "Resultado copiado",
     "APPS_DARKCHAT": "Xiscord",
+    "APPS_MAIL": "Mail",
+    "MAIL": {
+      "EMPTY": "This inbox is empty"
+    },
     "GENERIC_CLICK_TO_REVEAL": "Clique para revelar",
     "GENERIC_LOADING": "Carregando...",
     "GENERIC_WAIT": "Um momento...",

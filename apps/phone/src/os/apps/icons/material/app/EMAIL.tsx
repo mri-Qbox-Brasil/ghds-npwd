@@ -1,6 +1,6 @@
 import React from 'react';
-import { Mail } from 'lucide-react';
+import img from '../../../../../../src/apps/imgs/mail.svg';
 
-const EmailIcon: React.FC = () => <Mail />;
+const EmailIcon: React.FC = () => <img src={img} alt="Email Icon" />;
 
 export default EmailIcon;
