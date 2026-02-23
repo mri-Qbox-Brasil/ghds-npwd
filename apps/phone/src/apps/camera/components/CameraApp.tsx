@@ -6,11 +6,11 @@ import { GalleryModal } from './modal/GalleryModal';
 import { Route, Switch } from 'react-router-dom';
 import { LoadingSpinner } from '@ui/components/LoadingSpinner';
 import NewPhotoButton from './NewPhotoButton';
-import { usePhotosValue, useIsEditing, useCheckedPhotos } from '../hooks/state';
+import { useIsEditing, useCheckedPhotos, usePhotosLoadable } from '../hooks/state';
 
 const CameraApp: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const photos = usePhotosValue();
+  const photosLoadable = usePhotosLoadable();
   const [isEditing, setIsEditing] = useIsEditing();
   const [checkedPhotos, setCheckedPhotos] = useCheckedPhotos();
 
@@ -19,7 +19,7 @@ const CameraApp: React.FC = () => {
     if (isEditing) setCheckedPhotos([]);
   };
 
-  const rightActions = !!photos.length ? (
+  const rightActions = photosLoadable.state === 'hasValue' && !!photosLoadable.contents.length ? (
     <button
       onClick={toggleEdit}
       className="text-[17px] font-normal text-blue-500 active:text-blue-600 transition-colors"

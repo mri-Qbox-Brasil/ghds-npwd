@@ -1,4 +1,4 @@
-import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState, useRecoilValueLoadable } from 'recoil';
 import { ServerPromiseResp } from '@typings/common';
 import { GalleryPhoto, PhotoEvents } from '@typings/photo';
 import fetchNui from '@utils/fetchNui';
@@ -39,6 +39,7 @@ export const photoState = {
 export const useSetPhotos = () => useSetRecoilState(photoState.photos);
 export const usePhotos = () => useRecoilState(photoState.photos);
 export const usePhotosValue = () => useRecoilValue(photoState.photos);
+export const usePhotosLoadable = () => useRecoilValueLoadable(photoState.photos);
 
 export const useIsEditing = () => useRecoilState(photoState.isEditing);
 export const useIsEditingValue = () => useRecoilValue(photoState.isEditing);

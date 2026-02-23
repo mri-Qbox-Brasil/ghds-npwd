@@ -6,7 +6,7 @@ import NoteList from './list/NoteList';
 import { NoteModal } from './modal/NoteModal';
 import { Edit } from 'lucide-react';
 import { Route } from 'react-router-dom';
-import { useSetModalVisible, useSetSelectedNote, useNotesValue } from './hooks/state';
+import { useSetModalVisible, useSetSelectedNote, useNotesLoadable } from './hooks/state';
 import { LoadingSpinner } from '@ui/components/LoadingSpinner';
 import { useQueryParams } from '@common/hooks/useQueryParams';
 import { AddNoteExportData } from '@typings/notes';
@@ -15,7 +15,8 @@ export const NotesApp: React.FC = () => {
   const notesApp = useApp('NOTES');
   const setSelectedNote = useSetSelectedNote();
   const setModalVisible = useSetModalVisible();
-  const notes = useNotesValue();
+  const notesLoadable = useNotesLoadable();
+  const notesCount = notesLoadable.state === 'hasValue' ? notesLoadable.contents.length : 0;
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const onClickCreate = () => {
@@ -69,7 +70,7 @@ export const NotesApp: React.FC = () => {
       {/* iOS bottom toolbar */}
       <div className="flex justify-center py-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
         <p className="text-xs text-neutral-500 font-medium">
-          {notes.length} {notes.length === 1 ? 'nota' : 'notas'}
+          {notesLoadable.state === 'hasValue' ? `${notesCount} ${notesCount === 1 ? 'nota' : 'notas'}` : 'Carregando...'}
         </p>
       </div>
     </AppWrapper>

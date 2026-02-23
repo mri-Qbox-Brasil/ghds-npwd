@@ -1,4 +1,4 @@
-import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { atom, selector, useRecoilState, useRecoilValue, useSetRecoilState, useRecoilValueLoadable } from 'recoil';
 import fetchNui from '@utils/fetchNui';
 import { ServerPromiseResp } from '@typings/common';
 import { NoteItem, NotesEvents } from '@typings/notes';
@@ -43,4 +43,5 @@ export const useSetModalVisible = () => useSetRecoilState(modalVisibile);
 export const useModalVisible = () => useRecoilState(modalVisibile);
 
 export const useNotesValue = () => useRecoilValue(noteItems);
+export const useNotesLoadable = () => useRecoilValueLoadable(noteItems);
 export const useSetNotes = () => useSetRecoilState(noteItems);

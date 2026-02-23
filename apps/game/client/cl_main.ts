@@ -61,8 +61,11 @@ const getCurrentGameTime = () => {
  *
  * * * * * * * * * * * * */
 
+let isPhoneFocused = false;
+
 export const showPhone = async (): Promise<void> => {
   global.isPhoneOpen = true;
+  isPhoneFocused = true;
   const time = getCurrentGameTime();
   await animationService.openPhone(); // Animation starts before the phone is open
   emitNet(PhoneEvents.FETCH_CREDENTIALS);
@@ -76,6 +79,7 @@ export const showPhone = async (): Promise<void> => {
 
 export const hidePhone = async (): Promise<void> => {
   global.isPhoneOpen = false;
+  isPhoneFocused = false;
   sendMessage('PHONE', PhoneEvents.SET_VISIBILITY, false);
   await animationService.closePhone();
   SetNuiFocus(false, false);
@@ -96,6 +100,33 @@ RegisterCommand(
     if (!global.isPhoneDisabled && !IsPauseMenuActive()) await togglePhone();
   },
   false,
+);
+
+RegisterCommand(
+  'phone:walkModeToggle',
+  () => {
+    if (!global.isPhoneOpen) return;
+
+    if (isPhoneFocused) {
+      isPhoneFocused = false;
+      SetNuiFocus(false, false);
+      SetNuiFocusKeepInput(false);
+      emit('npwd:disableControlActions', false);
+    } else {
+      isPhoneFocused = true;
+      SetNuiFocus(true, true);
+      SetNuiFocusKeepInput(true);
+      emit('npwd:disableControlActions', true);
+    }
+  },
+  false,
+);
+
+RegisterKeyMapping(
+  'phone:walkModeToggle',
+  'Alternar Foco do Celular (Andar/Câmera)',
+  'keyboard',
+  'LMENU', // Left Alt
 );
 
 RegisterCommand(
