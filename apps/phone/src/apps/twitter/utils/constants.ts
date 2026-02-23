@@ -1,6 +1,6 @@
 import { Tweet } from '@typings/twitter';
 
-export const IMG_DEFAULT_AVATAR = 'https://i.file.glass/QrEvq.png';
+export const IMG_DEFAULT_AVATAR = '';
 export const IMG_INVALID_AVATAR = 'media/twitter/invalid.png';
 export const APP_TWITTER = 'TWITTER';
 
@@ -11,7 +11,7 @@ export const MockTwitterProfile = {
   id: 1,
   profile_name: 'My Name',
   identifier: '421431414441124124',
-  avatar_url: 'https://i.fivemanage.com/images/3ClWwmpwkFhL.png',
+  avatar_url: '',
   bio: 'Please no ERP',
   location: 'In my admin car',
   job: '',

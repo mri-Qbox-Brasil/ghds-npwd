@@ -21,15 +21,19 @@ async function fetchNui<T = any, D = any>(
 		body: JSON.stringify(data),
 	};
 
-	if (isEnvBrowser() && mockResp) {
-		LogDebugEvent({
-			data: {
-				request: data,
-				response: mockResp,
-			},
-			action: `fetchNui (${eventName})`,
-		});
-		return mockResp;
+	if (isEnvBrowser()) {
+		if (mockResp !== undefined) {
+			LogDebugEvent({
+				data: {
+					request: data,
+					response: mockResp,
+				},
+				action: `fetchNui (${eventName})`,
+			});
+			return mockResp;
+		}
+		// Return a rejected promise to suppress net::ERR_NAME_NOT_RESOLVED in the console
+		return Promise.reject(new Error(`[fetchNui] No mock response provided for ${eventName} in browser environment`));
 	}
 
 	const resourceName = (window as any).GetParentResourceName

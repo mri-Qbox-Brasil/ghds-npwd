@@ -54,9 +54,7 @@ const ContactsInfoPage: React.FC = () => {
   const [isEditing, setIsEditing] = useState(isNew);
   const [name, setName] = useState(contact?.display ?? '');
   const [number, setNumber] = useState(contact?.number ?? '');
-  const [avatar, setAvatar] = useState(
-    contact?.avatar ?? 'https://i.fivemanage.com/images/3ClWwmpwkFhL.png',
-  );
+  const [avatar, setAvatar] = useState(contact?.avatar ?? '');
 
   const [t] = useTranslation();
   const { ResourceConfig } = usePhone();
@@ -147,7 +145,7 @@ const ContactsInfoPage: React.FC = () => {
               setIsEditing(false);
               setName(contact?.display ?? '');
               setNumber(contact?.number ?? '');
-              setAvatar(contact?.avatar ?? 'https://i.fivemanage.com/images/3ClWwmpwkFhL.png');
+              setAvatar(contact?.avatar ?? '');
             } else {
               history.goBack();
             }

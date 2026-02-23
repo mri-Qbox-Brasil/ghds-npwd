@@ -20,7 +20,16 @@ export const useWeather = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchNui<any>('npwd:getWeather')
+        fetchNui<any>('npwd:getWeather', {}, {
+            status: 'ok',
+            data: {
+                current: { weather: 'CLEAR', time: 12 },
+                forecast: [
+                    { weather: 'CLOUDS', time: 13 },
+                    { weather: 'RAIN', time: 14 }
+                ]
+            }
+        })
             .then((res) => {
                 if (res.status === 'ok') {
                     setData(res.data);

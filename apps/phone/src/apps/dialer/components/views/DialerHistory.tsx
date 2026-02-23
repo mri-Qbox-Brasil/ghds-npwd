@@ -50,7 +50,7 @@ export const DialerHistory: React.FC = () => {
 
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         <div className="flex flex-col">
-          {calls.map((call: CallHistoryItem) => {
+          {calls.map((call: CallHistoryItem, index: number) => {
             const isOutgoing = call.transmitter === myNumber;
             const isMissed = !isOutgoing && !call.is_accepted && !call.isAnonymous;
             const displayNum = isOutgoing ? call.receiver : (call.isAnonymous ? 'Privado' : call.transmitter);
@@ -71,7 +71,7 @@ export const DialerHistory: React.FC = () => {
 
             return (
               <div
-                key={call.id}
+                key={`${call.id}-${index}`}
                 className="group px-6 py-3 border-b border-neutral-100 dark:border-neutral-800/50 flex items-center justify-between active:bg-neutral-100 dark:active:bg-neutral-800/30 transition-colors"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1" onClick={() => !call.isAnonymous && handleCall(displayNum)}>

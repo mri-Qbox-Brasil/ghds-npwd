@@ -4,6 +4,7 @@ import { Typography } from '@ui/components/ui/typography';
 import { useContactActions } from '../../../apps/contacts/hooks/useContactActions';
 import { useCall } from '../hooks/useCall';
 import { useTranslation } from 'react-i18next';
+import { initials } from '@utils/misc';
 
 const CallContactContainer = () => {
   const [t] = useTranslation();
@@ -18,6 +19,12 @@ const CallContactContainer = () => {
         ? 'Anonymous'
         : getDisplayByNumber(call?.transmitter);
 
+  const avatarSrc = call.isTransmitter
+    ? getPictureByNumber(call.receiver)
+    : !call.isTransmitter && call.isAnonymous
+      ? ''
+      : getPictureByNumber(call?.transmitter);
+
   return (
     <Flex align="center">
       <Flex direction="col" className="flex-grow overflow-hidden text-ellipsis">
@@ -28,17 +35,19 @@ const CallContactContainer = () => {
         </Typography>
         <Typography variant="h4">{getDisplayOrNumber()}</Typography>
       </Flex>
-      <img
-        className="ml-2 h-[80px] w-[80px] rounded-full object-cover"
-        alt={getDisplayOrNumber()}
-        src={
-          call.isTransmitter
-            ? getPictureByNumber(call.receiver)
-            : !call.isTransmitter && call.isAnonymous
-              ? 'https://i.fivemanage.com/images/3ClWwmpwkFhL.png'
-              : getPictureByNumber(call?.transmitter)
-        }
-      />
+      {avatarSrc ? (
+        <img
+          className="ml-2 h-[80px] w-[80px] shrink-0 rounded-full object-cover"
+          alt={getDisplayOrNumber()}
+          src={avatarSrc}
+        />
+      ) : (
+        <div className="ml-2 h-[80px] w-[80px] shrink-0 rounded-full bg-[#8E8E93] flex items-center justify-center">
+          <span className="text-[32px] text-white uppercase font-normal tracking-wide">
+            {initials(getDisplayOrNumber() || "?")}
+          </span>
+        </div>
+      )}
     </Flex>
   );
 };

@@ -35,7 +35,7 @@ const BankStatement = () => {
   const fetchTransactions = async () => {
     setLoading(true);
     try {
-      const result = await fetchNui('getTransactionsFromClient');
+      const result = await fetchNui('getTransactionsFromClient', undefined, mockTransactions);
       if (result && Array.isArray(result)) {
         setTransactions(result);
       } else {

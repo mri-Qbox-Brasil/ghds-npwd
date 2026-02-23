@@ -110,6 +110,7 @@
         "CALLING": "Calling {{ transmitter }}..."
       },
       "INPUT_PLACEHOLDER": "Enter a number",
+      "NAVBAR_FAVORITES": "Favorites",
       "NAVBAR_HISTORY": "History",
       "NAVBAR_DIAL": "Dial",
       "NAVBAR_CONTACTS": "Contacts",

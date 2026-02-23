@@ -14,7 +14,7 @@ const Home: React.FC = () => {
 
   const fetchPlayerData = async () => {
     try {
-      const result = await fetchNui('getBankCredentials');
+      const result = await fetchNui('getBankCredentials', undefined, { balance: 250000 });
       if (result && result.balance !== undefined) {
         setBalance(result.balance);
       }

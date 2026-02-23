@@ -102,6 +102,7 @@
         "TRANSMITTER_IS_CALLING": "{{ transmitter }} esta te ligando!"
       },
       "INPUT_PLACEHOLDER": "Digite um número",
+      "NAVBAR_FAVORITES": "Favoritos",
       "NAVBAR_HISTORY": "Recentes",
       "NAVBAR_DIAL": "Teclado",
       "NAVBAR_CONTACTS": "Contatos",
