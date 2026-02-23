@@ -1,7 +1,6 @@
 export * from './Alert';
 export * from './AppContent';
 export * from './AppIcon';
-export * from './AppTitle';
 export * from './AppWrapper';
 export * from './Backdrop';
 export * from './Button';

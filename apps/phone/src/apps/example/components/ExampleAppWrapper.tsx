@@ -1,22 +1,25 @@
-import React from 'react';
-import { AppWrapper } from '@ui/components';
-import { AppContent } from '@ui/components/AppContent';
-import { useApp } from '@os/apps/hooks/useApps';
-import { AppTitle } from '@ui/components/AppTitle';
+import React, { useRef } from 'react';
+import { AppWrapper, AppContent } from '@ui/components';
+import { DynamicHeader } from '@ui/components/DynamicHeader';
 import { ExampleApp } from './ExampleApp';
+import { useTranslation } from 'react-i18next';
+import { LoadingSpinner } from '@ui/components/LoadingSpinner';
 
-// AppContent by default has a React.Suspense which can be used to handle the app as a whole, for
-// when it must resolve the render promise. But, we must make sure that this is is mounted in a component
-// higher in the tree than the Recoil state caller.
-
-// This is why this wrapper component is needed.
 export const ExampleAppWrapper: React.FC = () => {
-  const example = useApp('EXAMPLE');
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [t] = useTranslation();
+
   return (
-    <AppWrapper>
-      <AppTitle app={example} />
-      <AppContent>
-        <ExampleApp />
+    <AppWrapper className="bg-[#F2F2F7] dark:bg-black">
+      <DynamicHeader title={t('APPS_EXAMPLE')} scrollRef={scrollRef} variant="pinned" />
+      <AppContent
+        ref={scrollRef}
+        className="flex flex-col grow pb-24 scrollbar-hide h-full relative"
+      >
+        <DynamicHeader title={t('APPS_EXAMPLE')} scrollRef={scrollRef} variant="largeTitle" />
+        <React.Suspense fallback={<LoadingSpinner />}>
+          <ExampleApp />
+        </React.Suspense>
       </AppContent>
     </AppWrapper>
   );
