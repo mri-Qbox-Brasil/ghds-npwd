@@ -13,6 +13,8 @@ import { INotificationIcon } from '@os/notifications/providers/NotificationsProv
 import { BrowserApp } from '@apps/browser/components/BrowserApp';
 import { MatchApp } from '@apps/match/components/MatchApp';
 import TwitterContainer from '@apps/twitter/components/TwitterContainer';
+import { WeatherApp } from '@apps/weather/components/WeatherApp';
+
 import { IPhoneSettings } from '@typings/settings';
 import { i18n } from 'i18next';
 
@@ -190,17 +192,15 @@ export const APPS: IAppConfig[] = [
     path: '/camera',
     Route: () => <AppRoute id="CAMERA" path="/camera" component={CameraApp} emitOnOpen={false} />,
   },
-  // {
-  //   id: 'WEATHER',
-  //   nameLocale: 'APPS_WEATHER',
-  //   icon: <WeatherIcon />,
-  //   backgroundColor: 'rgba(0, 0, 0, 0)',
-  //   color: '#ffffff',
-  //   path: '/test',
-  //   // Route: () => <AppRoute id="EXAMPLE" path="/example" component={ExampleAppWrapper} emitOnOpen={false} />
-  //   Route: () => <div></div>,
-
-  // },
+  {
+    id: 'WEATHER',
+    nameLocale: 'APPS_WEATHER',
+    icon: <WeatherIcon />,
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    color: '#ffffff',
+    path: '/weather',
+    Route: () => <AppRoute id="WEATHER" path="/weather" component={WeatherApp} emitOnOpen={false} />,
+  },
   {
     id: 'BANK',
     nameLocale: 'APPS_BANK',
@@ -227,17 +227,6 @@ if (import.meta.env.DEV) {
       Route: () => (
         <AppRoute id="EXAMPLE" path="/example" component={ExampleAppWrapper} emitOnOpen={false} />
       ),
-    },
-    {
-      id: 'WEATHER',
-      nameLocale: 'APPS_WEATHER',
-      icon: <WeatherIcon />,
-      backgroundColor: 'rgba(0, 0, 0, 0)',
-      color: '#ffffff',
-      path: '/test',
-      // Route: () => <AppRoute id="EXAMPLE" path="/example" component={ExampleAppWrapper} emitOnOpen={false} />
-      Route: () => <div></div>,
-
-    },
+    }
   );
 }

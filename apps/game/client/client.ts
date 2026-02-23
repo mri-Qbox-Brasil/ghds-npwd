@@ -8,6 +8,7 @@ import './cl_marketplace';
 import './cl_notes';
 import './cl_photo';
 import './cl_messages';
+import './weather/cl_weather';
 import './calls/cl_calls.controller';
 import './cl_match';
 import './darkchat-client';
