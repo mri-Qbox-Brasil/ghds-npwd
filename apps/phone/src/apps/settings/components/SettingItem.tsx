@@ -106,6 +106,8 @@ interface SettingSliderProps {
   value: number;
   onCommit: (value: number | number[]) => void;
   iconBg?: string;
+  min?: number;
+  max?: number;
 }
 
 export const SettingItemSlider: React.FC<SettingSliderProps> = ({
@@ -114,6 +116,8 @@ export const SettingItemSlider: React.FC<SettingSliderProps> = ({
   value,
   onCommit,
   iconBg = "bg-orange-500",
+  min = 0,
+  max = 100,
 }) => (
   <div className="w-full flex flex-col pl-4 pr-4 py-3 bg-white dark:bg-neutral-900 border-b border-neutral-100 dark:border-white/5 last:border-none gap-3">
     <div className="flex items-center justify-between w-full">
@@ -128,8 +132,8 @@ export const SettingItemSlider: React.FC<SettingSliderProps> = ({
     <div className="px-1">
       <input
         type="range"
-        min="0"
-        max="100"
+        min={min}
+        max={max}
         value={value}
         onChange={(e) => onCommit(parseInt(e.target.value, 10))}
         className="w-full h-1.5 bg-neutral-100 dark:bg-neutral-800 rounded-full appearance-none cursor-pointer accent-blue-500"

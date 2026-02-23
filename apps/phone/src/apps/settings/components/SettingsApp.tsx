@@ -83,6 +83,20 @@ export const SettingsApp: React.FC = () => {
   const zoomOptions = config.zoomOptions.map(
     MapSettingItem(settings.zoom, (val: SettingOption) => handleSettingChange('zoom', val)),
   );
+
+  // Custom Slider Adapter format for Zoom
+  const handleZoomChange = (val: number | number[]) => {
+    const percent = Array.isArray(val) ? val[0] : val;
+    // Zoom percentage (70 - 150) to decimal (0.7 - 1.5)
+    const decimalValue = percent / 100;
+    const matchedOption = config.zoomOptions.find(opt => opt.value === decimalValue);
+
+    // We recreate the SettingOption object to keep standard settings persist structural compatibility
+    handleSettingChange(
+      'zoom',
+      matchedOption || { label: `${percent}%`, value: decimalValue }
+    );
+  };
   const ringtones = config.ringtones.map(
     MapSettingItem(settings.ringtone, (val: SettingOption) => handleSettingChange('ringtone', val)),
   );
@@ -254,12 +268,13 @@ export const SettingsApp: React.FC = () => {
               Icon={Smartphone}
               iconBg="bg-neutral-800"
             />
-            <SettingItem
-              label={t('SETTINGS.OPTIONS.ZOOM')}
-              value={settings.zoom.label}
-              options={zoomOptions}
-              onClick={openMenu}
-              Icon={ZoomIn}
+            <SettingItemSlider
+              label={t('SETTINGS.OPTIONS.ZOOM') as string}
+              value={Math.round(Number(settings.zoom.value) * 100)}
+              onCommit={handleZoomChange}
+              min={70}
+              max={150}
+              icon={<ZoomIn size={20} />}
               iconBg="bg-indigo-500"
             />
           </SettingsCategory>
