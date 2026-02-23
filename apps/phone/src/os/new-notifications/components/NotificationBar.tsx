@@ -21,6 +21,7 @@ import { cn } from '@utils/css';
 import { getAmbientBrightness } from '@utils/getBrightness';
 import { useLocation } from 'react-router-dom';
 import { useWallpaper } from '../../../apps/settings/hooks/useWallpaper';
+import { useSettings } from '../../../apps/settings/hooks/useSettings';
 import { ControlCenter } from './ControlCenter';
 
 
@@ -67,6 +68,7 @@ export const NotificationBar = () => {
   const time = usePhoneTime();
   const { pathname } = useLocation();
   const wallpaper = useWallpaper();
+  const [settings] = useSettings();
 
   const [barCollapsed, setBarUncollapsed] = useNavbarUncollapsed();
   const [controlCenterOpen, setControlCenterOpen] = useControlCenterOpen();
@@ -94,7 +96,7 @@ export const NotificationBar = () => {
 
     const timeout = setTimeout(detectBrightness, 200);
     return () => clearTimeout(timeout);
-  }, [pathname, wallpaper, setStatusBarStyle]);
+  }, [pathname, wallpaper, settings.theme.value, controlCenterOpen, setStatusBarStyle]);
 
   const handleClearNotis = async () => {
     setBarUncollapsed(false);
@@ -161,10 +163,11 @@ export const NotificationBar = () => {
         {/* Blur backdrop overlay */}
         <div
           className={cn(
-            "absolute inset-0 bg-black/40 backdrop-blur-2xl transition-opacity duration-500",
+            "absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity duration-500",
             barCollapsed ? "opacity-100" : "opacity-0"
           )}
           onClick={() => setBarUncollapsed(false)}
+          data-ignore-brightness="true"
         />
 
         <div

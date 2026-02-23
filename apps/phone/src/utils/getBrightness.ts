@@ -87,9 +87,21 @@ export const getAmbientBrightness = async (
         // Skip the excluded element (usually the NotificationBar itself)
         if (el === excludeElement || (excludeElement && excludeElement.contains(el))) continue;
 
+        // Skip elements explicitly told to be ignored or invisible
+        if (el.dataset.ignoreBrightness === "true") continue;
+        if (el.style.opacity === "0") continue;
+
         const style = window.getComputedStyle(el);
         const bgImage = style.backgroundImage;
         const bgColor = style.backgroundColor;
+
+        // Ignore translucent backgrounds (opacity < 0.5) because the brightness mostly comes from underneath
+        if (bgColor && bgColor.startsWith('rgba')) {
+            const alphaMatch = bgColor.match(/rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*([\d.]+)\s*\)/);
+            if (alphaMatch && parseFloat(alphaMatch[1]) < 0.5) {
+                continue;
+            }
+        }
 
         // 1. Check for background images
         if (bgImage && bgImage !== 'none' && bgImage.includes('url')) {

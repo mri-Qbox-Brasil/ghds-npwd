@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { usePhone } from '@os/phone/hooks/usePhone';
-import { useNavigationBarStyle } from '@os/new-notifications/state';
+import { useNavigationBarStyle, useControlCenterOpen } from '@os/new-notifications/state';
 import { getAmbientBrightness } from '@utils/getBrightness';
+import { useSettings } from '../../../apps/settings/hooks/useSettings';
 import { useWallpaper } from '../../../apps/settings/hooks/useWallpaper';
 import { cn } from '@utils/cn';
 
@@ -13,6 +14,8 @@ export const Navigation: React.FC = () => {
   const [isBrieflyVisible, setIsBrieflyVisible] = useState(false);
   const [isOverIframe, setIsOverIframe] = useState(false);
   const [navBarStyle, setNavigationBarStyle] = useNavigationBarStyle();
+  const [isOpen] = useControlCenterOpen();
+  const [settings] = useSettings();
   const wallpaper = useWallpaper();
   const history = useHistory();
   const { isExact } = useRouteMatch('/');
@@ -59,7 +62,7 @@ export const Navigation: React.FC = () => {
     // Run detection with a slight delay to ensure content is settled
     const timeout = setTimeout(detectBrightness, 300);
     return () => clearTimeout(timeout);
-  }, [location.pathname, wallpaper, setNavigationBarStyle]);
+  }, [location.pathname, wallpaper, settings.theme.value, isOpen, setNavigationBarStyle]);
 
   // const handleGoBackInHistory = () => {
   //   history.goBack();

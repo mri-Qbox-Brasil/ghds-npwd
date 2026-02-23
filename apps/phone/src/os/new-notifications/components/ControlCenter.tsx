@@ -15,7 +15,7 @@ import {
     Music
 } from 'lucide-react';
 import { cn } from '@utils/css';
-import { useControlCenterOpen } from '../state';
+import { useControlCenterOpen, useNavigationBarStyle } from '../state';
 import { useSettings } from '../../../apps/settings/hooks/useSettings';
 
 export const ControlCenter = () => {
@@ -26,6 +26,8 @@ export const ControlCenter = () => {
     const [wifi, setWifi] = React.useState(true);
     const [bluetooth, setBluetooth] = React.useState(true);
     const [radio, setRadio] = React.useState(true);
+
+    const [navStyle] = useNavigationBarStyle();
 
     const [settings, setSettings] = useSettings();
     const isDarkMode = settings.theme.value === 'taso-dark';
@@ -52,14 +54,16 @@ export const ControlCenter = () => {
                 "absolute inset-0 z-[98]",
                 isOpen ? "pointer-events-auto" : "pointer-events-none delay-500" // delay para pointer actions acabarem depois q a animação acaba
             )}
+            data-ignore-brightness="true"
         >
             {/* Background with heavy blur */}
             <div
                 className={cn(
-                    "absolute inset-0 bg-black/30 backdrop-blur-3xl transition-opacity duration-500",
+                    "absolute inset-0 bg-black/10 backdrop-blur-md transition-opacity duration-500",
                     isOpen ? "opacity-100" : "opacity-0"
                 )}
                 onClick={() => setIsOpen(false)}
+                data-ignore-brightness="true"
             />
 
             {/* Control Center Content Container with Slide Animation */}
@@ -206,7 +210,10 @@ export const ControlCenter = () => {
                 {/* Deslize para Cima Button */}
                 <div className="flex justify-center mt-auto pb-8 pt-4">
                     <button
-                        className="mx-auto text-white/50 hover:text-white cursor-pointer appearance-none bg-transparent border-none p-2 rounded-full active:scale-90 transition-all font-semibold"
+                        className={cn(
+                            "mx-auto cursor-pointer appearance-none bg-transparent border-none p-2 rounded-full active:scale-90 transition-all font-semibold",
+                            navStyle === 'light' ? "text-white/60 hover:text-white" : "text-black/60 hover:text-black"
+                        )}
                         onClick={() => setIsOpen(false)}
                     >
                         Deslize para Cima
