@@ -341,7 +341,12 @@
     "APPS_DARKCHAT": "IRC",
     "APPS_MAIL": "Mail",
     "MAIL": {
-      "EMPTY": "This inbox is empty"
+      "EMPTY": "This inbox is empty",
+      "INBOX": "Inbox",
+      "UNREAD_COUNT_ZERO": "No Unread",
+      "UNREAD_COUNT_ONE": "1 Unread",
+      "UNREAD_COUNT_MANY": "{{count}} Unread",
+      "JUST_UPDATED": "Just Updated"
     },
     "GENERIC_CLICK_TO_REVEAL": "Click to reveal",
     "GENERIC_LOADING": "Loading...",

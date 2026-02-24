@@ -14,12 +14,19 @@ onNetPromise<void, MailMessage[]>(MailEvents.FETCH_MAILS, async (reqObj: Promise
     }
 });
 
-onNetPromise<number, boolean>(MailEvents.DELETE_MAIL, async (reqObj: PromiseRequest<number>, resp: PromiseEventResp<boolean>) => {
+onNetPromise<number | number[], boolean>(MailEvents.DELETE_MAIL, async (reqObj: PromiseRequest<number | number[]>, resp: PromiseEventResp<boolean>) => {
     try {
-        const success = await MailService.deleteMail(reqObj.source, reqObj.data);
+        const ids = Array.isArray(reqObj.data) ? reqObj.data : [reqObj.data];
+        let success = true;
+
+        for (const id of ids) {
+            const result = await MailService.deleteMail(reqObj.source, id);
+            if (!result) success = false;
+        }
+
         resp({ status: 'ok', data: success });
     } catch (e) {
-        mainLogger.error(`Error occurred while deleting mail (${reqObj.source}), Error: ${(e as Error).message}`);
+        mainLogger.error(`Error occurred while deleting mail(s) (${reqObj.source}), Error: ${(e as Error).message}`);
         resp({ status: 'error', errorMsg: (e as Error).message });
     }
 });

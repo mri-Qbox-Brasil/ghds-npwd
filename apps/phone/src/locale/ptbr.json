@@ -303,7 +303,12 @@
     "APPS_DARKCHAT": "Xiscord",
     "APPS_MAIL": "Mail",
     "MAIL": {
-      "EMPTY": "This inbox is empty"
+      "EMPTY": "Esta caixa de entrada está vazia",
+      "INBOX": "Entrada",
+      "UNREAD_COUNT_ZERO": "Nenhuma Não Lida",
+      "UNREAD_COUNT_ONE": "1 Não Lida",
+      "UNREAD_COUNT_MANY": "{{count}} Não Lidas",
+      "JUST_UPDATED": "Atualizado Há Pouco"
     },
     "GENERIC_CLICK_TO_REVEAL": "Clique para revelar",
     "GENERIC_LOADING": "Carregando...",

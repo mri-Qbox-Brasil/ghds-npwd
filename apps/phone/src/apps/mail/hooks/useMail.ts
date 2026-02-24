@@ -19,14 +19,19 @@ export const useMail = () => {
         }
     };
 
-    const deleteMail = async (id: number) => {
+    const deleteMail = async (id: number | number[]) => {
         try {
             const resp = await fetchNui<any>(MailEvents.DELETE_MAIL, id, { status: 'ok', data: true });
+
             if (resp && resp.status === 'ok' && resp.data) {
-                setMails((prev) => prev.filter((mail) => mail.id !== id));
+                if (Array.isArray(id)) {
+                    setMails((prev) => prev.filter((mail) => !id.includes(mail.id)));
+                } else {
+                    setMails((prev) => prev.filter((mail) => mail.id !== id));
+                }
             }
         } catch (e) {
-            console.error('Failed to delete mail', e);
+            console.error('Failed to delete mail(s)', e);
         }
     };
 
