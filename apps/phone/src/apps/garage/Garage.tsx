@@ -15,6 +15,8 @@ export interface Vehicle {
     fuel: number;
     engine: number;
     body: number;
+    coords?: { x: number; y: number; z: number };
+    street?: string;
 }
 
 const GarageApp: React.FC = () => {
@@ -37,12 +39,18 @@ const GarageApp: React.FC = () => {
         fetchVehicles();
     }, []);
 
-    const getStatusLabel = (state: number) => {
-        switch (state) {
-            case 0: return { label: 'Fora', color: 'text-orange-500' };
-            case 1: return { label: 'Na Garagem', color: 'text-emerald-500' };
-            case 2: return { label: 'Apreendido', color: 'text-red-500' };
-            default: return { label: 'Desconhecido', color: 'text-neutral-500' };
+    const getStatusLabel = (veh: Vehicle) => {
+        switch (veh.state) {
+            case 0:
+                return veh.coords
+                    ? { label: 'Na Rua', color: 'text-orange-500' }
+                    : { label: 'Retido (Depot)', color: 'text-orange-500' };
+            case 1:
+                return { label: 'Na Garagem', color: 'text-emerald-500' };
+            case 2:
+                return { label: 'Apreendido', color: 'text-red-500' };
+            default:
+                return { label: 'Desconhecido', color: 'text-neutral-500' };
         }
     };
 
@@ -66,7 +74,7 @@ const GarageApp: React.FC = () => {
                     ) : (
                         <div className="space-y-3">
                             {vehicles.map((veh) => {
-                                const status = getStatusLabel(veh.state);
+                                const status = getStatusLabel(veh);
                                 return (
                                     <button
                                         key={veh.id}
@@ -93,7 +101,8 @@ const GarageApp: React.FC = () => {
                                                     {status.label}
                                                 </p>
                                                 <p className="text-[11px] text-neutral-400">
-                                                    {veh.garage || 'Rua'}
+                                                    {veh.state === 1 ? veh.garage :
+                                                        veh.coords ? (veh.street || 'Rua') : 'Depot'}
                                                 </p>
                                             </div>
                                             <ChevronRight size={16} className="text-neutral-300" />

@@ -46,7 +46,10 @@ export const useApps = () => {
         notification: icons.find((i) => i.key === app.id),
         NotificationIcon,
         notificationIcon: <NotificationIcon htmlColor={app.color} fontSize="small" />,
-        isDisabled: !!ResourceConfig?.disabledApps.find((a) => a === app.id),
+        isDisabled:
+          app.id === 'GARAGE'
+            ? ResourceConfig?.garage?.enabled === false || !!ResourceConfig?.disabledApps.find((a) => a === app.id)
+            : !!ResourceConfig?.disabledApps.find((a) => a === app.id),
       };
     });
   }, [icons, curIconSet, ResourceConfig]);

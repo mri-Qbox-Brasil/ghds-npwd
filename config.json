@@ -113,5 +113,9 @@
     "returnedDataIndexes": [
       "url"
     ]
+  },
+  "garage": {
+    "enabled": true,
+    "valetPrice": 500
   }
 }

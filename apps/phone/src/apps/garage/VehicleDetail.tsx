@@ -82,7 +82,9 @@ const VehicleDetail: React.FC<VehicleDetailProps> = ({ vehicle, onBack }) => {
                         <div>
                             <h4 className="text-[14px] font-bold text-neutral-900 dark:text-white">Localização Atual</h4>
                             <p className="text-[13px] text-neutral-600 dark:text-neutral-400 mt-1">
-                                {vehicle.state === 1 ? `Estacionado em ${vehicle.garage}` : 'Veículo está circulando ou em local desconhecido'}
+                                {vehicle.state === 1 ? `Estacionado em ${vehicle.garage}` :
+                                    vehicle.coords ? `Na Rua: ${vehicle.street || 'Localização marcada'}` :
+                                        'Veículo está retido no Depot'}
                             </p>
                         </div>
                     </div>
@@ -98,7 +100,7 @@ const VehicleDetail: React.FC<VehicleDetailProps> = ({ vehicle, onBack }) => {
                         <span>Rastrear Veículo</span>
                     </button>
 
-                    {vehicle.state === 1 && (
+                    {(vehicle.state === 1 || vehicle.state === 0) && (
                         <button
                             onClick={handleValet}
                             className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-emerald-500 text-white font-bold text-[16px] active:scale-[0.97] transition-all shadow-lg shadow-emerald-500/20"

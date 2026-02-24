@@ -3,6 +3,14 @@ local QBX = exports.qbx_core
 -- NUI: Buscar veículos (vêm do servidor)
 RegisterNUICallback('getGarageVehicles', function(_, cb)
     local vehicles = lib.callback.await('npwd:server:getGarageVehicles', false)
+    if vehicles then
+        for _, v in ipairs(vehicles) do
+            if v.coords and v.state == 0 then
+                local streetHash, crossingHash = GetStreetNameAtCoord(v.coords.x, v.coords.y, v.coords.z)
+                v.street = GetStreetNameFromHashKey(streetHash)
+            end
+        end
+    end
     cb(vehicles)
 end)
 
@@ -22,7 +30,8 @@ RegisterNUICallback('trackVehicle', function(data, cb)
         local vehicles = GetGamePool('CVehicle')
         local found = false
         for _, veh in ipairs(vehicles) do
-            if qbx.getVehiclePlate(veh) == plate then
+            local vehPlate = GetVehicleNumberPlateText(veh):gsub("%s+", "")
+            if vehPlate == plate:gsub("%s+", "") then
                 local coords = GetEntityCoords(veh)
                 SetNewWaypoint(coords.x, coords.y)
                 exports.ox_lib:notify({
@@ -36,9 +45,23 @@ RegisterNUICallback('trackVehicle', function(data, cb)
         end
 
         if not found then
+            -- Busca no servidor (OneSync)
+            local sCoords = lib.callback.await('npwd:server:getVehicleLocation', false, plate)
+            if sCoords then
+                SetNewWaypoint(sCoords.x, sCoords.y)
+                exports.ox_lib:notify({
+                    title = 'Rastreamento',
+                    description = 'Localização remota marcada no GPS!',
+                    type = 'success'
+                })
+                found = true
+            end
+        end
+
+        if not found then
             exports.ox_lib:notify({
                 title = 'Rastreamento',
-                description = 'Não foi possível localizar o veículo no GPS.',
+                description = 'Não foi possível localizar o veículo. Ele pode estar no Depot.',
                 type = 'error'
             })
         end
@@ -70,11 +93,12 @@ RegisterNetEvent('npwd:client:startValet', function(plate, model)
         type = 'info'
     })
 
-    -- Procura ponto de spawn
-    local retval, outCoords, outHeading = GetClosestVehicleNodeWithHeading(playerCoords.x + 40, playerCoords.y + 40, playerCoords.z, 1, 3, 0)
+    -- Procura ponto de spawn mais longe (100m)
+    local spawnRadius = 100.0
+    local foundNode, outCoords, outHeading = GetClosestVehicleNodeWithHeading(playerCoords.x + spawnRadius, playerCoords.y + spawnRadius, playerCoords.z, 1, 3, 0)
     
-    if not retval then
-        outCoords = playerCoords + vector3(25.0, 25.0, 0.0)
+    if not foundNode then
+        outCoords = playerCoords + vector3(spawnRadius, spawnRadius, 0.0)
         outHeading = 0.0
     end
 
@@ -84,6 +108,15 @@ RegisterNetEvent('npwd:client:startValet', function(plate, model)
     SetVehicleNumberPlateText(vehicle, plate)
     SetEntityAsMissionEntity(vehicle, true, true)
     
+    -- Cria blip para o manobrista
+    local valetBlip = AddBlipForEntity(vehicle)
+    SetBlipSprite(valetBlip, 225)
+    SetBlipColour(valetBlip, 2)
+    SetBlipScale(valetBlip, 0.8)
+    BeginTextCommandSetBlipName("STRING")
+    AddTextComponentString("Manobrista")
+    EndTextCommandSetBlipName(valetBlip)
+
     local pedModel = `s_m_m_gentransport`
     lib.requestModel(pedModel)
     
@@ -96,7 +129,7 @@ RegisterNetEvent('npwd:client:startValet', function(plate, model)
     
     local arrived = false
     local timeout = 0
-    while not arrived and timeout < 60 do
+    while not arrived and timeout < 120 do -- Aumentado timeout para distância maior
         Wait(500)
         timeout = timeout + 1
         local dist = #(GetEntityCoords(vehicle) - playerCoords)
@@ -107,7 +140,12 @@ RegisterNetEvent('npwd:client:startValet', function(plate, model)
     
     TaskVehicleTempAction(valetPed, vehicle, 27, 5000)
     Wait(2000)
+    
+    -- Dá as chaves ao jogador
+    TriggerServerEvent('npwd:server:giveVehicleKeys', plate)
+    
     TaskLeaveVehicle(valetPed, vehicle, 0)
+    RemoveBlip(valetBlip)
     Wait(2000)
     TaskWanderStandard(valetPed, 10.0, 10)
     
@@ -119,7 +157,7 @@ RegisterNetEvent('npwd:client:startValet', function(plate, model)
     
     exports.ox_lib:notify({
         title = 'Manobrista',
-        description = 'Seu veículo foi entregue!',
+        description = 'Seu veículo foi entregue e a chave entregue!',
         type = 'success'
     })
 

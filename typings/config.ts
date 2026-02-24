@@ -108,6 +108,11 @@ interface VoiceMessageConfig {
   returnedDataIndexes: Array<any>;
 }
 
+interface GarageConfig {
+  enabled: boolean;
+  valetPrice: number;
+}
+
 export interface DefaultContact {
   display: string;
   number: string;
@@ -140,4 +145,5 @@ export interface ResourceConfig {
   apps: string[];
   voiceMessage: VoiceMessageConfig;
   contacts: Contacts;
+  garage: GarageConfig;
 }
