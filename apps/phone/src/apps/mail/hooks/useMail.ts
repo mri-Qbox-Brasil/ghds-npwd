@@ -4,13 +4,14 @@ import fetchNui from '@utils/fetchNui';
 import { MailEvents, MailMessage } from '@typings/mail';
 import { useEffect } from 'react';
 import { useNuiEvent } from '@common/hooks/useNuiEvent';
+import { MockMailsServerResp } from '../utils/constants';
 
 export const useMail = () => {
     const [mails, setMails] = useRecoilState(mailState);
 
     const fetchMails = async () => {
         try {
-            const resp = await fetchNui<any>(MailEvents.FETCH_MAILS);
+            const resp = await fetchNui<any>(MailEvents.FETCH_MAILS, undefined, MockMailsServerResp);
             if (resp && resp.status === 'ok') {
                 setMails(resp.data);
             }

@@ -21,11 +21,19 @@ export const MailList: React.FC = () => {
 
     const inboxTitle = (t('MAIL.INBOX') as string) || 'Entrada';
     const unreadCount = mails.filter(m => m.read === 0).length;
-    const unreadText = unreadCount === 0
-        ? (t('MAIL.UNREAD_COUNT_ZERO') as string) || 'Nenhuma Não Lida'
-        : unreadCount === 1
+    let unreadText = '';
+
+    if (mails.length === 0) {
+        unreadText = (t('MAIL.TOTAL_COUNT_ZERO') as string) || '';
+    } else if (unreadCount > 0) {
+        unreadText = unreadCount === 1
             ? (t('MAIL.UNREAD_COUNT_ONE') as string) || '1 Não Lida'
             : (t('MAIL.UNREAD_COUNT_MANY', { count: unreadCount }) as string) || `${unreadCount} Não Lidas`;
+    } else {
+        unreadText = mails.length === 1
+            ? (t('MAIL.TOTAL_COUNT_ONE') as string) || '1 Mensagem'
+            : (t('MAIL.TOTAL_COUNT_MANY', { count: mails.length }) as string) || `${mails.length} Mensagens`;
+    }
 
     const toggleEdit = () => {
         setIsEditing(!isEditing);
@@ -68,13 +76,15 @@ export const MailList: React.FC = () => {
             />
             <AppContent
                 ref={scrollRef}
-                className="flex flex-col grow scrollbar-hide h-full w-full relative"
+                className="flex flex-col grow scrollbar-hide h-full w-full relative bg-white dark:bg-black"
             >
                 <DynamicHeader title={inboxTitle} scrollRef={scrollRef} variant="largeTitle" />
 
                 {mails.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center flex-1 w-full bg-white dark:bg-black text-neutral-500 dark:text-neutral-400">
-                        <Typography variant="body1">{t('MAIL.EMPTY') as string}</Typography>
+                    <div className="flex flex-col items-center w-full mt-8">
+                        <Typography variant="body1" className="text-[15px] font-medium text-[#8E8E93] dark:text-[#8E8E93]">
+                            {t('MAIL.EMPTY') as string}
+                        </Typography>
                     </div>
                 ) : (
                     <div className="flex flex-col flex-1 pb-24 bg-white dark:bg-black w-full overflow-x-hidden">
