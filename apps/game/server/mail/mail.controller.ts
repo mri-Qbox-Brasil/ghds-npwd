@@ -40,6 +40,39 @@ onNetPromise<number, boolean>(MailEvents.SET_MAIL_READ, async (reqObj: PromiseRe
     }
 });
 
+onNetPromise<{ target: string; subject: string; message: string }, boolean>(MailEvents.SEND_MAIL, async (reqObj: PromiseRequest<{ target: string; subject: string; message: string }>, resp: PromiseEventResp<boolean>) => {
+    try {
+        const player = global.exports.qbx_core.GetPlayer(reqObj.source);
+        if (!player) {
+            resp({ status: 'error', errorMsg: 'Player not found' });
+            return;
+        }
+
+        const senderAuth = player.PlayerData.charinfo.firstname + ' ' + player.PlayerData.charinfo.lastname;
+        await MailService.sendMail(reqObj.data.target, senderAuth, reqObj.data.subject, reqObj.data.message);
+
+        // Push notification to target if they are online
+        const targetPlayer = global.exports.qbx_core.GetPlayerByCitizenId(reqObj.data.target);
+        if (targetPlayer) {
+            emitNet('npwd:mail:receiveNew', targetPlayer.PlayerData.source, {
+                id: 0,
+                sender: senderAuth,
+                subject: reqObj.data.subject,
+                message: reqObj.data.message,
+                citizenid: reqObj.data.target,
+                button: null,
+                read: 0,
+                date: new Date().toISOString()
+            });
+        }
+
+        resp({ status: 'ok', data: true });
+    } catch (e) {
+        mainLogger.error(`Error occurred while sending mail (${reqObj.source}), Error: ${(e as Error).message}`);
+        resp({ status: 'error', errorMsg: (e as Error).message });
+    }
+});
+
 onNet('npwd:mail:wipeButton', async (id: number) => {
     const src = global.source;
     if (!src || src === 0) return;

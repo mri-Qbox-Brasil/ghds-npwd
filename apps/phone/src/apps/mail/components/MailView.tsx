@@ -45,14 +45,15 @@ export const MailView: React.FC = () => {
     );
 
     return (
-        <div className="flex flex-col h-full bg-white dark:bg-black relative">
+        <div className="flex flex-col h-full bg-white dark:bg-black relative w-full overflow-hidden">
             <DynamicHeader
-                title=""
+                title={mail.subject}
                 variant="pinned"
+                scrollRef={scrollRef}
                 leftContent={BackButton}
             />
 
-            <div ref={scrollRef} className="flex flex-col px-4 pt-28 pb-24 overflow-y-auto scrollbar-hide h-full">
+            <div ref={scrollRef} className="flex flex-col px-4 pt-28 pb-24 overflow-y-auto scrollbar-hide h-full w-full">
                 <Typography variant="h2" className="mb-4 font-bold text-black dark:text-white text-[32px] leading-tight tracking-tight">
                     {mail.subject}
                 </Typography>

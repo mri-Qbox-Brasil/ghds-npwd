@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useMail } from '../hooks/useMail';
 import { Typography } from '@ui/components/ui/typography';
@@ -6,13 +6,14 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '@utils/cn';
 import { DynamicHeader } from '@ui/components/DynamicHeader';
 import { AppContent, AlertDialog, BottomNav, BottomToolbarItem } from '@ui/components';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Search } from 'lucide-react';
 
 export const MailList: React.FC = () => {
     const { mails, deleteMail } = useMail();
     const history = useHistory();
     const [t] = useTranslation();
     const scrollRef = useRef<HTMLDivElement>(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const [isEditing, setIsEditing] = useState(false);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -56,6 +57,16 @@ export const MailList: React.FC = () => {
         setIsModalOpen(false);
     };
 
+    const filteredMails = useMemo(() => {
+        if (!searchTerm) return mails;
+        const lowerSearch = searchTerm.toLowerCase();
+        return mails.filter(mail =>
+            (mail.subject || '').toLowerCase().includes(lowerSearch) ||
+            (mail.sender || '').toLowerCase().includes(lowerSearch) ||
+            (mail.message || '').toLowerCase().includes(lowerSearch)
+        );
+    }, [mails, searchTerm]);
+
     return (
         <>
             <DynamicHeader
@@ -79,17 +90,41 @@ export const MailList: React.FC = () => {
             >
                 <DynamicHeader title={inboxTitle} scrollRef={scrollRef} variant="largeTitle" />
 
+                {/* Search Bar */}
+                {mails.length > 0 && (
+                    <div className="px-4 pb-3">
+                        <div className="relative">
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
+                                <Search size={16} className="stroke-[2.5px]" />
+                            </div>
+                            <input
+                                type="text"
+                                className="w-full h-9 pl-9 pr-4 rounded-[10px] bg-neutral-200/60 dark:bg-neutral-800/60 border-none text-[17px] focus:ring-0 transition-all text-neutral-900 dark:text-white placeholder:text-neutral-500"
+                                onChange={(e) => setSearchTerm(e.currentTarget.value)}
+                                placeholder="Buscar"
+                                value={searchTerm}
+                            />
+                        </div>
+                    </div>
+                )}
+
                 {mails.length === 0 ? (
                     <div className="flex flex-col items-center w-full mt-8">
                         <Typography variant="body1" className="text-[15px] font-medium text-[#8E8E93] dark:text-[#8E8E93]">
                             {t('MAIL.EMPTY') as string}
                         </Typography>
                     </div>
+                ) : filteredMails.length === 0 ? (
+                    <div className="flex flex-col items-center w-full mt-8">
+                        <Typography variant="body1" className="text-[15px] font-medium text-[#8E8E93] dark:text-[#8E8E93]">
+                            Nenhum resultado
+                        </Typography>
+                    </div>
                 ) : (
                     <div className="flex flex-col flex-1 pb-24 bg-white dark:bg-black w-full overflow-x-hidden">
                         <div className="flex flex-col w-full">
-                            {mails.map((mail, index) => {
-                                const isLast = index === mails.length - 1;
+                            {filteredMails.map((mail, index) => {
+                                const isLast = index === filteredMails.length - 1;
                                 const isSelected = selectedIds.includes(mail.id);
 
                                 return (
@@ -210,7 +245,14 @@ export const MailList: React.FC = () => {
 
                 {/* Compose Icon */}
                 <BottomToolbarItem
-                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>}
+                    onClick={() => history.push('/mail/compose')}
+                    icon={
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                    }
                 />
             </BottomNav>
 

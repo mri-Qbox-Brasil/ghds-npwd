@@ -1,7 +1,7 @@
 import { useRecoilState } from 'recoil';
 import { mailState } from './state';
 import fetchNui from '@utils/fetchNui';
-import { MailEvents, MailMessage } from '@typings/mail';
+import { MailEvents, MailMessage, ComposeMailData } from '@typings/mail';
 import { useEffect } from 'react';
 import { useNuiEvent } from '@common/hooks/useNuiEvent';
 import { MockMailsServerResp } from '../utils/constants';
@@ -65,6 +65,16 @@ export const useMail = () => {
         }
     };
 
+    const sendMail = async (data: ComposeMailData) => {
+        try {
+            const resp = await fetchNui<any>(MailEvents.SEND_MAIL, data, { status: 'ok' });
+            return resp?.status === 'ok';
+        } catch (e) {
+            console.error('Failed to send mail', e);
+            return false;
+        }
+    };
+
     useNuiEvent('MAIL', 'npwd:mail:receiveNew', (newMail: MailMessage) => {
         setMails((prev) => [newMail, ...prev]);
     });
@@ -73,5 +83,5 @@ export const useMail = () => {
         fetchMails();
     }, []);
 
-    return { mails, fetchMails, deleteMail, setMailRead, updateButton };
+    return { mails, fetchMails, deleteMail, setMailRead, updateButton, sendMail };
 };

@@ -349,7 +349,10 @@
       "TOTAL_COUNT_ZERO": "",
       "TOTAL_COUNT_ONE": "1 Message",
       "TOTAL_COUNT_MANY": "{{count}} Messages",
-      "JUST_UPDATED": "Just Updated"
+      "JUST_UPDATED": "Just Updated",
+      "NEW_MESSAGE": "New Message",
+      "NO_SUBJECT": "No Subject",
+      "SEND_ERROR": "Error sending email."
     },
     "GENERIC_CLICK_TO_REVEAL": "Click to reveal",
     "GENERIC_LOADING": "Loading...",

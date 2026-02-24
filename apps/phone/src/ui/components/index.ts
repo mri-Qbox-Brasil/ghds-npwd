@@ -19,6 +19,7 @@ export * from './PictureThumbnail';
 export * from './SearchField';
 export * from './StatusButton';
 export * from './StatusIconButton';
+export { SafeArea } from './SafeArea';
 export * from './Tooltip';
 export * from './UpdateButton';
 export * from './ListItem';

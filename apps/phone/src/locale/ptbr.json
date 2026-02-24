@@ -311,7 +311,10 @@
       "TOTAL_COUNT_ZERO": "",
       "TOTAL_COUNT_ONE": "1 Mensagem",
       "TOTAL_COUNT_MANY": "{{count}} Mensagens",
-      "JUST_UPDATED": "Atualizado Há Pouco"
+      "JUST_UPDATED": "Atualizado Há Pouco",
+      "NEW_MESSAGE": "Nova Mensagem",
+      "NO_SUBJECT": "Sem Assunto",
+      "SEND_ERROR": "Erro ao enviar e-mail."
     },
     "GENERIC_CLICK_TO_REVEAL": "Clique para revelar",
     "GENERIC_LOADING": "Carregando...",
