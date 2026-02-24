@@ -13,29 +13,21 @@ export const useApps = () => {
 
   const apps: IApp[] = useMemo(() => {
     return APPS.map((app) => {
-      const SvgIcon = React.lazy<React.ComponentType<any>>(() =>
-        import(`../icons/${curIconSet.name}/svg/${app.id}.tsx`).catch(
-          () => 'Was not able to find a dynamic import for icon from this icon set',
-        ),
-      );
       const AppIcon = React.lazy<React.ComponentType<any>>(() =>
         import(`../icons/${curIconSet.name}/app/${app.id}.tsx`).catch(
           () => 'Was not able to find a dynamic import for icon from this icon set',
         ),
       );
 
-      const NotificationIcon = createLazyAppIcon(SvgIcon);
       const Icon = createLazyAppIcon(AppIcon);
 
       if (curIconSet.custom) {
         return {
           ...app,
           notification: icons.find((i) => i.key === app.id),
-          NotificationIcon,
+          NotificationIcon: Icon,
           Icon,
-          notificationIcon: (
-            <NotificationIcon htmlColor="currentColor" fontSize="small" />
-          ),
+          notificationIcon: <Icon />,
           icon: <Icon />,
           isDisabled: !!ResourceConfig?.disabledApps.find((a) => a === app.id),
         };
@@ -44,8 +36,8 @@ export const useApps = () => {
       return {
         ...app,
         notification: icons.find((i) => i.key === app.id),
-        NotificationIcon,
-        notificationIcon: <NotificationIcon htmlColor={app.color} fontSize="small" />,
+        NotificationIcon: Icon,
+        notificationIcon: <Icon />,
         isDisabled: !!ResourceConfig?.disabledApps.find((a) => a === app.id),
       };
     });

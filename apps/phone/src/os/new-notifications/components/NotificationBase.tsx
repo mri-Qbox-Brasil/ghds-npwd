@@ -52,11 +52,8 @@ const NotificationBase = forwardRef<HTMLDivElement, NotificationBaseProps>((prop
             className="flex-col bg-white/85 dark:bg-neutral-900/85 backdrop-blur-md py-3.5 px-4 flex shadow-xl border border-neutral-200/50 dark:border-white/10 rounded-[20px] pointer-events-auto"
         >
             <div className="flex items-center text-neutral-900 dark:text-neutral-50 w-full mb-2">
-                <div
-                    className={cn("p-2 flex items-center justify-center rounded-full")}
-                    style={{ backgroundColor: app.backgroundColor, color: app.color }}
-                >
-                    {app.NotificationIcon && <app.NotificationIcon fontSize="inherit" />}
+                <div className="w-5 h-5 flex items-center justify-center rounded overflow-hidden">
+                    {app.NotificationIcon && <app.NotificationIcon />}
                 </div>
                 <div className="text-neutral-900 dark:text-neutral-50 font-semibold pl-1 grow text-sm">
                     {t(app.nameLocale) as string}
