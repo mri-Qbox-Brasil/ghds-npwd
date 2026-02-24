@@ -22,3 +22,4 @@ export * from './StatusIconButton';
 export * from './Tooltip';
 export * from './UpdateButton';
 export * from './ListItem';
+export * from './BottomNav';

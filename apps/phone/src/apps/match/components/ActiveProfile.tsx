@@ -74,7 +74,7 @@ const ActiveProfile = ({ profile, onSwipe }: IProps) => {
       </div>
 
       {/* Action Buttons — inline, não absolute */}
-      <div className="flex items-center justify-center gap-6 py-3 shrink-0">
+      <div className="flex items-center justify-center gap-6 py-3 pb-24 shrink-0">
         <button
           onClick={handleNope}
           className="h-14 w-14 flex items-center justify-center rounded-full bg-white dark:bg-neutral-800 text-red-500 shadow-lg border border-neutral-200 dark:border-neutral-700 transition-all active:scale-90"

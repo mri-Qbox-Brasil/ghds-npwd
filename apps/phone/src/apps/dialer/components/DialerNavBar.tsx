@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Star, Clock, Contact2, Grid3X3 } from 'lucide-react';
-import { cn } from '@utils/cn';
+import { BottomNav, BottomNavItem } from '@ui/components';
 
 const DialerNavBar: React.FC = () => {
   const location = useLocation();
+  const history = useHistory();
   const [page, setPage] = useState(location.pathname);
-  const [t] = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setPage(location.pathname);
@@ -15,28 +16,28 @@ const DialerNavBar: React.FC = () => {
 
   const navItems = [
     {
-      label: t('DIALER.NAVBAR_FAVORITES', 'Favoritos'),
+      label: t('DIALER.NAVBAR_FAVORITES') || 'Favoritos',
       value: "/phone/favorites",
       icon: Star,
       to: "/phone/favorites",
       exact: true
     },
     {
-      label: t('DIALER.NAVBAR_HISTORY', 'Recentes'),
+      label: t('DIALER.NAVBAR_HISTORY') || 'Recentes',
       value: "/phone",
       icon: Clock,
       to: "/phone",
       exact: true
     },
     {
-      label: t('DIALER.NAVBAR_CONTACTS', 'Contatos'),
+      label: t('DIALER.NAVBAR_CONTACTS') || 'Contatos',
       value: "/phone/contacts",
       icon: Contact2,
       to: "/phone/contacts",
       exact: false
     },
     {
-      label: t('DIALER.NAVBAR_DIAL', 'Teclado'),
+      label: t('DIALER.NAVBAR_DIAL') || 'Teclado',
       value: "/phone/dial",
       icon: Grid3X3,
       to: "/phone/dial",
@@ -45,36 +46,23 @@ const DialerNavBar: React.FC = () => {
   ];
 
   return (
-    <nav className="flex items-center justify-around h-20 bg-[#F9F9F9]/80 dark:bg-black/80 backdrop-blur-xl border-t border-neutral-200/20 dark:border-neutral-800/50 shrink-0 select-none px-2">
+    <BottomNav className="z-40 h-[80px] bg-[#F9F9F9]/80 dark:bg-black/80 backdrop-blur-xl border-t border-neutral-200/20 dark:border-neutral-800/50">
       {navItems.map((item) => {
         const isActive = item.exact ? page === item.value : page.startsWith(item.value);
         const Icon = item.icon;
 
         return (
-          <NavLink
+          <BottomNavItem
             key={item.value}
-            to={item.to}
-            className={cn(
-              "flex flex-col items-center justify-center gap-1 group w-full transition-all active:scale-90 pt-1",
-              isActive ? "text-[#007AFF]" : "text-neutral-500"
-            )}
-          >
-            <Icon
-              size={24}
-              strokeWidth={isActive ? 2.5 : 2}
-              fill="none"
-              className="transition-colors duration-300"
-            />
-            <span className={cn(
-              "text-[10px] font-medium leading-tight",
-              isActive ? "opacity-100" : "opacity-80"
-            )}>
-              {item.label}
-            </span>
-          </NavLink>
+            icon={<Icon size={24} strokeWidth={isActive ? 2.5 : 2} />}
+            label={item.label}
+            isActive={isActive}
+            activeClassName="text-[#007AFF]"
+            onClick={() => history.push(item.to)}
+          />
         );
       })}
-    </nav>
+    </BottomNav>
   );
 };
 

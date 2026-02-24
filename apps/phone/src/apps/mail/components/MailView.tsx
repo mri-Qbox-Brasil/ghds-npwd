@@ -4,7 +4,7 @@ import { useMail } from '../hooks/useMail';
 import { Typography } from '@ui/components/ui/typography';
 import { ChevronLeft, Trash2, Reply, Folder, CornerUpLeft, Edit } from 'lucide-react';
 import { DynamicHeader } from '@ui/components/DynamicHeader';
-import { AlertDialog } from '@ui/components';
+import { AlertDialog, BottomNav, BottomToolbarItem } from '@ui/components';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@utils/cn';
 
@@ -98,20 +98,24 @@ export const MailView: React.FC = () => {
             </div>
 
             {/* iOS Mail Bottom Toolbar */}
-            <div className="absolute bottom-0 w-full min-h-[80px] pb-6 px-6 pt-3 bg-[#F9F9F9]/90 dark:bg-[#1C1C1E]/90 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 flex justify-between items-center text-blue-500 z-40">
-                <button className="active:opacity-70 opacity-30 cursor-not-allowed">
-                    <Folder size={22} strokeWidth={2} />
-                </button>
-                <button className="active:opacity-70" onClick={() => setShowDeleteConfirm(true)}>
-                    <Trash2 size={24} strokeWidth={1.5} className="text-blue-500" />
-                </button>
-                <button className="active:opacity-70 opacity-30 cursor-not-allowed">
-                    <CornerUpLeft size={24} strokeWidth={1.5} />
-                </button>
-                <button className="active:opacity-70 opacity-30 cursor-not-allowed">
-                    <Edit size={22} strokeWidth={1.5} />
-                </button>
-            </div>
+            <BottomNav>
+                <BottomToolbarItem
+                    disabled
+                    icon={<Folder size={22} strokeWidth={2} />}
+                />
+                <BottomToolbarItem
+                    onClick={() => setShowDeleteConfirm(true)}
+                    icon={<Trash2 size={24} strokeWidth={1.5} />}
+                />
+                <BottomToolbarItem
+                    disabled
+                    icon={<CornerUpLeft size={24} strokeWidth={1.5} />}
+                />
+                <BottomToolbarItem
+                    disabled
+                    icon={<Edit size={22} strokeWidth={1.5} />}
+                />
+            </BottomNav>
 
             {/* iOS Alert Dialog for Delete Confirmation */}
             <AlertDialog

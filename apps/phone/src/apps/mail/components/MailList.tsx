@@ -5,9 +5,8 @@ import { Typography } from '@ui/components/ui/typography';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@utils/cn';
 import { DynamicHeader } from '@ui/components/DynamicHeader';
-import { AppContent } from '@ui/components';
+import { AppContent, AlertDialog, BottomNav, BottomToolbarItem } from '@ui/components';
 import { Trash2 } from 'lucide-react';
-import { AlertDialog } from '@ui/components/AlertDialog';
 
 export const MailList: React.FC = () => {
     const { mails, deleteMail } = useMail();
@@ -190,23 +189,16 @@ export const MailList: React.FC = () => {
             />
 
             {/* Default Bottom Toolbar */}
-            <div
+            <BottomNav
                 className={cn(
-                    "absolute bottom-0 left-0 w-full z-10 transition-transform duration-300 bg-white/80 dark:bg-black/80 backdrop-blur-md border-t border-neutral-200 dark:border-white/10 px-4 pt-2.5 pb-8 flex items-center justify-between",
-                    !isEditing ? "translate-y-0" : "translate-y-full"
+                    "transition-transform duration-300",
+                    isEditing ? "translate-y-full" : "translate-y-0"
                 )}
             >
-                {/* Filter Icon */}
-                <button className="text-blue-500 hover:opacity-80 transition-opacity bg-transparent border-none outline-none -ml-1 flex items-center justify-center p-1 relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="8" y1="10" x2="16" y2="10" />
-                        <line x1="8" y1="14" x2="16" y2="14" />
-                        <line x1="10" y1="18" x2="14" y2="18" />
-                    </svg>
-                </button>
+                <BottomToolbarItem
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="8" y1="16" x2="16" y2="16" /><line x1="8" y1="8" x2="16" y2="8" /></svg>}
+                />
 
-                {/* Center text */}
                 <div className="flex flex-col items-center">
                     <span className="text-[11px] font-medium text-black dark:text-white leading-tight">
                         {(t('MAIL.JUST_UPDATED') as string) || 'Atualizado Há Pouco'}
@@ -217,13 +209,10 @@ export const MailList: React.FC = () => {
                 </div>
 
                 {/* Compose Icon */}
-                <button className="text-blue-500 hover:opacity-80 transition-opacity bg-transparent border-none outline-none -mr-1 flex items-center justify-center p-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 20h9" />
-                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                    </svg>
-                </button>
-            </div>
+                <BottomToolbarItem
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>}
+                />
+            </BottomNav>
 
             {/* Bottom Toolbar for Editing Operations */}
             <div
