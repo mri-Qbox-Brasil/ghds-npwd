@@ -32,6 +32,28 @@ const BankStatement = () => {
       currency: 'BRL',
     }).format(value);
 
+  const formatDate = (dateValue: any) => {
+    if (!dateValue) return 'N/A';
+
+    let date: Date;
+    if (typeof dateValue === 'number') {
+      // Handle Unix timestamps (seconds or milliseconds)
+      date = new Date(dateValue > 1000000000000 ? dateValue : dateValue * 1000);
+    } else {
+      date = new Date(dateValue);
+    }
+
+    if (isNaN(date.getTime())) return dateValue;
+
+    return date.toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
   const fetchTransactions = async () => {
     setLoading(true);
     try {
@@ -103,8 +125,10 @@ const BankStatement = () => {
                   </div>
 
                   <div className="flex flex-col min-w-0">
-                    <span className="text-[15px] font-medium text-neutral-900 dark:text-white truncate">{transaction.targetName}</span>
-                    <span className="text-[12px] text-neutral-400">{transaction.date}</span>
+                    <span className="text-[15px] font-medium text-neutral-900 dark:text-white truncate">
+                      {transaction.targetName || 'Transação'}
+                    </span>
+                    <span className="text-[12px] text-neutral-400">{formatDate(transaction.date)}</span>
                   </div>
                 </div>
 
