@@ -98,7 +98,7 @@ export class _MatchDB {
                  LEFT OUTER JOIN npwd_match_views AS targetViews
                                  ON targetProfile.identifier = targetViews.identifier AND
                                     targetViews.profile = myProfile.id
-                 LEFT OUTER JOIN ${config.database.playerTable} AS targetUser ON targetProfile.identifier = targetUser.${config.database.identifierColumn}
+                 LEFT OUTER JOIN ${config.database.playerTable} AS targetUser ON targetProfile.identifier = targetUser.${config.database.identifierColumn} COLLATE utf8mb4_unicode_ci
         WHERE npwd_match_views.identifier = ?
           AND npwd_match_views.liked = 1
           AND targetViews.liked = 1

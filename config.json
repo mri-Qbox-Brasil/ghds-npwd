@@ -103,9 +103,7 @@
   },
   "defaultContacts": [],
   "disabledApps": [],
-  "apps": [
-    "npwd_qbx_mail"
-  ],
+  "apps": [],
   "voiceMessage": {
     "enabled": false,
     "authorizationHeader": "Authorization",

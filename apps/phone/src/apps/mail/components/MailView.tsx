@@ -11,7 +11,7 @@ import { cn } from '@utils/cn';
 export const MailView: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const history = useHistory();
-    const { mails, setMailRead, deleteMail } = useMail();
+    const { mails, setMailRead, deleteMail, updateButton } = useMail();
     const scrollRef = useRef<HTMLDivElement>(null);
     const [t] = useTranslation();
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -77,6 +77,24 @@ export const MailView: React.FC = () => {
                     style={{ whiteSpace: 'pre-wrap' }}
                     dangerouslySetInnerHTML={{ __html: mail.message }}
                 />
+
+                {mail.button && (
+                    <div className="mt-8 flex justify-center">
+                        <button
+                            onClick={() => updateButton(mail.id, mail.button)}
+                            className={cn(
+                                "flex items-center justify-center gap-2 px-6 py-3 w-full",
+                                "bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white",
+                                "rounded-xl font-semibold text-[17px] transition-colors"
+                            )}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Confirm Action
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* iOS Mail Bottom Toolbar */}

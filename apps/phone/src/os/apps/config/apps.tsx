@@ -35,7 +35,7 @@ import ExampleIcon from '../icons/material/app/EXAMPLE';
 import WeatherIcon from '../icons/material/app/WEATHER';
 import BankIcon from '../icons/material/app/BANK';
 import BankApp from '@apps/bank/components/BankApp';
-import EmailIcon from '../icons/material/app/EMAIL';
+import MailIcon from '../icons/material/app/MAIL';
 import MailApp from '@apps/mail/components/MailApp';
 
 export interface IAppConfig {
@@ -215,7 +215,7 @@ export const APPS: IAppConfig[] = [
   {
     id: 'MAIL',
     nameLocale: 'APPS_MAIL',
-    icon: <EmailIcon />,
+    icon: <MailIcon />,
     backgroundColor: '#007AFF', // iOS blue
     color: '#ffffff',
     path: '/mail',

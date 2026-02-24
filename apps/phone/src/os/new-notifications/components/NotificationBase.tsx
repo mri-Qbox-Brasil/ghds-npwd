@@ -54,7 +54,7 @@ const NotificationBase = forwardRef<HTMLDivElement, NotificationBaseProps>((prop
             <div className="flex items-center text-neutral-900 dark:text-neutral-50 w-full mb-2">
                 <div
                     className={cn("p-2 flex items-center justify-center rounded-full")}
-                    style={{ backgroundColor: app.backgroundColor }}
+                    style={{ backgroundColor: app.backgroundColor, color: app.color }}
                 >
                     {app.NotificationIcon && <app.NotificationIcon fontSize="inherit" />}
                 </div>

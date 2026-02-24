@@ -5,6 +5,8 @@ export interface MailMessage {
     subject: string;
     message: string;
     read: number;
+    mailid?: number;
+    button?: any;
     date: string;
 }
 
@@ -12,4 +14,5 @@ export enum MailEvents {
     FETCH_MAILS = 'npwd:mail:fetchMails',
     DELETE_MAIL = 'npwd:mail:deleteMail',
     SET_MAIL_READ = 'npwd:mail:setMailRead',
+    UPDATE_BUTTON = 'npwd:mail:updateButton',
 }

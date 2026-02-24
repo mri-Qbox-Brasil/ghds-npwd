@@ -3,43 +3,14 @@ import { mailState } from './state';
 import fetchNui from '@utils/fetchNui';
 import { MailEvents, MailMessage } from '@typings/mail';
 import { useEffect } from 'react';
-
-const mockMails: MailMessage[] = [
-    {
-        id: 1,
-        citizenid: '12345',
-        sender: 'Bank of Los Santos',
-        subject: 'Your recent deposit',
-        message: 'Dear customer, your recent deposit of <b>$5,000</b> has been successfully processed.',
-        read: 0,
-        date: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-    },
-    {
-        id: 2,
-        citizenid: '12345',
-        sender: 'Simeon Yetarian',
-        subject: 'Car Repossession',
-        message: 'Hello my friend! I have a very special job for you. Please come see me at the dealership immediately. Do not disappoint me!',
-        read: 1,
-        date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
-    },
-    {
-        id: 3,
-        citizenid: '12345',
-        sender: 'Central Hospital',
-        subject: 'Medical Bill Overdue',
-        message: 'Your recent medical bill of $1,200 is past due. Please pay immediately to avoid further penalties or collections.',
-        read: 1,
-        date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
-    }
-];
+import { useNuiEvent } from '@common/hooks/useNuiEvent';
 
 export const useMail = () => {
     const [mails, setMails] = useRecoilState(mailState);
 
     const fetchMails = async () => {
         try {
-            const resp = await fetchNui<any>(MailEvents.FETCH_MAILS, undefined, { status: 'ok', data: mockMails });
+            const resp = await fetchNui<any>(MailEvents.FETCH_MAILS);
             if (resp && resp.status === 'ok') {
                 setMails(resp.data);
             }
@@ -75,9 +46,26 @@ export const useMail = () => {
         }
     };
 
+    const updateButton = async (id: number, buttonParams: any) => {
+        try {
+            const resp = await fetchNui<any>(MailEvents.UPDATE_BUTTON, { id, button: buttonParams }, { status: 'ok' });
+            if (resp && resp.status === 'ok') {
+                setMails((prev) =>
+                    prev.map((mail) => (mail.id === id ? { ...mail, button: null } : mail))
+                );
+            }
+        } catch (e) {
+            console.error('Failed to update button', e);
+        }
+    };
+
+    useNuiEvent('MAIL', 'npwd:mail:receiveNew', (newMail: MailMessage) => {
+        setMails((prev) => [newMail, ...prev]);
+    });
+
     useEffect(() => {
         fetchMails();
     }, []);
 
-    return { mails, fetchMails, deleteMail, setMailRead };
+    return { mails, fetchMails, deleteMail, setMailRead, updateButton };
 };
