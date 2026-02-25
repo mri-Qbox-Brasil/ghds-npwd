@@ -80,7 +80,7 @@ export const NotificationBar = () => {
   const unreadNotifications = useUnreadNotifications();
   const { markAllAsRead } = useNotification();
   const resourceConfig = useRecoilValue(phoneState.resourceConfig);
-  const carrierName = (resourceConfig as any).lockscreen?.carrier || 'MRI';
+  const carrierName = (resourceConfig as any)?.lockscreen?.carrier || 'MRI';
 
   // Ambient Sensor: Detect background brightness automatically
   useEffect(() => {

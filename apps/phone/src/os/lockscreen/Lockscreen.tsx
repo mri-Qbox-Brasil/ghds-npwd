@@ -131,14 +131,14 @@ export const Lockscreen: React.FC = () => {
                     </span>
 
                     {/* iOS 18 Widgets */}
-                    <div className="flex gap-4 mt-8 px-6 items-center justify-center opacity-90 transition-opacity">
+                    {/* <div className="flex gap-4 mt-8 px-6 items-center justify-center opacity-90 transition-opacity">
                         <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/10 shadow-sm">
                             <span className="text-[11px] font-bold">24°</span>
                         </div>
                         <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/10 shadow-sm">
                             <Battery size={22} fill="currentColor" strokeWidth={1} className="text-emerald-400/80" />
                         </div>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Notifications */}
