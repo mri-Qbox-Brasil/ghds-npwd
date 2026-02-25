@@ -1,6 +1,7 @@
 import React, { Dispatch, Fragment, SetStateAction, useEffect } from 'react';
 import './Phone.css';
-import { Route } from 'react-router-dom';
+import { Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { CallModal } from '@os/call/components/CallModal';
 import { HomeApp } from './apps/home/components/Home';
 import { Dock } from './apps/home/components/Dock';
@@ -48,6 +49,7 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
   const { i18n } = useTranslation();
   const { apps } = useApps();
   const [settings] = useSettings();
+  const location = useLocation();
 
   const dockApps = apps.filter((a) => a.isDockApp);
 
@@ -96,7 +98,7 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
           <Lockscreen />
           <NotificationBar />
           <div className="PhoneAppContainer scrollbar-hide" id="notificationAppContainer" ref={notiRefCB}>
-            <>
+            <AnimatePresence exitBeforeEnter initial={false}>
               <Route exact path="/" component={HomeApp} />
               {callModal && <Route exact path="/call" component={CallModal} />}
               {apps.map((App) => (
@@ -108,7 +110,7 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
                   <App.Route settings={settings} i18n={i18n} />
                 </Fragment>
               ))}
-            </>
+            </AnimatePresence>
             <NotificationAlert />
             <PhoneSnackbar />
           </div>

@@ -38,7 +38,7 @@ import BankApp from '@apps/bank/components/BankApp';
 import MailIcon from '../icons/material/app/MAIL';
 import MailApp from '@apps/mail/components/MailApp';
 import StoreApp from '@apps/store/components/StoreApp';
-import StoreAppIcon from '@apps/store/components/StoreIcon';
+import StoreIcon from '../icons/material/app/STORE';
 
 export interface IAppConfig {
   id: string;
@@ -226,7 +226,7 @@ export const APPS: IAppConfig[] = [
   {
     id: 'STORE',
     nameLocale: 'APPS_STORE',
-    icon: <StoreAppIcon />,
+    icon: <StoreIcon />,
     backgroundColor: '#3b82f6',
     color: '#ffffff',
     path: '/store',

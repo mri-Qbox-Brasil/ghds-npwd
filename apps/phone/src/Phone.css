@@ -155,3 +155,31 @@
 .animate-download-fill {
   animation: downloadFill 2s ease-out forwards;
 }
+
+/* iOS Jiggle Mode */
+@keyframes jiggle {
+  0% {
+    transform: rotate(-1.5deg) scale(1.02);
+  }
+
+  25% {
+    transform: rotate(1.5deg) scale(1.02);
+  }
+
+  50% {
+    transform: rotate(-1.5deg) scale(1.02);
+  }
+
+  75% {
+    transform: rotate(1.5deg) scale(1.02);
+  }
+
+  100% {
+    transform: rotate(-1.5deg) scale(1.02);
+  }
+}
+
+.animate-jiggle {
+  animation: jiggle 0.25s ease-in-out infinite;
+  transform-origin: center;
+}

@@ -1,5 +1,4 @@
 import React from 'react';
-import { cn } from '@utils/css';
 
 interface DownloadButtonProps {
     state: 'idle' | 'downloading' | 'installed';
@@ -14,18 +13,16 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
     onInstall,
     onUninstall,
 }) => {
+    // Sistema — sem botão (igual ao iOS para apps do sistema)
     if (isEssential) {
-        return (
-            <span className="text-[12px] font-semibold px-3 py-1 rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-500 dark:text-neutral-400">
-                Essencial
-            </span>
-        );
+        return null;
     }
 
+    // Baixando — anel circular animado
     if (state === 'downloading') {
         return (
             <div className="relative w-8 h-8 flex items-center justify-center">
-                <svg className="w-8 h-8 -rotate-90 animate-spin-slow" viewBox="0 0 36 36">
+                <svg className="w-8 h-8 animate-spin-slow" viewBox="0 0 36 36">
                     <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" strokeWidth="3" />
                     <circle
                         cx="18"
@@ -35,30 +32,32 @@ export const DownloadButton: React.FC<DownloadButtonProps> = ({
                         stroke="#3b82f6"
                         strokeWidth="3"
                         strokeLinecap="round"
-                        strokeDasharray="60 1000"
+                        strokeDasharray="30 1000"
                         className="animate-download-fill"
+                        style={{ transformOrigin: 'center', transform: 'rotate(-90deg)' }}
                     />
                 </svg>
             </div>
         );
     }
 
+    // Instalado — botão "Abrir" estilo iOS (borda azul, sem preenchimento)
     if (state === 'installed') {
         return (
             <button
                 onClick={onUninstall}
-                className="text-[12px] font-semibold px-3 py-1 rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 active:scale-95 transition-all"
+                className="text-[13px] font-semibold px-4 py-1 rounded-full border border-blue-500 text-blue-500 bg-transparent active:opacity-60 transition-opacity min-w-[66px] text-center"
             >
-                Remover
+                Abrir
             </button>
         );
     }
 
-    // idle — not installed
+    // idle — não instalado → "Obter"
     return (
         <button
             onClick={onInstall}
-            className="text-[12px] font-bold px-4 py-1 rounded-full bg-blue-500 text-white active:scale-95 active:bg-blue-600 transition-all shadow-sm"
+            className="text-[13px] font-bold px-4 py-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 active:opacity-60 transition-opacity min-w-[66px] text-center"
         >
             Obter
         </button>
