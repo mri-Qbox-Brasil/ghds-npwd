@@ -6,7 +6,6 @@ import { Typography } from '@ui/components/ui/typography';
 import { ChevronUp } from 'lucide-react';
 import { NotificationItem } from './NotificationItem';
 import usePhoneTime from '../../phone/hooks/usePhoneTime';
-import { NoNotificationText } from './NoNotificationText';
 import {
   useNavbarUncollapsed,
   useControlCenterOpen,
@@ -15,6 +14,8 @@ import {
   useStatusBarStyle,
 } from '@os/new-notifications/state';
 import { useApp } from '@os/apps/hooks/useApps';
+import { phoneState } from '@os/phone/hooks/state';
+import { useRecoilValue } from 'recoil';
 import { UnreadNotificationBarProps } from '@typings/notifications';
 import { useNotification } from '../useNotification';
 import { cn } from '@utils/css';
@@ -69,6 +70,7 @@ export const NotificationBar = () => {
   const { pathname } = useLocation();
   const wallpaper = useWallpaper();
   const [settings] = useSettings();
+  const isLocked = useRecoilValue(phoneState.isLocked);
 
   const [barCollapsed, setBarUncollapsed] = useNavbarUncollapsed();
   const [controlCenterOpen, setControlCenterOpen] = useControlCenterOpen();
@@ -77,6 +79,8 @@ export const NotificationBar = () => {
   const unreadNotificationIds = useUnreadNotificationIds();
   const unreadNotifications = useUnreadNotifications();
   const { markAllAsRead } = useNotification();
+  const resourceConfig = useRecoilValue(phoneState.resourceConfig);
+  const carrierName = (resourceConfig as any).lockscreen?.carrier || 'MRI';
 
   // Ambient Sensor: Detect background brightness automatically
   useEffect(() => {
@@ -132,7 +136,7 @@ export const NotificationBar = () => {
       <div
         ref={containerRef}
         className={cn(
-          "absolute top-0 left-0 w-full z-[999] px-8 pt-6 pb-2 flex items-center justify-between shrink-0 bg-transparent pointer-events-none transition-colors duration-300",
+          "absolute top-0 left-0 w-full z-[10001] px-8 pt-6 pb-2 flex items-center justify-between shrink-0 bg-transparent pointer-events-none transition-colors duration-300",
           statusStyle === 'light' ? "text-white" : "text-black"
         )}
       >
@@ -142,8 +146,11 @@ export const NotificationBar = () => {
           <div className="w-[120px] h-full cursor-pointer" onClick={handleRightClick} />
         </div>
 
-        <div className="font-sans text-[15px] font-semibold tracking-tight leading-none z-0 mt-0.5">
-          {time || '00:00'}
+        <div className={cn(
+          "font-sans text-[15px] font-semibold tracking-tight leading-none z-0 mt-0.5 min-w-[40px] transition-all duration-300",
+          isLocked ? "opacity-100" : "opacity-100"
+        )}>
+          {isLocked ? carrierName : (time || '00:00')}
         </div>
 
         <div className="flex items-center gap-1.5 overflow-visible z-0 mt-0.5">
@@ -157,7 +164,7 @@ export const NotificationBar = () => {
 
       {/* Notification Center */}
       <div
-        className="absolute inset-0 overflow-hidden z-[97]"
+        className="absolute inset-0 overflow-hidden z-[10003]"
         style={{ pointerEvents: barCollapsed ? 'auto' : 'none' }}
       >
         {/* Blur backdrop overlay */}

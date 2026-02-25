@@ -111,5 +111,8 @@
     "returnedDataIndexes": [
       "url"
     ]
+  },
+  "lockscreen": {
+    "carrier": "MRI"
   }
 }

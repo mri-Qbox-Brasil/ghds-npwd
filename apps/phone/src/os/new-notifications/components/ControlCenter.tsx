@@ -72,7 +72,7 @@ export const ControlCenter = () => {
     return (
         <div
             className={cn(
-                "absolute inset-0 z-[98]",
+                "absolute inset-0 z-[10002]",
                 isOpen ? "pointer-events-auto" : "pointer-events-none delay-500" // delay para pointer actions acabarem depois q a animação acaba
             )}
             data-ignore-brightness="true"

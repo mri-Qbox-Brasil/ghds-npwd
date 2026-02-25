@@ -37,6 +37,7 @@ import { useDarkchatService } from './apps/darkchat/hooks/useDarkchatService';
 import { useNotificationListener } from '@os/new-notifications/useNotificationListener';
 import { useSystemNotificationListener } from '@os/new-notifications/components/system/useSystemNotificationListener';
 import { useNotificationBarListener } from '@os/new-notifications/useNotificationBarListener';
+import { Lockscreen } from '@os/lockscreen';
 
 interface PhoneProps {
   notiRefCB: Dispatch<SetStateAction<HTMLElement>>;
@@ -91,6 +92,7 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
       <TopLevelErrorComponent>
         <WindowSnackbar />
         <PhoneWrapper>
+          <Lockscreen />
           <NotificationBar />
           <div className="PhoneAppContainer scrollbar-hide" id="notificationAppContainer" ref={notiRefCB}>
             <>

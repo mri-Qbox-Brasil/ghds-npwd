@@ -73,3 +73,13 @@
   position: absolute !important;
   top: 60px !important;
 }
+
+@keyframes shimmerPulse {
+  0% { opacity: 0.35; }
+  50% { opacity: 0.85; }
+  100% { opacity: 0.35; }
+}
+
+.animate-shimmer {
+  animation: shimmerPulse 3s infinite ease-in-out;
+}
