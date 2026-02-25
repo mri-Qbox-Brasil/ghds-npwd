@@ -145,42 +145,7 @@ export const StoreApp: React.FC = () => {
                 {/* === APPS TAB === */}
                 {activeTab === 'apps' && (
                     <div className="flex flex-col gap-5 pt-2 pb-5">
-                        {/* Installed Section */}
-                        {installedApps.length > 0 && (
-                            <div>
-                                <div className="flex items-center justify-between px-5 mb-2">
-                                    <p className="text-[18px] font-bold text-neutral-900 dark:text-white">Instalados</p>
-                                    <button className="text-blue-500 text-[14px] font-medium flex items-center gap-0.5">
-                                        Ver todos <ChevronRight size={14} />
-                                    </button>
-                                </div>
-                                <div className="bg-white dark:bg-[#2c2c2e] rounded-[16px] mx-4 overflow-hidden divide-y divide-neutral-100 dark:divide-neutral-700/50 shadow-sm">
-                                    {installedApps.map((app) => {
-                                        const name = t(app.nameLocale) || app.id;
-                                        const category = APP_CATEGORIES[app.id] ?? 'App';
-                                        return (
-                                            <div key={app.id} className="flex items-center gap-3 px-4 py-3">
-                                                <div className="w-[52px] h-[52px] rounded-[13px] overflow-hidden shrink-0 shadow-sm bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center">
-                                                    {app.icon}
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-[15px] font-semibold text-neutral-900 dark:text-white truncate">{name}</p>
-                                                    <p className="text-[12px] text-neutral-400">{category}</p>
-                                                </div>
-                                                <DownloadButton
-                                                    state="installed"
-                                                    isEssential={isEssential(app.id)}
-                                                    onInstall={() => { }}
-                                                    onUninstall={() => history.push(app.path)}
-                                                />
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Available Section */}
+                        {/* Available Section — first */}
                         {notInstalledApps.length > 0 && (
                             <div>
                                 <div className="flex items-center justify-between px-5 mb-2">
@@ -208,6 +173,41 @@ export const StoreApp: React.FC = () => {
                                                     isEssential={false}
                                                     onInstall={() => installApp(app.id)}
                                                     onUninstall={() => uninstallApp(app.id)}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Installed Section — second */}
+                        {installedApps.length > 0 && (
+                            <div>
+                                <div className="flex items-center justify-between px-5 mb-2">
+                                    <p className="text-[18px] font-bold text-neutral-900 dark:text-white">Instalados</p>
+                                    <button className="text-blue-500 text-[14px] font-medium flex items-center gap-0.5">
+                                        Ver todos <ChevronRight size={14} />
+                                    </button>
+                                </div>
+                                <div className="bg-white dark:bg-[#2c2c2e] rounded-[16px] mx-4 overflow-hidden divide-y divide-neutral-100 dark:divide-neutral-700/50 shadow-sm">
+                                    {installedApps.map((app) => {
+                                        const name = t(app.nameLocale) || app.id;
+                                        const category = APP_CATEGORIES[app.id] ?? 'App';
+                                        return (
+                                            <div key={app.id} className="flex items-center gap-3 px-4 py-3">
+                                                <div className="w-[52px] h-[52px] rounded-[13px] overflow-hidden shrink-0 shadow-sm bg-neutral-100 dark:bg-neutral-700 flex items-center justify-center">
+                                                    {app.icon}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-[15px] font-semibold text-neutral-900 dark:text-white truncate">{name}</p>
+                                                    <p className="text-[12px] text-neutral-400">{category}</p>
+                                                </div>
+                                                <DownloadButton
+                                                    state="installed"
+                                                    isEssential={isEssential(app.id)}
+                                                    onInstall={() => { }}
+                                                    onUninstall={() => history.push(app.path)}
                                                 />
                                             </div>
                                         );
