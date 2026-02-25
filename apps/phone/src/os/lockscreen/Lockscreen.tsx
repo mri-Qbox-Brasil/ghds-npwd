@@ -22,7 +22,9 @@ const LockscreenNotificationItem: React.FC<{ id: string }> = ({ id }) => {
             </div>
             <div className="flex flex-col justify-center overflow-hidden text-white">
                 <span className="font-bold text-[14px] leading-tight truncate">{title}</span>
-                <span className="text-white/80 text-[13px] leading-snug line-clamp-2 mt-0.5">{content}</span>
+                <span className="text-white/80 text-[13px] leading-snug line-clamp-2 mt-0.5">
+                    {typeof content === 'string' ? content : null}
+                </span>
             </div>
         </div>
     );
@@ -149,19 +151,19 @@ export const Lockscreen: React.FC = () => {
                 </div>
 
                 {/* Bottom Shortcuts */}
-                <div className="w-full px-8 pb-10 flex justify-between items-end pointer-events-auto">
-                    <div className="w-12 h-12 rounded-full bg-black/30 backdrop-blur-xl border border-white/10 flex items-center justify-center text-white active:scale-95 active:bg-white/20 transition-all cursor-pointer shadow-lg group">
+                <div className="w-full px-8 flex justify-between items-end pointer-events-auto mt-auto pb-1">
+                    <div className="w-12 h-12 rounded-full mb-3 bg-black/30 backdrop-blur-xl border border-white/10 flex items-center justify-center text-white active:scale-95 active:bg-white/20 transition-all cursor-pointer shadow-lg group">
                         <Flashlight size={22} className="group-active:text-yellow-400 transition-colors" />
                     </div>
 
-                    <div className="flex flex-col items-center gap-4 mb-2 cursor-pointer group" onClick={unlock}>
-                        <span className="text-[13px] font-semibold tracking-tight text-white animate-shimmer drop-shadow-sm">
+                    <div className="flex flex-col items-center gap-0 cursor-pointer group" onClick={unlock}>
+                        <span className="text-[13px] font-semibold tracking-tight text-white animate-shimmer drop-shadow-sm mb-4">
                             Swipe up to open
                         </span>
-                        <div className="w-32 h-[5px] bg-white/40 rounded-full group-hover:bg-white/60 transition-colors shadow-sm" />
+                        <div className="w-[130px] h-[5px] bg-white/40 rounded-full group-hover:bg-white/60 transition-colors shadow-sm mb-1" />
                     </div>
 
-                    <div className="w-12 h-12 rounded-full bg-black/30 backdrop-blur-xl border border-white/10 flex items-center justify-center text-white active:scale-90 active:bg-white/20 transition-all cursor-pointer shadow-lg group">
+                    <div className="w-12 h-12 rounded-full mb-3 bg-black/30 backdrop-blur-xl border border-white/10 flex items-center justify-center text-white active:scale-90 active:bg-white/20 transition-all cursor-pointer shadow-lg group">
                         <Camera size={22} />
                     </div>
                 </div>

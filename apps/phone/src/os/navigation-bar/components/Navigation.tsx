@@ -89,7 +89,7 @@ export const Navigation: React.FC = () => {
   return (
     <div
       className={cn(
-        "absolute bottom-0 left-1/2 -translate-x-1/2 w-[200px] h-4 z-[1000] pointer-events-auto flex items-end justify-center pb-2",
+        "absolute bottom-0 left-1/2 -translate-x-1/2 w-[200px] h-4 z-[1000] pointer-events-auto flex items-end justify-center",
         isOverIframe && "mix-blend-difference"
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -100,12 +100,12 @@ export const Navigation: React.FC = () => {
           ref={containerRef}
           className={cn(
             "cursor-pointer appearance-none bg-transparent border-none p-2 transition-all duration-500 ease-in-out",
-            (isHovered || isBrieflyVisible) ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-95"
+            "opacity-100 translate-y-0 scale-100" // Always visible as requested
           )}
           onClick={handleGoToMenu}
         >
           <div className={cn(
-            "w-[145px] h-[5px] rounded-[0.5rem] transition-colors duration-500",
+            "w-[130px] h-[5px] rounded-[0.5rem] transition-colors duration-500",
             isOverIframe
               ? "bg-white"
               : cn("shadow-[0_1px_4px_rgba(0,0,0,0.1)]", navBarStyle === 'light' ? "bg-white/80" : "bg-black/80")

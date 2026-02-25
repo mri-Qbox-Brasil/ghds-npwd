@@ -153,9 +153,17 @@ export const NotificationBar = () => {
           {isLocked ? carrierName : (time || '00:00')}
         </div>
 
-        <div className="flex items-center gap-1.5 overflow-visible z-0 mt-0.5">
-          <SignalIcon color="currentColor" />
-          <BatteryIcon color="currentColor" />
+        <div className="flex flex-col items-center gap-1.5 overflow-visible z-0 mt-0.5">
+          <div className="flex items-center gap-1.5">
+            <SignalIcon color="currentColor" />
+            <BatteryIcon color="currentColor" />
+          </div>
+          {/* iOS Control Center Handle Indicator (Always below the right side icons on Lockscreen) */}
+          <div className={cn(
+            "w-[45px] h-[3px] rounded-full transition-opacity duration-300 ml-auto",
+            statusStyle === 'light' ? "bg-white/50" : "bg-black/30",
+            isLocked ? "opacity-100" : "opacity-0"
+          )} />
         </div>
       </div>
 
