@@ -340,6 +340,7 @@
     "APPS_CALCULATOR_COPIED": "Result was copied to clipboard!",
     "APPS_DARKCHAT": "IRC",
     "APPS_MAIL": "Mail",
+    "APPS_STORE": "App Store",
     "MAIL": {
       "EMPTY": "No Mail",
       "INBOX": "Inbox",

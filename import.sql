@@ -206,11 +206,7 @@ CREATE TABLE `npwd_darkchat_channels` (
 	`label` VARCHAR(255) NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
 	PRIMARY KEY (`id`) USING BTREE,
 	UNIQUE INDEX `darkchat_channels_channel_identifier_uindex` (`channel_identifier`) USING BTREE
-)
-COLLATE='utf8mb4_general_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=20
-;
+);
 
 CREATE TABLE `npwd_darkchat_channel_members` (
 	`channel_id` INT(11) NOT NULL,
@@ -218,10 +214,7 @@ CREATE TABLE `npwd_darkchat_channel_members` (
 	`is_owner` TINYINT(4) NOT NULL DEFAULT '0',
 	INDEX `npwd_darkchat_channel_members_npwd_darkchat_channels_id_fk` (`channel_id`) USING BTREE,
 	CONSTRAINT `npwd_darkchat_channel_members_npwd_darkchat_channels_id_fk` FOREIGN KEY (`channel_id`) REFERENCES `npwd_darkchat_channels` (`id`) ON UPDATE RESTRICT ON DELETE RESTRICT
-)
-COLLATE='utf8mb4_general_ci'
-ENGINE=InnoDB
-;
+);
 
 CREATE TABLE `npwd_darkchat_messages` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -233,8 +226,12 @@ CREATE TABLE `npwd_darkchat_messages` (
 	PRIMARY KEY (`id`) USING BTREE,
 	INDEX `darkchat_messages_darkchat_channels_id_fk` (`channel_id`) USING BTREE,
 	CONSTRAINT `darkchat_messages_darkchat_channels_id_fk` FOREIGN KEY (`channel_id`) REFERENCES `npwd_darkchat_channels` (`id`) ON UPDATE RESTRICT ON DELETE RESTRICT
-)
-COLLATE='utf8mb4_general_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=31
-;
+);
+
+CREATE TABLE IF NOT EXISTS `npwd_players_apps`
+(
+    `identifier`    varchar(60) NOT NULL COLLATE 'utf8mb4_general_ci',
+    `installed_apps` LONGTEXT    NOT NULL,
+    `updated_at`    TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`identifier`)
+);

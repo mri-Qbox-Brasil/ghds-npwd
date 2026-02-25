@@ -114,5 +114,23 @@
   },
   "lockscreen": {
     "carrier": "MRI"
+  },
+  "store": {
+    "essentialApps": [
+      "DIALER",
+      "CONTACTS",
+      "MESSAGES",
+      "SETTINGS",
+      "STORE"
+    ],
+    "preInstalledApps": [
+      "CALCULATOR",
+      "BROWSER",
+      "NOTES",
+      "BANK",
+      "MAIL",
+      "WEATHER",
+      "CAMERA"
+    ]
   }
 }
