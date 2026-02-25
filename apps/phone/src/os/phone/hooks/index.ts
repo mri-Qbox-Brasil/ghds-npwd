@@ -7,3 +7,4 @@ export * from './usePhoneService';
 export * from './usePhoneTheme';
 export * from './usePhoneTime';
 export * from './usePhoneVisibility';
+export * from './usePhoneHardware';

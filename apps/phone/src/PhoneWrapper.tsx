@@ -7,6 +7,8 @@ import { useLocation } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { phoneState } from '@os/phone/hooks/state';
 import { toggleKeys } from './ui/components/Input';
+import { usePhoneHardware } from '@os/phone/hooks/usePhoneHardware';
+import { HardwareOverlays } from './os/phone/components/HardwareOverlays';
 
 interface PhoneWrapperProps {
   children: React.ReactNode;
@@ -18,6 +20,7 @@ const PhoneWrapper: React.FC<PhoneWrapperProps> = ({ children }) => {
   const wallpaper = useWallpaper();
   const { pathname } = useLocation();
   const setIsLocked = useSetRecoilState(phoneState.isLocked);
+  const { increaseVolume, decreaseVolume, toggleMute } = usePhoneHardware();
 
   return (
     <div
@@ -55,6 +58,9 @@ const PhoneWrapper: React.FC<PhoneWrapperProps> = ({ children }) => {
           {children}
         </div>
 
+        {/* Hardware Overlays (Must be above everything including the frame) */}
+        <HardwareOverlays />
+
         {/* Physical Buttons Area */}
         <div className="absolute inset-0 pointer-events-none z-[1000]">
           {/* Power Button (Right Side) */}
@@ -65,13 +71,22 @@ const PhoneWrapper: React.FC<PhoneWrapperProps> = ({ children }) => {
           />
 
           {/* Action Button (Left Side - Top) */}
-          <div className="absolute left-[30px] top-[235px] w-[15px] h-[35px] cursor-pointer pointer-events-auto bg-white/0 hover:bg-white/5 active:scale-x-90 transition-all rounded-r-md" />
+          <div
+            className="absolute left-[30px] top-[235px] w-[15px] h-[35px] cursor-pointer pointer-events-auto bg-white/0 hover:bg-white/5 active:scale-x-90 transition-all rounded-r-md"
+            onClick={toggleMute}
+          />
 
           {/* Volume Up (Left Side) */}
-          <div className="absolute left-[30px] top-[305px] w-[15px] h-[65px] cursor-pointer pointer-events-auto bg-white/0 hover:bg-white/5 active:scale-x-90 transition-all rounded-r-md" />
+          <div
+            className="absolute left-[30px] top-[305px] w-[15px] h-[65px] cursor-pointer pointer-events-auto bg-white/0 hover:bg-white/5 active:scale-x-90 transition-all rounded-r-md"
+            onClick={increaseVolume}
+          />
 
           {/* Volume Down (Left Side) */}
-          <div className="absolute left-[30px] top-[385px] w-[15px] h-[65px] cursor-pointer pointer-events-auto bg-white/0 hover:bg-white/5 active:scale-x-90 transition-all rounded-r-md" />
+          <div
+            className="absolute left-[30px] top-[385px] w-[15px] h-[65px] cursor-pointer pointer-events-auto bg-white/0 hover:bg-white/5 active:scale-x-90 transition-all rounded-r-md"
+            onClick={decreaseVolume}
+          />
         </div>
       </div>
     </div>

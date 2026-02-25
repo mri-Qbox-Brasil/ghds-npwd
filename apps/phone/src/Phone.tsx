@@ -38,6 +38,7 @@ import { useNotificationListener } from '@os/new-notifications/useNotificationLi
 import { useSystemNotificationListener } from '@os/new-notifications/components/system/useSystemNotificationListener';
 import { useNotificationBarListener } from '@os/new-notifications/useNotificationBarListener';
 import { Lockscreen } from '@os/lockscreen';
+import { HardwareOverlays } from './os/phone/components/HardwareOverlays';
 
 interface PhoneProps {
   notiRefCB: Dispatch<SetStateAction<HTMLElement>>;

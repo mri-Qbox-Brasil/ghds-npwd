@@ -34,4 +34,12 @@ export const phoneState = {
     key: 'phoneIsLocked',
     default: true,
   }),
+  activeHardwareOverlay: atom<'volume' | 'silent' | null>({
+    key: 'activeHardwareOverlay',
+    default: null,
+  }),
+  isMuted: atom<boolean>({
+    key: 'phoneIsMuted',
+    default: false,
+  }),
 };
