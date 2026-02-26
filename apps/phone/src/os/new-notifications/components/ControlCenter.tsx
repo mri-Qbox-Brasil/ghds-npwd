@@ -73,14 +73,14 @@ export const ControlCenter = () => {
         <div
             className={cn(
                 "absolute inset-0 z-[10002]",
-                isOpen ? "pointer-events-auto" : "pointer-events-none delay-500" // delay para pointer actions acabarem depois q a animação acaba
+                isOpen ? "pointer-events-auto" : "pointer-events-none delay-500"
             )}
             data-ignore-brightness="true"
         >
             {/* Background with heavy blur */}
             <div
                 className={cn(
-                    "absolute inset-0 bg-black/10 backdrop-blur-md transition-opacity duration-500",
+                    "absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity duration-500",
                     isOpen ? "opacity-100" : "opacity-0"
                 )}
                 onClick={() => setIsOpen(false)}
@@ -90,7 +90,7 @@ export const ControlCenter = () => {
             {/* Control Center Content Container with Slide Animation */}
             <div
                 className={cn(
-                    "absolute inset-0 w-full h-full pt-[68px] px-6 flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform",
+                    "absolute inset-0 w-full h-full pt-[68px] px-6 flex flex-col transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) will-change-transform",
                     isOpen ? "translate-y-0" : "-translate-y-full"
                 )}
             >
@@ -100,7 +100,7 @@ export const ControlCenter = () => {
                     {/* Linha 1 e 2 (Topo): Conectividade (2x2) e Música (2x2) */}
 
                     {/* Conectividade */}
-                    <div className="col-span-2 row-span-2 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-[36px] p-[14px] grid grid-cols-2 gap-2 shadow-[0_4px_24px_rgba(0,0,0,0.2)] place-items-center">
+                    <div className="col-span-2 row-span-2 bg-[#1C1C1E]/90 rounded-[36px] p-[14px] grid grid-cols-2 gap-2 border border-white/[0.06] place-items-center">
                         <button
                             className="flex items-center justify-center active:scale-95 transition-transform w-[62px] h-[62px]"
                             onClick={() => setAirplane(!airplane)}
@@ -135,7 +135,7 @@ export const ControlCenter = () => {
                     </div>
 
                     {/* Música */}
-                    <div className="col-span-2 row-span-2 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-[36px] p-4 flex flex-col justify-between shadow-[0_4px_24px_rgba(0,0,0,0.2)] text-white relative">
+                    <div className="col-span-2 row-span-2 bg-[#1C1C1E]/90 rounded-[36px] p-4 flex flex-col justify-between border border-white/[0.06] text-white relative">
                         <div className="flex items-start justify-between">
                             <span className="text-[13px] font-medium opacity-60">Não Reproduzin...</span>
                             <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center shrink-0 ml-1">
@@ -163,8 +163,8 @@ export const ControlCenter = () => {
                     </button>
                     <button
                         className={cn(
-                            "col-span-1 row-span-1 rounded-[22px] flex items-center justify-center shadow-[0_4px_24px_rgba(0,0,0,0.2)] active:scale-95 transition-all duration-300",
-                            isDarkMode ? "bg-white text-black" : "bg-[#1C1C1E]/80 backdrop-blur-lg text-white"
+                            "col-span-1 row-span-1 rounded-[22px] flex items-center justify-center border border-white/[0.06] active:scale-95 transition-all duration-300",
+                            isDarkMode ? "bg-white text-black" : "bg-[#1C1C1E]/90 text-white"
                         )}
                         onClick={toggleTheme}
                     >
@@ -196,7 +196,7 @@ export const ControlCenter = () => {
                     </div>
 
                     {/* Linha 4: Foco (2x1 no lado esquerdo, colado abaixo da Rotação e Espelhar) */}
-                    <button className="col-span-2 row-span-1 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-[28px] flex items-center justify-start px-4 shadow-[0_4px_24px_rgba(0,0,0,0.2)] text-white active:scale-95 transition-transform cursor-pointer">
+                    <button className="col-span-2 row-span-1 bg-[#1C1C1E]/90 rounded-[28px] flex items-center justify-start px-4 border border-white/[0.06] text-white active:scale-95 transition-transform cursor-pointer">
                         <div className="w-[30px] h-[30px] rounded-full bg-white/15 flex items-center justify-center mr-3 shrink-0">
                             <Moon size={16} className="fill-current text-purple-400" />
                         </div>
@@ -204,30 +204,30 @@ export const ControlCenter = () => {
                     </button>
 
                     {/* Linha 5: Atalhos 1x1 (Lanterna, Timer, Calculadora, Câmera) */}
-                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/80 backdrop-blur-lg text-white rounded-full flex items-center justify-center shadow-[0_4px_24px_rgba(0,0,0,0.2)] active:scale-95 transition-transform">
+                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/90 text-white rounded-full flex items-center justify-center border border-white/[0.06] active:scale-95 transition-transform">
                         <Flashlight size={28} className="opacity-90 fill-current" />
                     </button>
-                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-full flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/90 rounded-full flex items-center justify-center text-white active:scale-95 transition-transform border border-white/[0.06]">
                         <Radio size={28} className="opacity-80" /> {/* Timer Mock */}
                     </button>
-                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-full flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/90 rounded-full flex items-center justify-center text-white active:scale-95 transition-transform border border-white/[0.06]">
                         <Calculator size={28} className="opacity-80" />
                     </button>
-                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-full flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/90 rounded-full flex items-center justify-center text-white active:scale-95 transition-transform border border-white/[0.06]">
                         <Camera size={28} className="opacity-80" />
                     </button>
 
                     {/* Linha 6 (Opcional): Mais Atalhos 1x1... */}
-                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-full flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/90 rounded-full flex items-center justify-center text-white active:scale-95 transition-transform border border-white/[0.06]">
                         <Radio size={28} className="opacity-80" />
                     </button>
-                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-full flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/90 rounded-full flex items-center justify-center text-white active:scale-95 transition-transform border border-white/[0.06]">
                         <Radio size={28} className="opacity-80" />
                     </button>
-                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-full flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/90 rounded-full flex items-center justify-center text-white active:scale-95 transition-transform border border-white/[0.06]">
                         <Music size={28} className="opacity-80" /> {/* Shazam Mock */}
                     </button>
-                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/80 backdrop-blur-lg rounded-full flex items-center justify-center text-white active:scale-95 transition-transform shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+                    <button className="col-span-1 row-span-1 bg-[#1C1C1E]/90 rounded-full flex items-center justify-center text-white active:scale-95 transition-transform border border-white/[0.06]">
                         <Battery size={28} className="opacity-80" />
                     </button>
                 </div>

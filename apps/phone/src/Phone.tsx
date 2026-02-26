@@ -4,7 +4,6 @@ import { Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { CallModal } from '@os/call/components/CallModal';
 import { HomeApp } from './apps/home/components/Home';
-import { Dock } from './apps/home/components/Dock';
 import { NotificationBar } from '@os/new-notifications/components/NotificationBar';
 import { Navigation } from '@os/navigation-bar/components/Navigation';
 import { useSimcardService } from '@os/simcard/hooks/useSimcardService';
@@ -50,8 +49,6 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
   const { apps } = useApps();
   const [settings] = useSettings();
   const location = useLocation();
-
-  const dockApps = apps.filter((a) => a.isDockApp);
 
   // Set language from local storage
   // This will only trigger on first mount & settings changes
@@ -114,7 +111,6 @@ const Phone: React.FC<PhoneProps> = ({ notiRefCB }) => {
             <NotificationAlert />
             <PhoneSnackbar />
           </div>
-          <Route exact path="/" render={() => dockApps.length > 0 ? <Dock apps={dockApps} /> : null} />
           <Navigation />
         </PhoneWrapper>
       </TopLevelErrorComponent>

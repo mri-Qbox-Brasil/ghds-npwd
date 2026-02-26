@@ -12,11 +12,12 @@ const DEFAULT_PREINSTALLED_APPS = [
 
 const STORAGE_KEY = 'npwd:playerData';
 
-/** Formato v2 persistido no banco */
+/** Formato v3 persistido no banco */
 interface PlayerData {
-    v: 2;
+    v: 3;
     installed: string[];
     order: string[];
+    dock: string[];
 }
 
 type LegacyData = string[]; // formato v1 (apenas lista de instalados)
@@ -28,14 +29,18 @@ export interface AppDownloadState {
 function parsePlayerData(raw: string): PlayerData | null {
     try {
         const parsed = JSON.parse(raw);
-        // v2 format
-        if (parsed && typeof parsed === 'object' && parsed.v === 2) {
+        // v3 format (current)
+        if (parsed && typeof parsed === 'object' && parsed.v === 3) {
             return parsed as PlayerData;
         }
-        // Legacy: simple array → migrate to v2 with empty order
+        // v2 format -> migrate to v3
+        if (parsed && typeof parsed === 'object' && parsed.v === 2) {
+            return { v: 3, installed: parsed.installed || [], order: parsed.order || [], dock: ['DIALER', 'CONTACTS', 'MESSAGES', 'BROWSER'] };
+        }
+        // Legacy v1: simple array → migrate to v3
         if (Array.isArray(parsed)) {
             const legacy: LegacyData = parsed;
-            return { v: 2, installed: legacy, order: [] };
+            return { v: 3, installed: legacy, order: [], dock: ['DIALER', 'CONTACTS', 'MESSAGES', 'BROWSER'] };
         }
     } catch { /* invalid */ }
     return null;
@@ -50,6 +55,7 @@ export const useAppStore = () => {
 
     const [installedApps, setInstalledApps] = useState<string[]>([]);
     const [appOrder, setAppOrder] = useState<string[]>([]);
+    const [dockOrder, setDockOrder] = useState<string[]>([]);
     const [downloadStates, setDownloadStates] = useState<AppDownloadState>({});
     const [isLoaded, setIsLoaded] = useState(false);
     const [configApplied, setConfigApplied] = useState(false);
@@ -69,8 +75,8 @@ export const useAppStore = () => {
     }, []);
 
     // ── Save ──────────────────────────────────────────────────────────────────
-    const savePlayerData = useCallback((installed: string[], order: string[]) => {
-        const payload: PlayerData = { v: 2, installed, order };
+    const savePlayerData = useCallback((installed: string[], order: string[], dock: string[]) => {
+        const payload: PlayerData = { v: 3, installed, order, dock };
         const json = JSON.stringify(payload);
 
         fetchNui<ServerPromiseResp<void>>('npwd:setInstalledApps', json).catch(() => {
@@ -86,13 +92,16 @@ export const useAppStore = () => {
                 if (data) {
                     setInstalledApps([...new Set([...essentialApps, ...data.installed])]);
                     setAppOrder(data.order);
+                    setDockOrder(data.dock);
                 } else {
                     setInstalledApps([...new Set([...essentialApps, ...preInstalledApps])]);
                     setAppOrder([]);
+                    setDockOrder(['DIALER', 'CONTACTS', 'MESSAGES', 'BROWSER']);
                 }
             } catch {
                 setInstalledApps([...new Set([...essentialApps, ...preInstalledApps])]);
                 setAppOrder([]);
+                setDockOrder(['DIALER', 'CONTACTS', 'MESSAGES', 'BROWSER']);
             } finally {
                 setIsLoaded(true);
             }
@@ -104,8 +113,8 @@ export const useAppStore = () => {
     // ── Persist on change ─────────────────────────────────────────────────────
     useEffect(() => {
         if (!isLoaded) return;
-        savePlayerData(installedApps, appOrder);
-    }, [installedApps, appOrder, isLoaded, savePlayerData]);
+        savePlayerData(installedApps, appOrder, dockOrder);
+    }, [installedApps, appOrder, dockOrder, isLoaded, savePlayerData]);
 
     // ── Re-apply config when ResourceConfig arrives late (dev mode) ───────────
     useEffect(() => {
@@ -152,6 +161,7 @@ export const useAppStore = () => {
             if (isEssential(appId)) return;
             setInstalledApps((prev) => prev.filter((id) => id !== appId));
             setAppOrder((prev) => prev.filter((id) => id !== appId));
+            setDockOrder((prev) => prev.filter((id) => id !== appId));
             setDownloadStates((prev) => ({ ...prev, [appId]: 'idle' }));
         },
         [isEssential],
@@ -161,6 +171,8 @@ export const useAppStore = () => {
         installedApps,
         appOrder,
         setAppOrder,
+        dockOrder,
+        setDockOrder,
         isInstalled,
         isEssential,
         installApp,

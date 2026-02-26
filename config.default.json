@@ -121,16 +121,16 @@
       "CONTACTS",
       "MESSAGES",
       "SETTINGS",
-      "STORE"
-    ],
-    "preInstalledApps": [
+      "STORE",
       "CALCULATOR",
       "BROWSER",
       "NOTES",
+      "CAMERA",
       "BANK",
-      "MAIL",
-      "WEATHER",
-      "CAMERA"
+      "MAIL"
+    ],
+    "preInstalledApps": [
+      "WEATHER"
     ]
   }
 }
