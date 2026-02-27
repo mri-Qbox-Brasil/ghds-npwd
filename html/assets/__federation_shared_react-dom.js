@@ -1,4 +1,4 @@
-import{g as Vs}from"./_commonjsHelpers-de833af9.js";import{r as Bs,o as Ws}from"./__federation_shared_react-e93ad879.js";var uu={exports:{}},pe={},su={exports:{}},au={};/** @license React v0.20.2
+import{g as Vs}from"./_commonjsHelpers.js";import{r as Bs,o as Ws}from"./__federation_shared_react.js";var uu={exports:{}},pe={},su={exports:{}},au={};/** @license React v0.20.2
  * scheduler.production.min.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.

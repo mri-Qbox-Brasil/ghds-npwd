@@ -1,4 +1,4 @@
-import{r as u}from"./__federation_shared_react-e93ad879.js";var i={exports:{}},t={};/** @license React v17.0.2
+import{r as u}from"./__federation_shared_react.js";var i={exports:{}},t={};/** @license React v17.0.2
  * react-jsx-runtime.production.min.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.

@@ -1,4 +1,4 @@
-import{g as T}from"./_commonjsHelpers-de833af9.js";/*
+import{g as T}from"./_commonjsHelpers.js";/*
 object-assign
 (c) Sindre Sorhus
 @license MIT

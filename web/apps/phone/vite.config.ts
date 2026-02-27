@@ -43,5 +43,16 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     outDir: '../../../html',
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name].js',
+        chunkFileNames: 'assets/[name].js',
+        assetFileNames: 'assets/[name].[ext]',
+        manualChunks: undefined,
+      },
+      input: {
+        index: path.resolve(__dirname, 'index.html'),
+      },
+    },
   },
 });
