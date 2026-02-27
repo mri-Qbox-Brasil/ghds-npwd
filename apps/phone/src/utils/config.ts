@@ -10,10 +10,11 @@ export const fetchConfig = async (): Promise<ResourceConfig> => {
       return await res.json();
     })
     .catch((err) => {
+      if (err?.message?.includes('shutting down')) return;
       console.error('Could not find a config file!', err);
     });
 
-  return deepMergeObjects({}, defaultConfig, config);
+  return deepMergeObjects({}, defaultConfig, config || {});
 };
 
 export enum EnvMode {

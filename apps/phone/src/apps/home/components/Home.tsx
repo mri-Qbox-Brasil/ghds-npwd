@@ -93,6 +93,15 @@ export const HomeApp: React.FC = () => {
     }
   }, [prevGridKey, prevDockKey, sortedGridApps, sortedDockApps]);
 
+  useEffect(() => {
+    return () => {
+      setJiggling(false);
+      if (longPressTimer.current) {
+        clearTimeout(longPressTimer.current);
+      }
+    };
+  }, [setJiggling]);
+
   /* ── Find target under pointer ── */
   const findTargetId = useCallback((x: number, y: number, excludeId: string): string | null => {
     for (const [id, el] of Object.entries(itemRefs.current)) {
@@ -175,6 +184,9 @@ export const HomeApp: React.FC = () => {
 
   /* ── Long press handlers ── */
   const startLongPress = useCallback(() => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
     longPressTimer.current = setTimeout(() => setJiggling(true), LONG_PRESS_MS);
   }, [setJiggling]);
 

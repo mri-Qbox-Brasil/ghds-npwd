@@ -82,7 +82,7 @@ export const GameBlur: React.FC = () => {
         });
 
         if (!gl) {
-            console.error('WebGL not supported');
+            // console.error('WebGL not supported');
             return;
         }
 

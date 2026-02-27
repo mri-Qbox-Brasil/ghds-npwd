@@ -55,10 +55,6 @@ build({
           from: 'client/bank/bank.lua',
           to: '../../dist/game/client/bank.lua',
         },
-        {
-          from: 'server/bank/bank.lua',
-          to: '../../dist/game/server/bank.lua',
-        },
       ],
     }),
   ],

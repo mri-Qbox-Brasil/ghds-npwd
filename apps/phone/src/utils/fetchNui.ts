@@ -40,7 +40,15 @@ async function fetchNui<T = any, D = any>(
 		? (window as any).GetParentResourceName()
 		: "npwd";
 
-	const resp = await fetch(`https://${resourceName}/${eventName}`, options);
+	let resp;
+	try {
+		resp = await fetch(`https://${resourceName}/${eventName}`, options);
+	} catch (error: any) {
+		if (error?.message?.includes("global scope is shutting down")) {
+			return {} as T;
+		}
+		throw error;
+	}
 
 	const responseObj = await resp.json();
 
