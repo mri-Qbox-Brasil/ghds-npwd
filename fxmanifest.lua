@@ -7,8 +7,8 @@ version "4.0.0"
 credits({ "itschip", "erik-sn", "TasoOneAsia", "kidz", "RockySouthpaw", "SamShanks", "c-wide", "mojito", "ghds", "mur4i" })
 
 client_scripts({
-	"dist/game/client/client.js",
-	"dist/game/client/*.lua",
+	"client/client.js",
+	"client/*.lua",
 	"@qbx_core/modules/playerdata.lua"
 })
 
@@ -19,16 +19,16 @@ shared_scripts{
 server_script({
 	-- This is a file that lives purely in source code and isn't compiled alongside
 	-- rest of the release. It's used to detect whether a user can read or not.
-	"dist/game/server/server.js",
-	"apps/game/server/bridge/qb/mail_bridge.lua"
+	"server/server.js",
+	"web/apps/game/server/bridge/qb/mail_bridge.lua"
 })
 
-ui_page("dist/html/index.html")
+ui_page("html/index.html")
 
 files({
 	"config.json",
-	"dist/html/index.html",
-	"dist/html/**/*",
+	"html/index.html",
+	"html/**/*",
 })
 
 dependency({
