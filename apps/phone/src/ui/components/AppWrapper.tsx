@@ -19,10 +19,9 @@ export const AppWrapper: React.FC<AppWrapperTypes & React.HTMLAttributes<HTMLDiv
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{
-        type: 'spring',
-        stiffness: 380,
-        damping: 30,
-        mass: 0.8,
+        type: 'tween',
+        duration: 0.16,
+        ease: 'easeOut',
       }}
     >
       {children}
