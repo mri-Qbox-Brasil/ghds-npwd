@@ -1,8 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+// @ts-ignore
+import { fileURLToPath, URL } from 'node:url';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import federation from '@originjs/vite-plugin-federation';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 // https://vitejs.dev/config/
 export default defineConfig({

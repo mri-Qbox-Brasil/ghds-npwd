@@ -11,7 +11,7 @@
     "target": "ES2018",
     "allowJs": false,
     "lib": ["es2018"],
-    "types": ["@citizenfx/server", "@types/node", "jest"],
+    "types": ["@citizenfx/server", "@types/node"],
     "moduleResolution": "node",
     "sourceMap": true,
     "resolveJsonModule": true,

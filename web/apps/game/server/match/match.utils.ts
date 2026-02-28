@@ -1,5 +1,5 @@
 import { mainLogger } from '../sv_logger';
-import { FormattedMatch, FormattedProfile, Match, Profile } from '../../../typings/match';
+import { FormattedMatch, FormattedProfile, Match, Profile } from '../../../../typings/match';
 import dayjs from 'dayjs';
 
 export const matchLogger = mainLogger.child({ module: 'match' });

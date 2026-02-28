@@ -1,6 +1,6 @@
 import { config } from '@npwd/config/server';
 import { PromiseEventResp, PromiseRequest } from '../lib/PromiseNetEvents/promise.types';
-import { AudioRequest, AudioResponse } from '../../../typings/audio';
+import { AudioRequest, AudioResponse } from '../../../../typings/audio';
 import { audioLogger } from './audio.utils';
 import fetch, { FormData, fileFromSync } from 'node-fetch';
 import * as fs from 'fs';

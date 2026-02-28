@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { Tweet, Profile } from '../../../typings/twitter';
+import { Tweet, TwitterProfile } from '../../../../typings/twitter';
 
 import { mainLogger } from '../sv_logger';
-import { MarketplaceListing } from '../../../typings/marketplace';
+import { MarketplaceListing } from '../../../../typings/marketplace';
 
 const IMAGE_DELIMITER = '||!||';
 const discordLogger = mainLogger.child({ module: 'discord' });
@@ -63,7 +63,7 @@ const createDiscordMsgObj = (type: string, message: string, fields: DiscordEmbed
   };
 };
 
-export async function reportTweetToDiscord(tweet: Tweet, reportingProfile: Profile): Promise<any> {
+export async function reportTweetToDiscord(tweet: Tweet, reportingProfile: TwitterProfile): Promise<any> {
   const guaranteedFields = [
     {
       name: 'Reported By:',

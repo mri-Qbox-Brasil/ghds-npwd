@@ -21,7 +21,8 @@
     "sourceMap": true,
     "inlineSources": true,
     "sourceRoot": "/",
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "types": ["node"]
   },
-  "include": ["src"]
+  "include": ["src", "vite.config.ts"]
 }

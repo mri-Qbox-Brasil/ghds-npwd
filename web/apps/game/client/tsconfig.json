@@ -2,39 +2,21 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "*": [
-        "types/*"
-      ],
-      "@shared/*": [
-        "../../../shared/*"
-      ],
-      "@typings/*": [
-        "../../../typings/*"
-      ]
+      "*": ["types/*"],
+      "@shared/*": ["../../../shared/*"],
+      "@typings/*": ["../../../typings/*"]
     },
     "outDir": "./",
     "noImplicitAny": true,
     "module": "commonjs",
     "target": "es6",
     "allowJs": true,
-    "lib": [
-      "es2017"
-    ],
-    "types": [
-      "@citizenfx/client",
-      "@types/node",
-      "jest"
-    ],
+    "lib": ["es2017"],
+    "types": ["@citizenfx/client", "@types/node"],
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
-  "include": [
-    "./**/*",
-    "../../../config.default.json"
-  ],
-  "exclude": [
-    "**/node_modules",
-    "**/__tests__/*"
-  ]
+  "include": ["./**/*", "../../../config.default.json"],
+  "exclude": ["**/node_modules", "**/__tests__/*"]
 }
