@@ -45,10 +45,18 @@ export default defineConfig({
     outDir: '../../../html',
     rollupOptions: {
       output: {
-        entryFileNames: 'assets/[name].js',
-        chunkFileNames: 'assets/[name].js',
-        assetFileNames: 'assets/[name].[ext]',
-        manualChunks: undefined,
+        entryFileNames: 'assets/js/script.js',
+        chunkFileNames: 'assets/js/[name].js',
+        assetFileNames: (assetInfo: any) => {
+          let extType = assetInfo.name.split('.').at(-1);
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico|webp/i.test(extType)) {
+            return `media/[name].[ext]`;
+          }
+          if (extType === 'css') {
+            return 'assets/css/styles.css';
+          }
+          return `assets/${extType}/[name].[ext]`;
+        },
       },
       input: {
         index: path.resolve(__dirname, 'index.html'),

@@ -1,0 +1,1 @@
+import{j as a}from"./jsx-runtime.js";import{G as r,__tla as e}from"./script.js";let t,l=Promise.all([(()=>{try{return e}catch{}})()]).then(async()=>{t=()=>a.jsx(r,{})});export{l as __tla,t as default};
