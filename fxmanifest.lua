@@ -20,7 +20,7 @@ server_script({
 	-- This is a file that lives purely in source code and isn't compiled alongside
 	-- rest of the release. It's used to detect whether a user can read or not.
 	"server/server.js",
-	"web/apps/game/server/bridge/qb/mail_bridge.lua"
+	"server/*.lua"
 })
 
 ui_page("html/index.html")

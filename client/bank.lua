@@ -20,7 +20,6 @@ end)
 
 -- RegisterNUICallback("getTransactionsFromClient", function(data, cb)
 --     local transactions = lib.callback.await("ps-banking:server:getHistory", false)
--- print('GHDS CLIENTSIDE TRANSACTIONS', transactions)
 --     local retData = {
 --         id = transactions.id,
 --         amount = transactions.amount,
@@ -34,7 +33,6 @@ end)
 
 RegisterNUICallback("getTransactionsFromClient", function(data, cb)
     local transactions = lib.callback.await("ps-banking:server:getTransactionStats", false)
-    print('GHDS CLIENTSIDE TRANSACTIONS', json.encode(transactions))
 
     local retData = {}
     for _, transaction in ipairs(transactions.transactionData) do
